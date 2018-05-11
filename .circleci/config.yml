@@ -1,34 +1,75 @@
 version: 2
 
+# Common steps for building client Docker image
+build_steps: &build_steps
+  docker:
+    - image: circleci/node:9.2.0
+
+  steps:
+    - checkout
+
+    - setup_remote_docker
+
+    - run:
+        name: Set COMMIT env var
+        command: echo 'export COMMIT=${CIRCLE_SHA1::8}' >> $BASH_ENV
+
+    - run:
+        name: Sign in to Docker Hub
+        command: docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
+
+    - run:
+        name: Build and push web service
+        environment:
+          CLIENT_SERVICE: metagenscope-client
+          NODE_ENV: production
+        command: |
+          docker build . -t $CLIENT_SERVICE:$COMMIT
+          docker tag $CLIENT_SERVICE:$COMMIT $DOCKER_ORG/$CLIENT_SERVICE:$TAG
+          docker push $DOCKER_ORG/$CLIENT_SERVICE
+
+
+# CircleCI Jobs
 jobs:
   run_tests:
     docker:
       - image: circleci/node:9.2.0
-        environment:
-          CLIENT: web-service
-          CLIENT_REPO: https://${GITHUB_TOKEN}@github.com/bchrobot/${CLIENT}.git
 
     working_directory: ~/repo
 
     steps:
       - checkout
 
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
       - run:
           name: Install node dependencies
           command: npm install --silent
+
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run:
+          name: Install typings dependencies
+          command: ./node_modules/.bin/typings install
 
       - run:
           name: Lint client
           command: npm run lint
 
-  build_emptyfish:
+  test_build:
     docker:
       - image: circleci/node:9.2.0
 
     environment:
-      TAG: emptyfish
-      DOCKER_ORG: metagenscope
-      REACT_APP_METAGENSCOPE_SERVICE_URL: https://www.emptyfish.net
+      TAG: test
 
     steps:
       - checkout
@@ -40,20 +81,20 @@ jobs:
           command: echo 'export COMMIT=${CIRCLE_SHA1::8}' >> $BASH_ENV
 
       - run:
-          name: Sign in to Docker Hub
-          command: docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
-
-      - run:
-          name: Build and push web service
+          name: Build web service
           environment:
             CLIENT_SERVICE: metagenscope-client
             NODE_ENV: production
           command: |
             docker build . -t $CLIENT_SERVICE:$COMMIT
-            docker tag $CLIENT_SERVICE:$COMMIT $DOCKER_ORG/$CLIENT_SERVICE:$TAG
-            docker push $DOCKER_ORG/$CLIENT_SERVICE
 
-  deploy_emptyfish:
+  build_staging:
+    <<: *build_steps
+    environment:
+      TAG: staging
+      DOCKER_ORG: metagenscope
+
+  deploy_staging:
     docker:
       - image: circleci/node:9.2.0
 
@@ -64,26 +105,51 @@ jobs:
           name: Deploy to emptyfish.net
           command: |
             set -x
-            echo "$DROPLET_IP $DROPLET_HOST_KEY" > ~/tmp_auth_hosts
-            ssh -A -o "UserKnownHostsFile ~/tmp_auth_hosts" $DROPLET_USER@$DROPLET_IP "cd /home/metagenscope/metagenscope-app && sh deploy.sh"
+            echo "$STAGING_MACHINE_IP $STAGING_MACHINE_HOST_KEY" > ~/tmp_auth_hosts
+            ssh -A -o "UserKnownHostsFile ~/tmp_auth_hosts" $STAGING_MACHINE_USER@$STAGING_MACHINE_IP "cd /home/metagenscope/metagenscope-app && sh deploy.sh"
 
+  build_master:
+    <<: *build_steps
+    environment:
+      TAG: latest
+      DOCKER_ORG: metagenscope
+
+
+# CircleCI Workflows
 workflows:
   version: 2
+
   test-and-deploy:
     jobs:
       - run_tests:
-            context: org-global
-      - build_emptyfish:
-          context: org-global
+            context: metagenscope-staging
+      - test_build:
+          context: metagenscope-staging
+          filters:
+            branches:
+              ignore:
+                - develop
+                - master
+          requires:
+            - run_tests
+      - build_staging:
+          context: metagenscope-staging
           filters:
             branches:
               only: develop
           requires:
             - run_tests
-      - deploy_emptyfish:
-          context: org-global
+      - deploy_staging:
+          context: metagenscope-staging
           filters:
             branches:
               only: develop
           requires:
-            - build_emptyfish
+            - build_staging
+      - build_master:
+          context: metagenscope-staging
+          filters:
+            branches:
+              only: master
+          requires:
+            - run_tests

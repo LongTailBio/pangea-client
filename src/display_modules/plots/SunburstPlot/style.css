@@ -1,0 +1,7 @@
+.sunburst-tooltip {
+  position: absolute;
+  pointer-events: none;
+  padding: 10px;
+  background: #EEEEEE;
+  border-radius: 5px;
+}

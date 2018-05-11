@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { Row, Col, Button } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
+import { default as axios, CancelTokenSource } from 'axios';
 
 import { createOrganization } from '../../../../services/api';
 
@@ -21,9 +22,12 @@ type CreateOrganizationState = {
 
 class CreateOrganization extends React.Component<Props, CreateOrganizationState> {
 
+  protected sourceToken: CancelTokenSource;
+
   constructor(props: Props) {
     super(props);
 
+    this.sourceToken = axios.CancelToken.source();
     this.state = {
       didCreate: false,
       formData: {
@@ -34,6 +38,10 @@ class CreateOrganization extends React.Component<Props, CreateOrganizationState>
 
     this.handleUserFormSubmit = this.handleUserFormSubmit.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
+  }
+
+  componentWillUnmount() {
+    this.sourceToken.cancel();
   }
 
   clearForm() {
@@ -52,12 +60,15 @@ class CreateOrganization extends React.Component<Props, CreateOrganizationState>
     event.preventDefault();
     const name = this.state.formData.name,
           adminEmail = this.state.formData.adminEmail;
-    createOrganization(name, adminEmail)
+
+    createOrganization(name, adminEmail, this.sourceToken)
       .then((res) => {
         this.setState({ didCreate: true });
       })
       .catch((error) => {
-        console.log(error);
+        if (!axios.isCancel(error)) {
+          console.log(error);
+        }
       });
   }
 

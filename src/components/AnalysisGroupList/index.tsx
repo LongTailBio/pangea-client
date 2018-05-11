@@ -1,13 +1,13 @@
 import * as React from 'react';
 
-import { AnalysisGroupType } from '../../services/api/models/analysisGroup';
+import { SampleGroupType } from '../../services/api/models/analysisGroup';
 
 import AnalysisGroupListItem from './components/AnalysisGroupListItem';
 
 import './analysisGroupList.css';
 
 interface Prop {
-    groups: Array<AnalysisGroupType>;
+    groups: Array<SampleGroupType>;
     organization: string;
 }
 
@@ -19,7 +19,7 @@ class AnalysisGroupList extends React.Component<Prop, {}> {
           this.props.groups.map((group) => {
             return (
               <AnalysisGroupListItem
-                key={group.slug}
+                key={group.uuid}
                 group={group}
                 organization={this.props.organization}
               />

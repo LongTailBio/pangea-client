@@ -9,7 +9,7 @@ import {
 } from 'react-bootstrap';
 
 interface SettingsProps {
-  slug: string;
+  uuid: string;
 }
 
 export default class OrganizationSettingsProfile extends React.Component<SettingsProps, {}> {

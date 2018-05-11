@@ -21,9 +21,9 @@ const Organizations: React.SFC<OrganizationsProps> = (props) => {
         )}
       />
       <Route
-        path="/organizations/:slug"
+        path="/organizations/:uuid"
         render={(routeProps) => (
-          <OrganizationDetail slug={routeProps.match.params.slug} />
+          <OrganizationDetail uuid={routeProps.match.params.uuid} />
         )}
       />
     </Switch>

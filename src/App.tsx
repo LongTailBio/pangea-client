@@ -9,7 +9,8 @@ import Logout from './screens/Auth/scenes/Logout';
 import Home from './screens/Home';
 import About from './screens/About';
 import Organizations from './screens/Organizations';
-import AnalysisGroups from './screens/AnalysisGroups';
+import SampleGroups from './screens/SampleGroups';
+import Samples from './screens/Samples';
 import Dashboard from './screens/Dashboard';
 import Docs from './screens/Docs';
 
@@ -18,6 +19,7 @@ interface AppState {
   email: string;
   title: string;
   isAuthenticated: boolean;
+  theme?: string;
 }
 
 class App extends React.Component<{}, AppState> {
@@ -29,8 +31,11 @@ class App extends React.Component<{}, AppState> {
       username: '',
       email: '',
       title: 'MetaGenScope',
-      isAuthenticated: false
+      isAuthenticated: false,
+      theme: undefined,
     };
+
+    this.updateTheme = this.updateTheme.bind(this);
   }
 
   componentWillMount() {
@@ -47,6 +52,10 @@ class App extends React.Component<{}, AppState> {
   logoutUser() {
     window.localStorage.clear();
     this.setState({ isAuthenticated: false });
+  }
+
+  updateTheme(theme?: string) {
+    this.setState({theme});
   }
 
   render() {
@@ -107,10 +116,20 @@ class App extends React.Component<{}, AppState> {
             )}
           />
           <Route
-            path="/analysis-groups"
+            path="/sample-groups"
             render={() => (
-              <AnalysisGroups
+              <SampleGroups
                 isAuthenticated={this.state.isAuthenticated}
+                updateTheme={this.updateTheme}
+              />
+            )}
+          />
+          <Route
+            path="/samples"
+            render={() => (
+              <Samples
+                isAuthenticated={this.state.isAuthenticated}
+                updateTheme={this.updateTheme}
               />
             )}
           />

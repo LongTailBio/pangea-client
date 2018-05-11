@@ -1,21 +1,21 @@
 import { UserType } from './user';
-import { AnalysisGroupType } from './analysisGroup';
+import { SampleGroupType } from './analysisGroup';
 
 export interface OrganizationType {
-  id: string;
+  uuid: string;
   name: string;
   adminEmail: string;
   users: Array<UserType>;
-  sampleGroups: Array<AnalysisGroupType>;
+  sampleGroups: Array<SampleGroupType>;
 }
 export interface JsonOrganizationType {
-  slug: string;
+  uuid: string;
   name: string;
   admin_email: string;
   users: {
     users: Array<UserType>;
   };
   sample_groups: {
-    sample_groups: Array<AnalysisGroupType>;
+    sample_groups: Array<SampleGroupType>;
   };
 }

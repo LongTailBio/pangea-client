@@ -1,0 +1,85 @@
+@font-face {
+  font-family: '1898 Sans';
+  src: url('./fonts/1898Sans-Regular.otf') format('opentype');
+  font-weight: normal;
+}
+@font-face {
+  font-family: '1898 Sans';
+  src: url('./fonts/1898Sans-Bold.otf') format('opentype');
+  font-weight: bold;
+}
+
+.world-quant-body h1, .world-quant-sample-body h1 {
+  font-family: '1898 Sans', sans-serif;
+  font-size: 34px;
+  line-height: 45px;
+}
+.world-quant-body h2, .world-quant-sample-body h2 {
+  font-family: '1898 Sans', sans-serif;
+  font-size: 28px;
+  line-height: 42px;
+}
+
+.worldquant-logo {
+  width: 504px;
+  max-width: 100%;
+}
+
+.top-header, .bottom-header, .worldquant-footer {
+  color: #FFFFFF;
+  font-weight: bold;
+}
+
+.top-header {
+  background-image: url('./images/globe-trimmed.png'), url('./images/background-gradient.jpg');
+  background-size: auto 100%, cover;
+  background-position: center center, top center;
+  background-repeat: no-repeat, no-repeat;
+}
+
+.top-header p {
+  font-size: 42px;
+  line-height: 50px;
+}
+
+.bottom-header {
+  padding: 75px 0;
+}
+
+.bottom-header p {
+  margin: 25px 0;
+  font-size: 28px;
+  line-height: 42px;
+}
+
+.worldquant-footer {
+  margin-top: 2em;
+  background-color: #000000;
+}
+
+.footer-wrapper {
+  padding-top: 75px;
+  padding-bottom: 75px;
+}
+
+.worldquant-footer p {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+@media screen and (max-width: 320px) {
+  .top-header img {
+    margin: 20px 0;
+  }
+  .top-header p {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+  }
+  .footer-wrapper {
+    padding: 12px 15px 5px 15px;
+  }
+}

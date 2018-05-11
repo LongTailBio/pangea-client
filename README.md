@@ -4,7 +4,7 @@
 
 ## Getting Started
 
-`metagenscope-client` is run as part of [`metagenscope-main`](https://github.com/bchrobot/metagenscope-main).
+`metagenscope-client` is run as part of [`metagenscope-main`](https://github.com/longtailbio/metagenscope-main).
 
 ### Running
 
@@ -68,5 +68,5 @@ See also the list of [contributors][contributors] who participated in this proje
 This project is licensed under the MIT License - see the [`LICENSE.md`](LICENSE.md) file for details.
 
 
-[project-tags]: https://github.com/bchrobot/metagenscope-client/tags
-[contributors]: https://github.com/bchrobot/metagenscope-client/contributors
+[project-tags]: https://github.com/longtailbio/metagenscope-client/tags
+[contributors]: https://github.com/longtailbio/metagenscope-client/contributors

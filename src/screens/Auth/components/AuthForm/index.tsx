@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
-import { AxiosPromise } from 'axios';
+import { default as axios, CancelTokenSource } from 'axios';
 
 import { authenticate } from '../../../../services/api';
 
@@ -23,9 +23,13 @@ interface FormProp {
 }
 
 class AuthForm extends React.Component<FormProp, AuthFormState> {
+
+  protected sourceToken: CancelTokenSource;
+
   constructor(props: FormProp) {
     super(props);
 
+    this.sourceToken = axios.CancelToken.source();
     this.state = {
       formData: {
         username: '',
@@ -44,6 +48,10 @@ class AuthForm extends React.Component<FormProp, AuthFormState> {
     }
   }
 
+  componentWillUnmount() {
+    this.sourceToken.cancel();
+  }
+
   clearForm() {
     this.setState({
       formData: {username: '', email: '', password: ''}
@@ -59,27 +67,32 @@ class AuthForm extends React.Component<FormProp, AuthFormState> {
   handleUserFormSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formType = this.props.formType;
-    let request: AxiosPromise;
+    // tslint:disable-next-line no-any
+    let request: Promise<any>;
     if (formType === 'login') {
-      request = authenticate(formType, {
+      const payload = {
         email: this.state.formData.email,
         password: this.state.formData.password,
-      });
+      };
+      request = authenticate(formType, payload, this.sourceToken);
     }
     if (formType === 'register') {
-      request = authenticate(formType, {
+      const payload = {
         username: this.state.formData.username,
         email: this.state.formData.email,
         password: this.state.formData.password,
-      });
+      };
+      request = authenticate(formType, payload, this.sourceToken);
     }
     request!
       .then((res) => {
         this.clearForm();
-        this.props.loginUser(res.data.auth_token);
+        this.props.loginUser(res.data.data.auth_token);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        if (!axios.isCancel(error)) {
+          console.log(error);
+        }
       });
   }
 

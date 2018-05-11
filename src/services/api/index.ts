@@ -1,16 +1,10 @@
-import axios from 'axios';
+import { CancelTokenSource } from 'axios';
 
-import { API_BASE_URL } from './utils';
+import { API_BASE_URL, cancelableAxios } from './utils';
 import { JsonOrganizationType, OrganizationType } from './models/organization';
-import { AnalysisGroupType } from './models/analysisGroup';
-import {
-  QueryResultType,
-  QueryResultWrapper,
-  SampleSimilarityResultType,
-  TaxonAbundanceResultType,
-  ReadsClassifiedType,
-  HMPResultType,
-} from './models/queryResult';
+import { SampleGroupType } from './models/analysisGroup';
+import { SampleType } from './models/sample';
+import { AnalysisResultType, QueryResultWrapper } from './models/queryResult';
 
 type LoginType = {
   email: string;
@@ -18,12 +12,17 @@ type LoginType = {
   username?: string;
 };
 
-export const authenticate = function(formType: string, data: LoginType) {
-  const url = `${API_BASE_URL}/auth/${formType}`;
-  return axios.post(url, data);
+export const authenticate = (formType: string, data: LoginType, source: CancelTokenSource) => {
+  const options = {
+    url: `${API_BASE_URL}/auth/${formType}`,
+    method: 'post',
+    data,
+  };
+
+  return cancelableAxios(options, source);
 };
 
-export const createOrganization = function(name: string, adminEmail: string) {
+export const createOrganization = (name: string, adminEmail: string, source: CancelTokenSource) => {
   const options = {
     url: `${API_BASE_URL}/organizations`,
     method: 'post',
@@ -37,10 +36,10 @@ export const createOrganization = function(name: string, adminEmail: string) {
     },
   };
 
-  return axios(options);
+  return cancelableAxios(options, source);
 };
 
-export const getOrganizations = function() {
+export const getOrganizations = (source: CancelTokenSource) => {
   const options = {
     url: `${API_BASE_URL}/organizations`,
     method: 'get',
@@ -50,12 +49,12 @@ export const getOrganizations = function() {
     }
   };
 
-  return axios(options)
-    .then((res) => {
+  return cancelableAxios(options, source)
+    .then(res => {
       const rawOrganizations = res.data.data.organizations as Array<JsonOrganizationType>;
       const organizations: Array<OrganizationType> = rawOrganizations.map((organization) => {
         return {
-          id: organization.slug,
+          uuid: organization.uuid,
           name: organization.name,
           adminEmail: organization.admin_email,
           users: organization.users.users,
@@ -66,9 +65,9 @@ export const getOrganizations = function() {
     });
 };
 
-export const getOrganization = function(slug: string) {
+export const getOrganization = (uuid: string, source: CancelTokenSource) => {
   const options = {
-    url: `${API_BASE_URL}/organizations/${slug}`,
+    url: `${API_BASE_URL}/organizations/${uuid}`,
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
@@ -76,25 +75,28 @@ export const getOrganization = function(slug: string) {
     }
   };
 
-  return axios(options)
-    .then((res) => {
+  return cancelableAxios(options, source)
+    .then(res => {
       const rawOrganization = res.data.data.organization as JsonOrganizationType;
-      const sampleGroups = rawOrganization.sample_groups.sample_groups.map(group => {
-        group.description = 'Lorem ipsum description.';
-        return group;
-      });
+      for (let i = 0; i < rawOrganization.sample_groups.sample_groups.length; i++) {
+        const analysisUUID = res.data.data.organization.sample_groups.sample_groups[i].analysis_result_id;
+        let description = res.data.data.organization.sample_groups.sample_groups[i].description;
+        description = description !== '' ? description : 'Lorem ipsum description.';
+        rawOrganization.sample_groups.sample_groups[i].analysisResultId = analysisUUID;
+        rawOrganization.sample_groups.sample_groups[i].description = description;
+      }
       const organization = {
-        id: rawOrganization.slug,
+        uuid: rawOrganization.uuid,
         name: rawOrganization.name,
         adminEmail: rawOrganization.admin_email,
         users: rawOrganization.users.users,
-        sampleGroups: sampleGroups,
+        sampleGroups: rawOrganization.sample_groups.sample_groups,
       };
       return organization;
     });
 };
 
-export const getUserStatus = function() {
+export const getUserStatus = (source: CancelTokenSource) => {
   const options = {
     url: `${API_BASE_URL}/auth/status`,
     method: 'get',
@@ -104,15 +106,13 @@ export const getUserStatus = function() {
     },
   };
 
-  return axios(options)
-    .then((res) => {
-      return res.data.data;
-    });
+  return cancelableAxios(options, source)
+    .then(res => res.data.data);
 };
 
-export const getAnalysisGroup = function(slug: string) {
+export const getSampleGroup = (uuid: string, source: CancelTokenSource) => {
   const options = {
-    url: `${API_BASE_URL}/sample_group/${slug}`,
+    url: `${API_BASE_URL}/sample_groups/${uuid}`,
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
@@ -120,21 +120,23 @@ export const getAnalysisGroup = function(slug: string) {
     },
   };
 
-  return axios(options)
-    .then((res) => {
-      const sampleGroup: AnalysisGroupType = {
-        slug: res.data.data.sample_group.slug,
+  return cancelableAxios(options, source)
+    .then(res => {
+      const rawDescription = res.data.data.sample_group.description;
+      const sampleGroup: SampleGroupType = {
+        uuid: res.data.data.sample_group.uuid,
         name: res.data.data.sample_group.name,
-        queryResultId: res.data.data.sample_group.query_result_id,
-        description: '[description not supported yet]',
+        analysisResultId: res.data.data.sample_group.analysis_result_uuid,
+        description: rawDescription !== undefined ? rawDescription : '[description not supported yet]',
+        theme: res.data.data.sample_group.theme,
       };
       return sampleGroup;
     });
 };
 
-export const getQueryResults = function(id: string) {
+export const getSampleGroupSamples = (uuid: string, source: CancelTokenSource) => {
   const options = {
-    url: `${API_BASE_URL}/query_results/${id}`,
+    url: `${API_BASE_URL}/sample_groups/${uuid}/samples`,
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
@@ -142,15 +144,25 @@ export const getQueryResults = function(id: string) {
     },
   };
 
-  return axios(options)
-    .then((res) => {
-      return res.data.data as QueryResultType;
+  return cancelableAxios(options, source)
+    .then(res => {
+      const rawSamples = res.data.data.samples;
+      // tslint:disable-next-line no-any
+      const samples: SampleType[] = rawSamples.map((rawSample: any) => {
+        return {
+          uuid: rawSample.uuid,
+          name: rawSample.name,
+          analysisResultUuid: rawSample.analysis_result_uuid,
+          metadata: rawSample.metadata,
+        };
+      });
+      return samples;
     });
 };
 
-export const getSampleSimilarity = function(id: string) {
+export const getSample = (uuid: string, source: CancelTokenSource) => {
   const options = {
-    url: `${API_BASE_URL}/query_results/${id}/sample_similarity`,
+    url: `${API_BASE_URL}/samples/${uuid}`,
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
@@ -158,15 +170,22 @@ export const getSampleSimilarity = function(id: string) {
     },
   };
 
-  return axios(options)
-    .then((res) => {
-      return res.data.data as QueryResultWrapper<SampleSimilarityResultType>;
+  return cancelableAxios(options, source)
+    .then(res => {
+      const sample: SampleType = {
+        uuid: res.data.data.sample.uuid,
+        name: res.data.data.sample.name,
+        analysisResultUuid: res.data.data.sample.analysis_result_uuid,
+        metadata: res.data.data.sample.meta,
+        theme: res.data.data.sample.theme,
+      };
+      return sample;
     });
 };
 
-export const getTaxonAbundance = function(id: string) {
+export const getAnalysisResults = (uuid: string, source: CancelTokenSource) => {
   const options = {
-    url: `${API_BASE_URL}/query_results/${id}/taxon_abundance`,
+    url: `${API_BASE_URL}/analysis_results/${uuid}`,
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
@@ -174,15 +193,19 @@ export const getTaxonAbundance = function(id: string) {
     },
   };
 
-  return axios(options)
-    .then((res) => {
-      return res.data.data as QueryResultWrapper<TaxonAbundanceResultType>;
-    });
+  return cancelableAxios(options, source)
+    .then(res => res.data.data.analysis_result as AnalysisResultType);
 };
 
-export const getReadsClassified = function(id: string) {
+// tslint:disable-next-line no-any
+type ResultWrapperType<T> = (res: any) => QueryResultWrapper<T>;
+
+export const getAnalysisResult = <T>(uuid: string,
+                                     type: string,
+                                     source: CancelTokenSource,
+                                     wrapResult?: ResultWrapperType<T>) => {
   const options = {
-    url: `${API_BASE_URL}/query_results/${id}/reads_classified`,
+    url: `${API_BASE_URL}/analysis_results/${uuid}/${type}`,
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
@@ -190,40 +213,8 @@ export const getReadsClassified = function(id: string) {
     },
   };
 
-  return axios(options)
-    .then((res) => {
-      return res.data.data as QueryResultWrapper<ReadsClassifiedType>;
-    });
+  wrapResult = (wrapResult !== undefined) ? wrapResult : res => res.data.data as QueryResultWrapper<T>;
+
+  return cancelableAxios(options, source)
+    .then(wrapResult);
 };
-
-export const getHMP = function(id: string) {
-  const options = {
-    url: `${API_BASE_URL}/query_results/${id}/hmp`,
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${window.localStorage.authToken}`
-    },
-  };
-
-  return axios(options)
-    .then((res) => {
-      // Convert to Map types
-      const result = res.data.data as QueryResultWrapper<HMPResultType>;
-      if (result.data) {
-        const categoriesMap = buildMap(result.data.categories);
-        const dataMap = buildMap(result.data.data);
-        result.data.categories = categoriesMap;
-        result.data.data = dataMap;
-      }
-      return result;
-    });
-};
-
-function buildMap(obj: object) {
-  const map = new Map();
-  Object.keys(obj).forEach(key => {
-      map.set(key, obj[key]);
-  });
-  return map;
-}

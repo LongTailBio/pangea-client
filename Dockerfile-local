@@ -8,13 +8,14 @@ WORKDIR /usr/src/app
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
 # Install and cache app dependencies
-ADD package.json /usr/src/app/package.json
+COPY package.json /usr/src/app/package.json
 RUN npm install --silent
-RUN npm install react-scripts@0.9.5 -g --silent
 
-ADD typings.json /usr/src/app/typings.json
-RUN npm install typings -g --silent
+COPY typings.json /usr/src/app/typings.json
 RUN typings install
+
+# Add app
+COPY . /usr/src/app
 
 # Start app
 CMD ["npm", "start"]

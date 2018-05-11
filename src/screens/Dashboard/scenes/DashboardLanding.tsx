@@ -5,7 +5,7 @@ class DashboardLanding extends React.Component<{}, {}> {
   render() {
     return (
       <Row>
-        <Col>
+        <Col lg={12}>
           <h1>Dashboard</h1>
           <p>Something will go here eventually&hellip;</p>
         </Col>

@@ -1,0 +1,25 @@
+ul.categories-control {
+  margin: 0 0 0 10px;
+  padding: 0;
+  list-style: none;
+  max-height: 240px;
+  overflow-y: scroll;
+}
+
+ul.categories-control li {
+  margin: 5px 0;
+  cursor: pointer;
+  color: #888888;
+  word-break: break-all;
+}
+
+ul.categories-control li:hover {
+  color: #333333;
+}
+
+ul.categories-control li span {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  margin-right: 5px;
+}

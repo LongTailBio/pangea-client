@@ -6,7 +6,7 @@ const heroBackground = require('./images/red-banner.png');
 const expert = require('./images/expert.png');
 const lightBulb = require('./images/light-bulb.png');
 
-const heroStyle = {
+const heroStyle: React.CSSProperties = {
   height: '400px',
   backgroundSize: 'cover',
   backgroundImage: `url( ${heroBackground} )`,
@@ -41,9 +41,9 @@ class HomeScreen extends React.Component {
                 <h3>For Scientists<br/>By Scientists</h3>
               </Col>
               <Col md={8}>
-                <blockquote>MetaGenScope acts as a computational microscope that gives researchers direct access to 
-                  their results. It visualizes many different anlyses of metagenomic data allowing researchers to 
-                  quickly explore and understand their data. Data can be explored both as individual samples or as 
+                <blockquote>MetaGenScope acts as a computational microscope that gives researchers direct access to
+                  their results. It visualizes many different anlyses of metagenomic data allowing researchers to
+                  quickly explore and understand their data. Data can be explored both as individual samples or as
                   complete projects.</blockquote>
               </Col>
             </Row>
@@ -57,7 +57,7 @@ class HomeScreen extends React.Component {
                 <h3>Complex Analyses Made Easy</h3>
               </Col>
               <Col md={8}>
-                <blockquote>MetaGenScope is a visualizer for many common metagenomic tools like MetaPhlAn2, Kraken, 
+                <blockquote>MetaGenScope is a visualizer for many common metagenomic tools like MetaPhlAn2, Kraken,
                   MicrobeCensus, and ShortBred. Beyond taxonomic profiles MetaGenScope aims to give a multifaceted view
                   of samples communicating the incredible complexity of bacterial samples.</blockquote>
               </Col>

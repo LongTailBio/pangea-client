@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "build/dist",
-    "module": "commonjs",
+    "module": "esnext",
     "target": "es5",
     "lib": ["es6", "dom", "es2017.object"],
     "sourceMap": true,
@@ -27,6 +27,7 @@
     "src/setupTests.ts"
   ],
   "files": [
-    "typings/index.d.ts"
+    "typings/index.d.ts",
+    "src/@types/index.d.ts"
   ]
 }

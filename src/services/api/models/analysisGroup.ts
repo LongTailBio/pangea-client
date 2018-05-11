@@ -1,6 +1,7 @@
-export interface AnalysisGroupType {
-  slug: string;
+export interface SampleGroupType {
+  uuid: string;
   name: string;
-  queryResultId: string;
+  analysisResultId: string;
   description: string;
+  theme?: string;
 }

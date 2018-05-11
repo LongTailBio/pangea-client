@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Row, Col, Table, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Helmet } from 'react-helmet';
+import { default as axios, CancelTokenSource } from 'axios';
 
 import { OrganizationType } from '../../../../services/api/models/organization';
 import { getOrganizations } from '../../../../services/api';
@@ -13,9 +14,12 @@ interface OrganizationsState {
 
 class OrganizationsList extends React.Component<{}, OrganizationsState> {
 
+  protected sourceToken: CancelTokenSource;
+
   constructor(props: {}) {
     super(props);
 
+    this.sourceToken = axios.CancelToken.source();
     this.state = {
       organizations: [],
     };
@@ -23,13 +27,19 @@ class OrganizationsList extends React.Component<{}, OrganizationsState> {
 
   componentDidMount() {
     // Assume that we are authenticated because Dashboard catches that
-    getOrganizations()
+    getOrganizations(this.sourceToken)
       .then((organizations) => {
         this.setState({ organizations });
       })
       .catch((error) => {
-        console.log(error);
+        if (!axios.isCancel(error)) {
+          console.log(error);
+        }
       });
+  }
+
+  componentWillUnmount() {
+    this.sourceToken.cancel();
   }
 
   render() {
@@ -38,7 +48,7 @@ class OrganizationsList extends React.Component<{}, OrganizationsState> {
         <Helmet>
           <title>MetaGenScope :: Organizations</title>
         </Helmet>
-        <Col>
+        <Col lg={12}>
           <h1>Organizations</h1>
           <Table striped={true} hover={true}>
             <thead>
@@ -52,7 +62,7 @@ class OrganizationsList extends React.Component<{}, OrganizationsState> {
                 this.state.organizations.map((organization, index) => {
                   return (
                     <tr key={index}>
-                      <td><Link to={`/organizations/${organization.id}`}>{organization.name}</Link></td>
+                      <td><Link to={`/organizations/${organization.uuid}`}>{organization.name}</Link></td>
                       <td>{organization.adminEmail}</td>
                     </tr>
                   );

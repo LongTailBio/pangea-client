@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import { default as axios, CancelTokenSource } from 'axios';
 
 import { getUserStatus } from '../../services/api';
 
@@ -17,8 +18,12 @@ interface UserState {
 
 class UserStatus extends React.Component<UserProps, UserState> {
 
+  protected sourceToken: CancelTokenSource;
+
   constructor (props: UserProps) {
     super(props);
+
+    this.sourceToken = axios.CancelToken.source();
     this.state = {
       created_at: '',
       email: '',
@@ -29,14 +34,20 @@ class UserStatus extends React.Component<UserProps, UserState> {
 
   componentDidMount() {
     if (this.props.isAuthenticated) {
-      getUserStatus()
+      getUserStatus(this.sourceToken)
         .then((userState) => {
           this.setState(userState);
         })
         .catch((error) => {
-          console.log(error);
+          if (!axios.isCancel(error)) {
+            console.log(error);
+          }
         });
     }
+  }
+
+  componentWillUnmount() {
+    this.sourceToken.cancel();
   }
 
   render() {

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Row, Col, Nav, NavItem, Glyphicon, Badge } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
+import { default as axios, CancelTokenSource } from 'axios';
 
 import OrganizationProjects from './scenes/OrganizationProjects';
 import PeopleList from './scenes/OrganizationPeople/components/PeopleList';
@@ -14,7 +15,7 @@ import { OrganizationType } from '../../../../services/api/models/organization';
 import { getOrganization } from '../../../../services/api';
 
 interface OrganizationsProps {
-  slug: string;
+  uuid: string;
 }
 
 interface OrganizationState {
@@ -23,9 +24,12 @@ interface OrganizationState {
 
 class OrganizationDetail extends React.Component<OrganizationsProps, OrganizationState> {
 
+  protected sourceToken: CancelTokenSource;
+
   constructor(props: OrganizationsProps) {
     super(props);
 
+    this.sourceToken = axios.CancelToken.source();
     this.state = {
       organization: undefined,
     };
@@ -33,13 +37,19 @@ class OrganizationDetail extends React.Component<OrganizationsProps, Organizatio
 
   componentDidMount() {
     // Assume that we are authenticated because Dashboard catches that
-    getOrganization(this.props.slug)
+    getOrganization(this.props.uuid, this.sourceToken)
       .then((organization) => {
         this.setState({ organization });
       })
       .catch((error) => {
-        console.log(error);
+        if (!axios.isCancel(error)) {
+          console.log(error);
+        }
       });
+  }
+
+  componentWillUnmount() {
+    this.sourceToken.cancel();
   }
 
   render() {
@@ -55,7 +65,7 @@ class OrganizationDetail extends React.Component<OrganizationsProps, Organizatio
         </Helmet>
         {!this.state.organization &&
           <Row>
-            <Col>
+            <Col lg={12}>
               <h1>Not Found</h1>
               Go back to the <Link to="/organizations">organizations list</Link>.
             </Col>
@@ -64,7 +74,7 @@ class OrganizationDetail extends React.Component<OrganizationsProps, Organizatio
         {this.state.organization &&
           <div>
             <Row>
-              <Col>
+              <Col lg={12}>
                 <h1>{this.state.organization.name}</h1>
                 <p>This is a lab. It would have a description at some point. Maybe?</p>
                 <p>Admin email: <Link to={`mailto:${this.state.organization.adminEmail}`}>
@@ -74,17 +84,17 @@ class OrganizationDetail extends React.Component<OrganizationsProps, Organizatio
             </Row>
             <Row>
               <Nav bsStyle="tabs" activeKey="1">
-                <LinkContainer to={`/organizations/${this.props.slug}`} exact={true}>
-                  <NavItem eventKey="1"><Glyphicon glyph="star" /> Analysis Groups <Badge>
+                <LinkContainer to={`/organizations/${this.props.uuid}`} exact={true}>
+                  <NavItem eventKey="1"><Glyphicon glyph="star" /> Sample Groups <Badge>
                     {this.state.organization.sampleGroups.length}
                   </Badge></NavItem>
                 </LinkContainer>
-                <LinkContainer to={`/organizations/${this.props.slug}/people`}>
+                <LinkContainer to={`/organizations/${this.props.uuid}/people`}>
                   <NavItem eventKey="2"><Glyphicon glyph="user" /> People <Badge>
                     {this.state.organization.users.length}
                   </Badge></NavItem>
                 </LinkContainer>
-                <LinkContainer to={`/organizations/${this.props.slug}/settings`}>
+                <LinkContainer to={`/organizations/${this.props.uuid}/settings`}>
                   <NavItem eventKey="3"><Glyphicon glyph="cog" /> Settings</NavItem>
                 </LinkContainer>
               </Nav>
@@ -93,13 +103,13 @@ class OrganizationDetail extends React.Component<OrganizationsProps, Organizatio
             <Switch>
               <Route
                 exact={true}
-                path="/organizations/:slug"
+                path="/organizations/:uuid"
                 render={(props) => {
                   const users = this.state.organization ? this.state.organization.users : [];
                   const sampleGroups = this.state.organization ? this.state.organization.sampleGroups : [];
                   return (
                     <OrganizationProjects
-                      slug={props.match.params.slug}
+                      uuid={props.match.params.uuid}
                       users={users}
                       sampleGroups={sampleGroups}
                     />
@@ -108,28 +118,28 @@ class OrganizationDetail extends React.Component<OrganizationsProps, Organizatio
               />
               <Route
                 exact={true}
-                path="/organizations/:slug/people"
+                path="/organizations/:uuid/people"
                 render={(props) => {
                   const users = this.state.organization ? this.state.organization.users : [];
                   return (
-                    <PeopleList orgSlug={props.match.params.slug} people={users} />
+                    <PeopleList orguuid={props.match.params.uuid} people={users} />
                   );
                 }}
               />
               <Route
                 exact={true}
-                path="/organizations/:slug/people/:username"
+                path="/organizations/:uuid/people/:username"
                 render={(props) => (
                   <PersonDetail
-                    orgSlug={props.match.params.slug}
+                    orguuid={props.match.params.uuid}
                     username={props.match.params.username}
                   />
                 )}
               />
               <Route
-                path="/organizations/:slug/settings"
+                path="/organizations/:uuid/settings"
                 render={(props) => (
-                  <OrganizationSettings slug={props.match.params.slug} />
+                  <OrganizationSettings uuid={props.match.params.uuid} />
                 )}
               />
             </Switch>
