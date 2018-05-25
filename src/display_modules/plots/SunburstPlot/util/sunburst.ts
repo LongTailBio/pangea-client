@@ -75,7 +75,7 @@ export default class Sunburst {
     const y = d3.scaleSqrt()
         .range([0, radius]);
 
-    const color = d3.scaleOrdinal(d3.schemeCategory20c);
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     const root = d3.hierarchy(options.data)
         .sum(d => d.children.length === 0 ? d.size : 0);

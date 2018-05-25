@@ -146,7 +146,7 @@ export class MicrobeDirectoryContainer extends React.Component<MicrobeDirectoryP
 
     const sampleNames = Object.keys(this.props.data.samples);
     const propertyNames = Object.keys(this.props.data.samples[sampleNames[0]]);
-    this.color = d3.scaleOrdinal(d3.schemeCategory20);
+    this.color = d3.scaleOrdinal(d3.schemeCategory10);
 
     this.state = {
       activeProperty: propertyNames[0],

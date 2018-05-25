@@ -33,7 +33,7 @@ export default class AlphaDivContainer extends React.Component<AlphaDivProps, Al
   constructor(props: AlphaDivProps) {
     super(props);
 
-    this.color = d3.scaleOrdinal(d3.schemeCategory20);
+    this.color = d3.scaleOrdinal(d3.schemeCategory10);
 
     this.handleToolChange = this.handleToolChange.bind(this);
     this.handleMetricChange = this.handleMetricChange.bind(this);

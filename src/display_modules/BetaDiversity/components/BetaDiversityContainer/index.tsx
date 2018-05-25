@@ -26,7 +26,7 @@ export default class BetaDiversityContainer extends React.Component<BetaDiversit
   constructor(props: BetaDiversityProps) {
     super(props);
 
-    this.color = d3.scaleOrdinal(d3.schemeCategory20);
+    this.color = d3.scaleOrdinal(d3.schemeCategory10);
 
     const metadata = this.metaDataFromProps(this.props);
     this.state = {

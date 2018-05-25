@@ -3,11 +3,13 @@ import { Dropdown, Glyphicon } from 'react-bootstrap';
 
 import { DownloadButtonItem } from './components/DownloadButtonItem';
 
+export interface DownloadButtonAction {
+  title: string;
+  action(): void;
+}
+
 export interface DownloadButtonProps {
-  actions: {
-    title: string;
-    action(): void;
-  }[];
+  actions: DownloadButtonAction[];
 }
 
 export const DownloadButton = (props: DownloadButtonProps) => {
