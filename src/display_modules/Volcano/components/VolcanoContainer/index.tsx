@@ -162,18 +162,74 @@ export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState
     };
   }
 
+  pvalueChartOptions(tool: string, category: string, categoryValue: string): Highcharts.Options {
+    const data = this.props.data.tools[tool].tool_categories[category][categoryValue].pval_histogram;
+    const seriesData: Highcharts.DataPoint[] = data.map(datum => {
+      return {
+        x: datum.xval,
+        y: datum.yval,
+      };
+    });
+
+    const options: Highcharts.Options = {
+      chart: {
+        type: 'column',
+        spacingTop: 5,
+        spacingLeft: 5,
+        spacingRight: 5,
+      },
+      title: {
+        text: 'P Values',
+      },
+      xAxis: {
+        tickInterval: 0.05,
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: '',
+        }
+      },
+      plotOptions: {
+        column: {
+          groupPadding: 0,
+          pointPadding: 0,
+          borderWidth: 0,
+        }
+      },
+      exporting: {
+        enabled: false,
+      },
+      legend: { enabled: false},
+      series: [{
+        name: 'P-Value',
+        data: seriesData,
+      }]
+    };
+
+    return options;
+  }
+
   render() {
     const {activeTool, activeCategory, activeCategoryValue} = this.state,
           activeCategoryValues = this.categoriesByTool[activeTool][activeCategory];
     const chartOptions = this.chartOptions(activeTool, activeCategory, activeCategoryValue);
+    const pvalOptions = this.pvalueChartOptions(activeTool, activeCategory, activeCategoryValue);
 
     return (
       <Row>
-        <Col lg={9}>
+        <Col lg={7}>
           <HighChartsPlot
             chartId="volcano"
             options={chartOptions}
             chartRef={this.props.chartRef}
+          />
+        </Col>
+        <Col lg={2}>
+          <HighChartsPlot
+            chartId="volcano-pval"
+            options={pvalOptions}
+            chartRef={() => {}} // tslint:disable-line no-empty
           />
         </Col>
         <Col lg={3}>
