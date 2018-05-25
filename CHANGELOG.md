@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - P-Value histogram for Volcano plot.
+- TopTaxa display module.
 
 ### Changed
 - Updated D3 to version 5.0.0.

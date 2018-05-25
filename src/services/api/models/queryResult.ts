@@ -227,6 +227,16 @@ export interface MicrobeDirectoryType {
   };
 }
 
+export interface TopTaxaType {
+  samples: {
+    // Sample name
+    [key: string]: {
+      abundance: number;
+      prevalence: number;
+    };
+  };
+}
+
 export interface QueryResultWrapper<T> {
   status: QueryResultStatus;
   data?: T;
