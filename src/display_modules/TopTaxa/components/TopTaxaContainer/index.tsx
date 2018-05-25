@@ -13,6 +13,8 @@ const chartOptions = function(data: TopTaxaProps): Highcharts.Options {
   const abundanceSeries = sampleNames.map(sampleName => samples[sampleName].abundance);
   const prevalenceSeries = sampleNames.map(sampleName => samples[sampleName].prevalence);
 
+  const colors = Highcharts.getOptions().colors!;
+
   const options: Highcharts.Options = {
     chart: {
       zoomType: 'xy'
@@ -29,13 +31,13 @@ const chartOptions = function(data: TopTaxaProps): Highcharts.Options {
         title: {
           text: 'Abundance',
           style: {
-            color: Highcharts.getOptions().colors[1]
+            color: colors[1],
           }
         },
         labels: {
           format: '{value}°C',
           style: {
-            color: Highcharts.getOptions().colors[1]
+            color: colors[1]
           }
         },
       },
@@ -43,13 +45,13 @@ const chartOptions = function(data: TopTaxaProps): Highcharts.Options {
         title: {
           text: 'Prevalence',
           style: {
-            color: Highcharts.getOptions().colors[0]
+            color: colors[0]
           }
         },
         labels: {
           format: '{value} mm',
           style: {
-            color: Highcharts.getOptions().colors[0]
+            color: colors[0]
           }
         },
         opposite: true,
@@ -101,7 +103,7 @@ export const TopTaxaContainer: React.SFC<TopTaxaProps> = (props) => {
         <HighChartsPlot
           chartId="top-taxa"
           options={options}
-          chartRef={this.props.chartRef}
+          chartRef={props.chartRef}
         />
       </Col>
     </Row>
