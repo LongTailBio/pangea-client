@@ -24,7 +24,7 @@ export class HMPContainer extends React.Component<HMPProps, HMPState> {
   constructor(props: HMPProps) {
     super(props);
 
-    this.color = d3.scaleOrdinal(d3.schemeCategory20);
+    this.color = d3.scaleOrdinal(d3.schemeCategory10);
 
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
     this.handleColorByCategoryChanged = this.handleColorByCategoryChanged.bind(this);

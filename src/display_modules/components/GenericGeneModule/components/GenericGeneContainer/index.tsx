@@ -29,7 +29,7 @@ export default class GenericGeneContainer extends React.Component<GenericGenePro
   constructor(props: GenericGeneProps) {
     super(props);
 
-    this.color = d3.scaleOrdinal(d3.schemeCategory20);
+    this.color = d3.scaleOrdinal(d3.schemeCategory10);
 
     this.state = {
       activeMetric: 'rpkm',
