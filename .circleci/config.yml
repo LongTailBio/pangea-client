@@ -1,5 +1,35 @@
 version: 2
 
+# Common steps for building client Docker image
+build_steps: &build_steps
+  docker:
+    - image: circleci/node:9.2.0
+
+  steps:
+    - checkout
+
+    - setup_remote_docker
+
+    - run:
+        name: Set COMMIT env var
+        command: echo 'export COMMIT=${CIRCLE_SHA1::8}' >> $BASH_ENV
+
+    - run:
+        name: Sign in to Docker Hub
+        command: docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
+
+    - run:
+        name: Build and push web service
+        environment:
+          CLIENT_SERVICE: metagenscope-client
+          NODE_ENV: production
+        command: |
+          docker build . -t $CLIENT_SERVICE:$COMMIT
+          docker tag $CLIENT_SERVICE:$COMMIT $DOCKER_ORG/$CLIENT_SERVICE:$TAG
+          docker push $DOCKER_ORG/$CLIENT_SERVICE
+
+
+# CircleCI Jobs
 jobs:
   run_tests:
     docker:
@@ -59,35 +89,10 @@ jobs:
             docker build . -t $CLIENT_SERVICE:$COMMIT
 
   build_staging:
-    docker:
-      - image: circleci/node:9.2.0
-
+    <<: *build_steps
     environment:
       TAG: staging
       DOCKER_ORG: metagenscope
-
-    steps:
-      - checkout
-
-      - setup_remote_docker
-
-      - run:
-          name: Set COMMIT env var
-          command: echo 'export COMMIT=${CIRCLE_SHA1::8}' >> $BASH_ENV
-
-      - run:
-          name: Sign in to Docker Hub
-          command: docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
-
-      - run:
-          name: Build and push web service
-          environment:
-            CLIENT_SERVICE: metagenscope-client
-            NODE_ENV: production
-          command: |
-            docker build . -t $CLIENT_SERVICE:$COMMIT
-            docker tag $CLIENT_SERVICE:$COMMIT $DOCKER_ORG/$CLIENT_SERVICE:$TAG
-            docker push $DOCKER_ORG/$CLIENT_SERVICE
 
   deploy_staging:
     docker:
@@ -103,8 +108,17 @@ jobs:
             echo "$STAGING_MACHINE_IP $STAGING_MACHINE_HOST_KEY" > ~/tmp_auth_hosts
             ssh -A -o "UserKnownHostsFile ~/tmp_auth_hosts" $STAGING_MACHINE_USER@$STAGING_MACHINE_IP "cd /home/metagenscope/metagenscope-app && sh deploy.sh"
 
+  build_master:
+    <<: *build_steps
+    environment:
+      TAG: latest
+      DOCKER_ORG: metagenscope
+
+
+# CircleCI Workflows
 workflows:
   version: 2
+
   test-and-deploy:
     jobs:
       - run_tests:
@@ -113,7 +127,9 @@ workflows:
           context: metagenscope-staging
           filters:
             branches:
-              ignore: develop
+              ignore:
+                - develop
+                - master
           requires:
             - run_tests
       - build_staging:
@@ -130,3 +146,10 @@ workflows:
               only: develop
           requires:
             - build_staging
+      - build_master:
+          context: metagenscope-staging
+          filters:
+            branches:
+              only: master
+          requires:
+            - run_tests
