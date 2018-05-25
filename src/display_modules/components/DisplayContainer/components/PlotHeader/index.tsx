@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Popover, OverlayTrigger, Button, Glyphicon } from 'react-bootstrap';
 
-import { DownloadButton } from './components/DownloadButton';
+import { DownloadButton, DownloadButtonAction } from './components/DownloadButton';
 
 export interface PlotHeaderProps {
   title: string;
@@ -17,15 +17,18 @@ export const PlotHeader: React.StatelessComponent<PlotHeaderProps> = (props) => 
     </Popover>
   );
 
-  const actions = [
-    {
-      title: 'Download PNG image',
-      action: props.downloadPng,
-    },
-    {
-      title: 'Download CSV data',
-      action: props.downloadCsv,
-    },
+  const actions: DownloadButtonAction[] = [
+    // Re-enable download actions at some point:
+    // https://github.com/LongTailBio/metagenscope-client/issues/85
+
+    // {
+    //   title: 'Download PNG image',
+    //   action: props.downloadPng,
+    // },
+    // {
+    //   title: 'Download CSV data',
+    //   action: props.downloadCsv,
+    // },
   ];
 
   return (
