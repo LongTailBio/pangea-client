@@ -15,7 +15,6 @@ class AnalysisGroupListItem extends React.Component<Prop, {}> {
         <Link to={`/sample-groups/${this.props.group.uuid}`}>
           <h4>{this.props.group.name}</h4>
         </Link>
-        <p>{this.props.group.description}</p>
       </li>
     );
   }
