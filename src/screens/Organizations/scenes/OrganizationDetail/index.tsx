@@ -76,7 +76,6 @@ class OrganizationDetail extends React.Component<OrganizationsProps, Organizatio
             <Row>
               <Col lg={12}>
                 <h1>{this.state.organization.name}</h1>
-                <p>This is a lab. It would have a description at some point. Maybe?</p>
                 <p>Admin email: <Link to={`mailto:${this.state.organization.adminEmail}`}>
                   {this.state.organization.adminEmail}
                 </Link></p>
