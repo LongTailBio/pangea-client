@@ -7,11 +7,18 @@ import { TopTaxaType } from '../../../../services/api/models/queryResult';
 import { ChartRefProps } from '../../../components/DisplayContainer/highcharts';
 
 const chartOptions = function(data: TopTaxaProps): Highcharts.Options {
-  const samples = data.data.samples;
-  const sampleNames = Object.keys(samples);
+  const categoryNames = Object.keys(data.data.categories),
+        firstCategory = data.data.categories[categoryNames[0]];
+  const categoryValues = Object.keys(firstCategory),
+        firstValue = firstCategory[categoryValues[0]];
+  const toolNames = Object.keys(firstValue),
+        firstTool = firstValue[toolNames[0]];
+  const kingdomNames = Object.keys(firstTool),
+        firstKingdom = firstTool[kingdomNames[0]];
 
-  const abundanceSeries = sampleNames.map(sampleName => samples[sampleName].abundance);
-  const prevalenceSeries = sampleNames.map(sampleName => samples[sampleName].prevalence);
+  const taxaNames = Object.keys(firstKingdom.abundance);
+  const abundanceSeries = taxaNames.map(taxaName => firstKingdom.abundance[taxaName]);
+  const prevalenceSeries = taxaNames.map(taxaName => firstKingdom.prevalence[taxaName]);
 
   const colors = Highcharts.getOptions().colors!;
 
@@ -23,7 +30,7 @@ const chartOptions = function(data: TopTaxaProps): Highcharts.Options {
       text: 'Top 100 Taxa',
     },
     xAxis: [{
-      categories: sampleNames,
+      categories: taxaNames,
       crosshair: true,
     }],
     yAxis: [
@@ -31,13 +38,13 @@ const chartOptions = function(data: TopTaxaProps): Highcharts.Options {
         title: {
           text: 'Abundance',
           style: {
-            color: colors[1],
+            color: colors[0],
           }
         },
         labels: {
-          format: '{value}°C',
+          // format: '{value}°C',
           style: {
-            color: colors[1]
+            color: colors[0]
           }
         },
       },
@@ -45,13 +52,13 @@ const chartOptions = function(data: TopTaxaProps): Highcharts.Options {
         title: {
           text: 'Prevalence',
           style: {
-            color: colors[0]
+            color: colors[1]
           }
         },
         labels: {
-          format: '{value} mm',
+          // format: '{value} mm',
           style: {
-            color: colors[0]
+            color: colors[1]
           }
         },
         opposite: true,

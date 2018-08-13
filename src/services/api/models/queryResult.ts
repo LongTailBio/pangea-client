@@ -228,11 +228,26 @@ export interface MicrobeDirectoryType {
 }
 
 export interface TopTaxaType {
-  samples: {
-    // Sample name
+  categories: {
+    // Category name
     [key: string]: {
-      abundance: number;
-      prevalence: number;
+      // Category values
+      [key: string]: {
+        // Tool name
+        [key: string]: {
+          // Kingdom
+          [key: string]: {
+            abundance: {
+              // Taxa: value
+              [key: string]: number;
+            };
+            prevalence: {
+              // Taxa: value
+              [key: string]: number;
+            };
+          };
+        };
+      };
     };
   };
 }
