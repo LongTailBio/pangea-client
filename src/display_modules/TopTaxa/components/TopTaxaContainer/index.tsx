@@ -6,19 +6,15 @@ import HighChartsPlot from '../../../plots/HighChartsPlot';
 import { TopTaxaType } from '../../../../services/api/models/queryResult';
 import { ChartRefProps } from '../../../components/DisplayContainer/highcharts';
 
-const chartOptions = function(data: TopTaxaProps): Highcharts.Options {
-  const categoryNames = Object.keys(data.data.categories),
-        firstCategory = data.data.categories[categoryNames[0]];
-  const categoryValues = Object.keys(firstCategory),
-        firstValue = firstCategory[categoryValues[0]];
-  const toolNames = Object.keys(firstValue),
-        firstTool = firstValue[toolNames[0]];
-  const kingdomNames = Object.keys(firstTool),
-        firstKingdom = firstTool[kingdomNames[0]];
+import TopTaxaControls from './components/TopTaxaControls';
 
-  const taxaNames = Object.keys(firstKingdom.abundance);
-  const abundanceSeries = taxaNames.map(taxaName => firstKingdom.abundance[taxaName]);
-  const prevalenceSeries = taxaNames.map(taxaName => firstKingdom.prevalence[taxaName]);
+const chartOptions = function(data: TopTaxaType, state: TopTaxaState): Highcharts.Options {
+  const { category, categoryValue, tool, kingdom } = state;
+  const chartData = data.categories[category][categoryValue][tool][kingdom];
+
+  const taxaNames = Object.keys(chartData.abundance);
+  const abundanceSeries = taxaNames.map(taxaName => chartData.abundance[taxaName]);
+  const prevalenceSeries = taxaNames.map(taxaName => chartData.prevalence[taxaName]);
 
   const colors = Highcharts.getOptions().colors!;
 
@@ -101,18 +97,87 @@ export interface TopTaxaProps extends ChartRefProps {
   data: TopTaxaType;
 }
 
-export const TopTaxaContainer: React.SFC<TopTaxaProps> = (props) => {
-  const options = chartOptions(props);
+export interface TopTaxaState {
+  category: string;
+  categoryValue: string;
+  tool: string;
+  kingdom: string;
+}
 
-  return (
-    <Row>
-      <Col lg={12}>
-        <HighChartsPlot
-          chartId="top-taxa"
-          options={options}
-          chartRef={props.chartRef}
-        />
-      </Col>
-    </Row>
-  );
+const expandSelectedValues = (data: TopTaxaType, selectedValues?: TopTaxaState) => {
+  const defaults = { category: '', categoryValue: '', tool: '', kingdom: '' };
+  let { category, categoryValue, tool, kingdom} = selectedValues || defaults;
+
+  const categoryNames = Object.keys(data.categories);
+  category = category || categoryNames[0];
+  const categoryData = data.categories[category];
+
+  const categoryValues = Object.keys(categoryData);
+  categoryValue = categoryValue || categoryValues[0];
+  const categoryValueData = categoryData[categoryValue];
+
+  const toolNames = Object.keys(categoryValueData);
+  tool = tool || toolNames[0];
+  const firstTool = categoryValueData[tool];
+
+  const kingdomNames = Object.keys(firstTool);
+  kingdom = kingdom || kingdomNames[0];
+
+  return { categoryNames, category,
+           categoryValues, categoryValue,
+           toolNames, tool,
+           kingdomNames, kingdom };
 };
+
+export class TopTaxaContainer extends React.Component<TopTaxaProps, TopTaxaState> {
+
+  constructor(props: TopTaxaProps) {
+    super(props);
+
+    this.state = expandSelectedValues(this.props.data);
+
+    this.handleCategoryChange = this.handleCategoryChange.bind(this);
+  }
+
+  handleCategoryChange(category: string) {
+    const categoryValue = Object.keys(this.props.data.categories[category])[0];
+    this.setState({ category, categoryValue });
+  }
+
+  render() {
+    const options = chartOptions(this.props.data, this.state);
+
+    const { categoryNames, category,
+            categoryValues, categoryValue,
+            toolNames, tool,
+            kingdomNames, kingdom } = expandSelectedValues(this.props.data, this.state);
+
+    return (
+      <Row>
+        <Col lg={9}>
+          <HighChartsPlot
+            chartId="top-taxa"
+            options={options}
+            chartRef={this.props.chartRef}
+          />
+        </Col>
+        <Col lg={3}>
+          <TopTaxaControls
+            categories={categoryNames}
+            selectedCategory={category}
+            categoryValues={categoryValues}
+            selectedCategoryValue={categoryValue}
+            tools={toolNames}
+            selectedTool={tool}
+            kingdoms={kingdomNames}
+            selectedKingdom={kingdom}
+            handleCategoryChange={this.handleCategoryChange}
+            handleCategoryValueChange={newValue => this.setState({ categoryValue: newValue })}
+            handleToolChange={newTool => this.setState({ tool: newTool })}
+            handleKingdomChange={newKingdom => this.setState({ kingdom: newKingdom })}
+          />
+        </Col>
+      </Row>
+    );
+  }
+}
