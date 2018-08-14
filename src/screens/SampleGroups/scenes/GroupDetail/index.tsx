@@ -23,6 +23,7 @@ import { ReadsClassifiedModule } from '../../../../display_modules/ReadsClassifi
 import { ReadStatsModule } from '../../../../display_modules/ReadStats';
 import { SampleSimilarityModule } from '../../../../display_modules/SampleSimilarity';
 import { TaxonAbundanceModule } from '../../../../display_modules/TaxonAbundance';
+import { TopTaxaModule } from '../../../../display_modules/TopTaxa';
 import { VolcanoModule } from '../../../../display_modules/Volcano';
 
 import SampleList from './components/SampleList';
@@ -52,6 +53,7 @@ const mapping: [string, ModuleClassType][] = [
   ['functional_genes', Humann2NormalizeModule],
   ['pathways', PathwaysModule],
   ['taxon_abundance', TaxonAbundanceModule],
+  ['top_taxa', TopTaxaModule],
   ['virulence_factors', VFDBModule],
 ];
 

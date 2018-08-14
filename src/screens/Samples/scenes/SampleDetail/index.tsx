@@ -19,6 +19,7 @@ import VFDBModule from '../../../../display_modules/VFDB';
 import { MicrobeDirectoryModule } from '../../../../display_modules/MicrobeDirectory';
 import { ReadsClassifiedModule } from '../../../../display_modules/ReadsClassified';
 import { SampleTaxonomyModule } from '../../../../display_modules/SampleTaxonomy';
+import { TopTaxaModule } from '../../../../display_modules/TopTaxa';
 
 const mapping: [string, ModuleClassType][] = [
   ['reads_classified', ReadsClassifiedModule],
@@ -26,6 +27,7 @@ const mapping: [string, ModuleClassType][] = [
   ['macrobe_abundance', MacrobesModule],
   ['putative_ancestry', AncestryModule],
   ['taxa_tree', SampleTaxonomyModule],
+  ['top_taxa', TopTaxaModule],
   ['card_amr_genes', CARDModule],
   ['functional_genes', Humann2NormalizeModule],
   ['methyltransferases', MethylModule],

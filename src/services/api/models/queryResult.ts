@@ -250,6 +250,31 @@ export interface MultiAxisType {
   };
 }
 
+export interface TopTaxaType {
+  categories: {
+    // Category name
+    [key: string]: {
+      // Category values
+      [key: string]: {
+        // Tool name
+        [key: string]: {
+          // Kingdom
+          [key: string]: {
+            abundance: {
+              // Taxa: value
+              [key: string]: number;
+            };
+            prevalence: {
+              // Taxa: value
+              [key: string]: number;
+            };
+          };
+        };
+      };
+    };
+  };
+}
+
 export interface QueryResultWrapper<T> {
   status: QueryResultStatus;
   data?: T;
