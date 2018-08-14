@@ -227,6 +227,29 @@ export interface MicrobeDirectoryType {
   };
 }
 
+export interface MultiAxisType {
+  categories: {
+    // Category name: category values
+    [key: string]: string[];
+  };
+  axes: {
+    // Axis name
+    [key: string]: {
+      vals: {
+        // Sample name: axis value
+        [key: string]: number;
+      };
+    };
+  };
+  metadata: {
+    // Sample name
+    [key: string]: {
+      // Category: category value
+      [key: string]: string;
+    };
+  };
+}
+
 export interface TopTaxaType {
   categories: {
     // Category name

@@ -18,6 +18,7 @@ import PathwaysModule from '../../../../display_modules/Pathways';
 import MethylModule from '../../../../display_modules/Methyl';
 import VFDBModule from '../../../../display_modules/VFDB';
 import { MicrobeDirectoryModule } from '../../../../display_modules/MicrobeDirectory';
+import { MultiAxisModule } from '../../../../display_modules/MultiAxis';
 import { ReadsClassifiedModule } from '../../../../display_modules/ReadsClassified';
 import { ReadStatsModule } from '../../../../display_modules/ReadStats';
 import { SampleSimilarityModule } from '../../../../display_modules/SampleSimilarity';
@@ -48,6 +49,7 @@ const mapping: [string, ModuleClassType][] = [
   ['card_amr_genes', CARDModule],
   ['methyltransferases', MethylModule],
   ['microbe_directory', MicrobeDirectoryModule],
+  ['multi_axis_abundance', MultiAxisModule],
   ['functional_genes', Humann2NormalizeModule],
   ['pathways', PathwaysModule],
   ['taxon_abundance', TaxonAbundanceModule],
