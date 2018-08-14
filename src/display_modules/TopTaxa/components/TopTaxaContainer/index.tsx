@@ -12,7 +12,14 @@ const chartOptions = function(data: TopTaxaType, state: TopTaxaState): Highchart
   const { category, categoryValue, tool, kingdom } = state;
   const chartData = data.categories[category][categoryValue][tool][kingdom];
 
-  const taxaNames = Object.keys(chartData.abundance);
+  const taxaNames = Object.keys(chartData.abundance).sort((left, right) => {
+    if (chartData.abundance[left] < chartData.abundance[right]) {
+      return 1;
+    } else if (chartData.abundance[left] > chartData.abundance[right]) {
+      return -1;
+    }
+    return 0;
+  });
   const abundanceSeries = taxaNames.map(taxaName => chartData.abundance[taxaName]);
   const prevalenceSeries = taxaNames.map(taxaName => chartData.prevalence[taxaName]);
 
