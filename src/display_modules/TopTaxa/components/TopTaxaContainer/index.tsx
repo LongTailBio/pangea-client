@@ -30,7 +30,7 @@ const chartOptions = function(data: TopTaxaType, state: TopTaxaState): Highchart
       zoomType: 'xy'
     },
     title: {
-      text: 'Top 100 Taxa',
+      text: '',
     },
     xAxis: [{
       categories: taxaNames,
