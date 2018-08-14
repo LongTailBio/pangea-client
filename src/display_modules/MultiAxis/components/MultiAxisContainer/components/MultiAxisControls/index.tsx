@@ -1,14 +1,21 @@
 import * as React from 'react';
+import * as d3 from 'd3';
 import { Well, Row, Col } from 'react-bootstrap';
 
 import DropdownSelect from '../../../../../controls/DropdownSelect';
+import SelectCategory from '../../../../../controls/SelectCategory';
 
 type ControlsProps = {
+  color: d3.ScaleOrdinal<string, string>;
   axisChoices: string[];
   xAxis: string;
   yAxis: string;
+  categories: string[];
+  selectedCategory: string;
+  categoryValues: string[];
   handleXAxisChange(xAxis: string): void;
   handleYAxisChange(yAxis: string): void;
+  handleCategoryChange(category: string): void;
 };
 
 class MultiAxisControls extends React.Component<ControlsProps, {}> {
@@ -17,6 +24,13 @@ class MultiAxisControls extends React.Component<ControlsProps, {}> {
   }
 
   render() {
+    const values = this.props.categoryValues.map(categoryValue => {
+      return {
+        name: categoryValue,
+        color: this.props.color(categoryValue),
+      };
+    });
+
     return (
       <Well>
         <Row>
@@ -36,6 +50,17 @@ class MultiAxisControls extends React.Component<ControlsProps, {}> {
               activeOption={this.props.yAxis}
               controlId="mutli-axis-y-select"
               handleOptionChange={this.props.handleYAxisChange}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12}>
+            <SelectCategory
+              categories={this.props.categories}
+              selectedCategoryName={this.props.selectedCategory}
+              categoryValues={values}
+              activeCategoryChanged={() => {}}  // tslint:disable-line no-empty
+              colorByCategoryChanged={this.props.handleCategoryChange}
             />
           </Col>
         </Row>

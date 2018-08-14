@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as Highcharts from 'highcharts';
+import * as d3 from 'd3';
 import { Row, Col } from 'react-bootstrap';
 
 import { ChartRefProps } from '../../../components/DisplayContainer/highcharts';
@@ -16,6 +17,7 @@ interface MultiAxisProps extends ChartRefProps {
 interface MultiAxisState {
   xAxis: string;
   yAxis: string;
+  selectedCategory: string;
 }
 
 export class MultiAxisContainer extends React.Component<MultiAxisProps, MultiAxisState> {
@@ -23,22 +25,31 @@ export class MultiAxisContainer extends React.Component<MultiAxisProps, MultiAxi
   constructor(props: MultiAxisProps) {
     super(props);
 
-    const axes = Object.keys(props.data.axes);
+    const axes = Object.keys(props.data.axes),
+          categories = Object.keys(props.data.categories);
     this.state = {
       xAxis: axes[0],
       yAxis: axes[1],
+      selectedCategory: categories[0],
     };
   }
 
   render() {
     const axesData = this.props.data.axes;
-    const { xAxis, yAxis } = this.state;
+    const { xAxis, yAxis, selectedCategory } = this.state;
+
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    const categories = Object.keys(this.props.data.categories),
+          categoryValues = this.props.data.categories[selectedCategory];
 
     const sampleNames = Object.keys(axesData[xAxis].vals);
     const data: Highcharts.DataPoint[] = sampleNames.map(sampleName => {
+      const datumColor = color(this.props.data.metadata[sampleName][selectedCategory]);
       return {
         x: axesData[xAxis].vals[sampleName],
         y: axesData[yAxis].vals[sampleName],
+        color: datumColor,
       };
     });
 
@@ -48,11 +59,11 @@ export class MultiAxisContainer extends React.Component<MultiAxisProps, MultiAxi
         zoomType: 'xy',
       },
       title: {
-        text: `${xAxis} Versus ${yAxis}`,
+        text: `${xAxis.displayFormat()} Versus ${yAxis.displayFormat()}`,
       },
       xAxis: {
         title: {
-          text: xAxis,
+          text: xAxis.displayFormat(),
         },
         startOnTick: true,
         endOnTick: true,
@@ -60,18 +71,8 @@ export class MultiAxisContainer extends React.Component<MultiAxisProps, MultiAxi
       },
       yAxis: {
         title: {
-          text: yAxis,
+          text: yAxis.displayFormat(),
         },
-      },
-      legend: {
-        layout: 'vertical',
-        align: 'left',
-        verticalAlign: 'top',
-        x: 100,
-        y: 70,
-        floating: true,
-        backgroundColor: '#FFFFFF',
-        borderWidth: 1,
       },
       plotOptions: {
         scatter: {
@@ -97,10 +98,7 @@ export class MultiAxisContainer extends React.Component<MultiAxisProps, MultiAxi
           },
         },
       },
-      series: [{
-        color: 'rgba(223, 83, 83, .5)',
-        data,
-      }],
+      series: [{ data }],
       exporting: {
         enabled: false,
       },
@@ -117,11 +115,16 @@ export class MultiAxisContainer extends React.Component<MultiAxisProps, MultiAxi
         </Col>
         <Col lg={3}>
           <MultiAxisControls
+            color={color}
             axisChoices={Object.keys(axesData)}
             xAxis={xAxis}
             yAxis={yAxis}
+            categories={categories}
+            selectedCategory={selectedCategory}
+            categoryValues={categoryValues}
             handleXAxisChange={newXAxis => this.setState({ xAxis: newXAxis })}
             handleYAxisChange={newYAxis => this.setState({ yAxis: newYAxis })}
+            handleCategoryChange={newValue => this.setState({ selectedCategory: newValue })}
           />
         </Col>
       </Row>
