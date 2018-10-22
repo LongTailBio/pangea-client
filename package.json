@@ -17,7 +17,7 @@
     "react-highcharts": "^16.0.2",
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.3.1",
-    "react-scripts-ts": "2.17.0"
+    "react-scripts-ts": "3.1.0"
   },
   "scripts": {
     "start": "PORT=9000 react-scripts-ts start",
@@ -34,15 +34,15 @@
     "@types/d3-sankey": "^0.7.3",
     "@types/googlemaps": "^3.30.15",
     "@types/highcharts": "^5.0.31",
-    "@types/jest": "^22.2.3",
+    "@types/jest": "^23.3.5",
     "@types/markerclustererplus": "^2.1.29",
-    "@types/node": "^9.6.35",
+    "@types/node": "^10.12.0",
     "@types/react": "^16.4.18",
     "@types/react-bootstrap": "^0.32.14",
     "@types/react-dom": "^16.0.9",
     "@types/react-helmet": "^5.0.7",
     "@types/react-router-bootstrap": "^0.24.5",
     "@types/react-router-dom": "^4.3.1",
-    "typescript": "^2.9.2"
+    "typescript": "^3.1.3"
   }
 }

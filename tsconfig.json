@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "outDir": "build/dist",
     "module": "esnext",
     "target": "es5",
@@ -13,6 +14,7 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitAny": true,
+    "importHelpers": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true
@@ -25,9 +27,5 @@
     "webpack",
     "jest",
     "src/setupTests.ts"
-  ],
-  "files": [
-    "typings/index.d.ts",
-    "src/@types/index.d.ts"
   ]
 }
