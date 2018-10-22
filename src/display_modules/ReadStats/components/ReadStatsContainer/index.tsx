@@ -16,6 +16,7 @@ export interface ReadStatsProps extends ChartRefProps {
 }
 
 export interface ReadStatsState {
+  minimumCount: number;
   activeSource: string;
 }
 
@@ -30,6 +31,7 @@ export class ReadStatsContainer extends React.Component<ReadStatsProps, ReadStat
 
     this.state = {
       activeSource: READ_STATS_SOURCES[0],
+      minimumCount: 0,
     };
   }
 
@@ -51,7 +53,7 @@ export class ReadStatsContainer extends React.Component<ReadStatsProps, ReadStat
 
     let sortedVals: Array<[string, number]> = valueList.sort((el0, el1) => el0[1] - el1[1]);
     const sampleNames = sortedVals.map(el => el[0]);
-    const dataPoints = sortedVals.map(el => el[1]);
+    const dataPoints = sortedVals.map(el => el[1]).filter(num => num >= this.state.minimumCount);
 
     let yAxisTitle = '[unnamed]';
     if (activeSource === 'num_reads') {
@@ -107,7 +109,9 @@ export class ReadStatsContainer extends React.Component<ReadStatsProps, ReadStat
           <ReadStatsControls
             sources={READ_STATS_SOURCES}
             activeSource={activeSource}
+            activeCount={this.state.minimumCount}
             handleSourceChange={this.handleSourceChange}
+            handleMinimumChange={val => this.setState({minimumCount: val})}
           />
         </Col>
       </Row>
