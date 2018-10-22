@@ -67,6 +67,7 @@ class CreateOrganization extends React.Component<Props, CreateOrganizationState>
       })
       .catch((error) => {
         if (!axios.isCancel(error)) {
+          // tslint:disable-next-line:no-console
           console.log(error);
         }
       });

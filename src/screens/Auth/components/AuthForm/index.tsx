@@ -91,6 +91,7 @@ class AuthForm extends React.Component<FormProp, AuthFormState> {
       })
       .catch((error) => {
         if (!axios.isCancel(error)) {
+          // tslint:disable-next-line:no-console
           console.log(error);
         }
       });
