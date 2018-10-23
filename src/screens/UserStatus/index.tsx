@@ -40,6 +40,7 @@ class UserStatus extends React.Component<UserProps, UserState> {
         })
         .catch((error) => {
           if (!axios.isCancel(error)) {
+            // tslint:disable-next-line:no-console
             console.log(error);
           }
         });

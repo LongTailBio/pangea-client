@@ -18,9 +18,6 @@ RUN npm install pushstate-server -g --silent
 COPY package.json /usr/src/app/package.json
 RUN npm install --silent
 
-COPY typings.json /usr/src/app/typings.json
-RUN typings install
-
 # Add app
 COPY . /usr/src/app
 
