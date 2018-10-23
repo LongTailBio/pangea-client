@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "caniuse-db": "^1.0.30000898",
     "chroma-js": "^1.4.0",
     "commonmark": "^0.28.1",
     "d3": "^5.7.0",
