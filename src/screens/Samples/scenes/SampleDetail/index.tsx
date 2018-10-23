@@ -18,10 +18,12 @@ import PathwaysModule from '../../../../display_modules/Pathways';
 import VFDBModule from '../../../../display_modules/VFDB';
 import { MicrobeDirectoryModule } from '../../../../display_modules/MicrobeDirectory';
 import { ReadsClassifiedModule } from '../../../../display_modules/ReadsClassified';
+import { ReadsSummaryModule } from 'src/display_modules/ReadsSummary';
 import { SampleTaxonomyModule } from '../../../../display_modules/SampleTaxonomy';
 import { TopTaxaModule } from '../../../../display_modules/TopTaxa';
 
 const mapping: [string, ModuleClassType][] = [
+  ['read_stats', ReadsSummaryModule],
   ['reads_classified', ReadsClassifiedModule],
   ['hmp', HMPModule],
   ['macrobe_abundance', MacrobesModule],
