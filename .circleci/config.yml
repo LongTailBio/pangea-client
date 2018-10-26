@@ -1,5 +1,17 @@
 version: 2
 
+docker_build: &docker_build
+   command: |
+     docker build . -t $SERVICE_NAME:$COMMIT
+     docker tag $SERVICE_NAME:$COMMIT $DOCKER_ORG/$SERVICE_NAME:$DOCKER_TAG
+     if [ "$PUSH_GIT_COMMIT" = true ] ; then \
+       docker tag $SERVICE_NAME:$COMMIT $DOCKER_ORG/$SERVICE_NAME:$COMMIT; \
+     fi
+     if [ "$PUSH_GIT_TAG" = true ] && [ -n "$CIRCLE_TAG" ] ; then \
+       docker tag $SERVICE_NAME:$COMMIT $DOCKER_ORG/$SERVICE_NAME:$(echo "$COMMIT_TAG" | cut -c 2-); \
+     fi
+     docker push $DOCKER_ORG/$SERVICE_NAME
+
 # Common steps for building client Docker image
 build_steps: &build_steps
   docker:
@@ -21,12 +33,9 @@ build_steps: &build_steps
     - run:
         name: Build and push web service
         environment:
-          CLIENT_SERVICE: metagenscope-client
+          SERVICE_NAME: metagenscope-client
           NODE_ENV: production
-        command: |
-          docker build . -t $CLIENT_SERVICE:$COMMIT
-          docker tag $CLIENT_SERVICE:$COMMIT $DOCKER_ORG/$CLIENT_SERVICE:$TAG
-          docker push $DOCKER_ORG/$CLIENT_SERVICE
+        <<: *docker_build
 
 
 # CircleCI Jobs
@@ -87,8 +96,10 @@ jobs:
   build_staging:
     <<: *build_steps
     environment:
-      TAG: staging
+      DOCKER_TAG: staging
       DOCKER_ORG: metagenscope
+      PUSH_GIT_COMMIT: true
+      PUSH_GIT_TAG: false
 
   deploy_staging:
     docker:
@@ -104,11 +115,13 @@ jobs:
             echo "$STAGING_MACHINE_IP $STAGING_MACHINE_HOST_KEY" > ~/tmp_auth_hosts
             ssh -A -o "UserKnownHostsFile ~/tmp_auth_hosts" $STAGING_MACHINE_USER@$STAGING_MACHINE_IP "cd /home/metagenscope/metagenscope-app && sh deploy.sh"
 
-  build_master:
+  build_release:
     <<: *build_steps
     environment:
-      TAG: latest
+      DOCKER_TAG: latest
       DOCKER_ORG: metagenscope
+      PUSH_GIT_COMMIT: false
+      PUSH_GIT_TAG: true
 
 
 # CircleCI Workflows
@@ -142,10 +155,12 @@ workflows:
               only: develop
           requires:
             - build_staging
-      - build_master:
+      - build_release:
           context: metagenscope-staging
           filters:
+            tags:
+              only: /^v.*/
             branches:
-              only: master
+              ignore: /.*/
           requires:
             - run_tests
