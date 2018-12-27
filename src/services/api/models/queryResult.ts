@@ -66,7 +66,7 @@ export interface AGSResultType {
         q3_val: number;
         max_val: number;
       };
-    }[];
+    };
   };
 }
 
@@ -98,6 +98,7 @@ export interface AlphaDivResultType {
 export interface ReadsClassifiedType {
   samples: {
     [key: string]: {
+      [key: string]: number;
       viral: number;
       archaeal: number;
       bacterial: number;
@@ -135,14 +136,16 @@ export interface SampleTaxonomyType {
   [key: string]: SunburstDataType;
 }
 
+export interface ReadStatsDataType {
+  gc_content: number;
+  num_reads: number;
+  codons: {[key: string]: number};
+  tetramers: {[key: string]: number};
+}
+
 export interface ReadStatsResultType {
   samples: {
-    [key: string]: {
-      gc_content: number,
-      num_reads: number,
-      codons: {[key: string]: number},
-      tetramers: {[key: string]: number},
-    };
+    [key: string]: ReadStatsDataType;
   };
 }
 
@@ -162,6 +165,7 @@ export interface GenericGeneType {
 export interface PathwaysType {
   samples: {
     [key: string]: {
+      [key: string]: {[key: string]: number};
       pathway_abundances: {[key: string]: number};
       pathway_coverages: {[key: string]: number};
     };

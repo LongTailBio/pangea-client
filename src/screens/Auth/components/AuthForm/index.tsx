@@ -7,6 +7,7 @@ import { default as axios, CancelTokenSource } from 'axios';
 import { authenticate } from '../../../../services/api';
 
 interface FormDataType {
+  [key: string]: string;
   username: string;
   email: string;
   password: string;

@@ -4,7 +4,7 @@ import { Popover, OverlayTrigger, Button, Glyphicon } from 'react-bootstrap';
 import { DownloadButton, DownloadButtonAction } from './components/DownloadButton';
 
 export interface PlotHeaderProps {
-  title: string;
+  title: string | undefined;
   description: React.ReactNode;
   downloadPng(): void;
   downloadCsv(): void;

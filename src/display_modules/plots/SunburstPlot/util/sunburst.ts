@@ -35,8 +35,8 @@ export default class Sunburst {
   protected rootDiv: d3.Selection<HTMLDivElement, {}, null, undefined>;
   protected svg: d3.Selection<SVGSVGElement, {}, null, undefined>;
 
-  protected tooltip: d3.Selection<d3.BaseType, {}, null, undefined>;
-  protected canvas: d3.Selection<d3.BaseType, {}, null, undefined>;
+  protected tooltip: d3.Selection<HTMLDivElement, {}, null, undefined>;
+  protected canvas: d3.Selection<SVGGElement, Node, null, undefined>;
 
   /**
    * Create Sunburst plot
@@ -55,7 +55,7 @@ export default class Sunburst {
       .style('opacity', 0);
 
     // Add canvas
-    this.canvas = this.svg.append('g').attr('class', 'canvas');
+    this.canvas = this.svg.append('g').attr('class', 'canvas').data<Node>([]);
   }
 
   /**
@@ -118,8 +118,8 @@ export default class Sunburst {
 
       // Then highlight only those that are an ancestor of the current segment.
       const ancestors = getAncestors(node);
-      safeCanvas.datum(root).selectAll('path')
-          .filter((filterNode: Node) => ancestors.indexOf(filterNode) >= 0)
+      safeCanvas.datum(root).selectAll<SVGPathElement, Node>('path')
+          .filter(filterNode => ancestors.indexOf(filterNode) >= 0)
           .style('opacity', 1);
     }
 
@@ -130,13 +130,13 @@ export default class Sunburst {
       safeTooltip.transition()
           .duration(200)
           .style('opacity', 0.0);
-      safeCanvas.selectAll('path')
+      safeCanvas.selectAll<SVGPathElement, Node>('path')
           .on('mouseover', null)
           .transition()
           .duration(300)
           .style('opacity', 1.0)
           .on('end', function() {
-            d3.select(this).on('mouseover', onMouseOver);
+            d3.select<SVGPathElement, Node>(this).on('mouseover', onMouseOver);
           });
     }
 
@@ -157,7 +157,7 @@ export default class Sunburst {
               y.domain(yd(t)).range(yr(t));
             };
           })
-          .selectAll('path')
+          .selectAll<SVGPathElement, Node>('path')
               .attrTween('d', (tweenNode: Node) => (t => arc(tweenNode)!));
     }
 
@@ -166,7 +166,7 @@ export default class Sunburst {
 
     // Add a <g> element for each node in thd data, then append <path> elements and draw lines based on the arc
     // variable calculations. Last, color the lines and the slices.
-    const nodeGroups = this.canvas.selectAll('.node').data(nodes);
+    const nodeGroups = this.canvas.selectAll<SVGPathElement, Node>('.node').data(nodes);
     nodeGroups.enter().append('path')
         .attr('class', 'node')
         .on('mouseover', onMouseOver)

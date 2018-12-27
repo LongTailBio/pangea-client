@@ -9,10 +9,10 @@ export interface SunburstProps extends SunburstOptionsType, SvgRefProps { }
 
 export default class SunburstPlot extends React.Component<SunburstProps, {}> {
 
-  private rootDiv: HTMLDivElement | null;
-  private sunburstSvg: SVGSVGElement | null;
+  private rootDiv: HTMLDivElement | null = null;
+  private sunburstSvg: SVGSVGElement | null = null;
 
-  private sunburst: Sunburst | null;
+  private sunburst: Sunburst | null = null;
 
   componentDidMount() {
     if (!(this.rootDiv === null || this.sunburstSvg === null)) {

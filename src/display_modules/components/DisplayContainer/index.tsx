@@ -23,7 +23,7 @@ interface WrapperState<D> {
  */
 export class DisplayContainer<D, P = {}> extends React.Component<DisplayContainerProps & P, WrapperState<D>> {
 
-  protected title: string;
+  protected title: string | undefined;
   protected description: React.ReactNode;
 
   // Polling interval (ms)

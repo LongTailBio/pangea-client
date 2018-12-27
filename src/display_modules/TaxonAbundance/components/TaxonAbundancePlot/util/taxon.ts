@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import * as d3_sankey from 'd3-sankey';
-import * as chroma from 'chroma-js';
+import chroma from 'chroma-js';
 
 // Input types
 export interface Node {
@@ -213,7 +213,7 @@ export function createTaxonAbundance(rootDiv: HTMLDivElement, rawSVG: SVGSVGElem
         .style('top', `${(eventY - 40)}px`);
 
       // Highlight all connected links (incoming and outgoing)
-      svg.selectAll('.link')
+      svg.selectAll<SVGPathElement, SankeyLink>('.link')
         .attr('class', (link: SankeyLink) => {
           const source = link.source as SankeyNode,
                 target = link.target as SankeyNode,

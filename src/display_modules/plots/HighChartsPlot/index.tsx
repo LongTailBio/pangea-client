@@ -19,7 +19,7 @@ export interface HighChartsPlotProps extends ChartRefProps {
 
 export default class HighChartsPlot extends React.Component<HighChartsPlotProps, {}> {
 
-  protected chart: Highcharts.ChartObject;
+  protected chart: Highcharts.ChartObject | undefined;
 
   /** @inheritdoc */
   componentDidMount() {

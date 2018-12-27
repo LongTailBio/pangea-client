@@ -12,8 +12,8 @@ export interface GenericGeneProps extends DisplayContainerProps {
 
 export default class GenericGeneModule extends D3DisplayContainer<GenericGeneType, GenericGeneProps> {
 
-  protected chartId: string;
-  protected yAxisTitle: string;
+  protected chartId: string = '';
+  protected yAxisTitle: string = '';
 
   /** @inheritdoc */
   plotContainer(data: GenericGeneType): JSX.Element {

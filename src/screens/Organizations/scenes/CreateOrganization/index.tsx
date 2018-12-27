@@ -7,6 +7,7 @@ import { default as axios, CancelTokenSource } from 'axios';
 import { createOrganization } from '../../../../services/api';
 
 type FormDataType = {
+  [key: string]: string;
   name: string;
   adminEmail: string;
 };

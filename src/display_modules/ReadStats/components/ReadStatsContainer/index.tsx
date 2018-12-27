@@ -22,7 +22,7 @@ export interface ReadStatsState {
 
 export class ReadStatsContainer extends React.Component<ReadStatsProps, ReadStatsState> {
 
-  protected color: d3.ScaleOrdinal<string, string>;
+  protected color: d3.ScaleOrdinal<string, string> | undefined;
 
   constructor(props: ReadStatsProps) {
     super(props);
@@ -47,7 +47,9 @@ export class ReadStatsContainer extends React.Component<ReadStatsProps, ReadStat
     const samples = this.props.data.samples;
 
     Object.keys(samples).forEach(sampleName => {
-      const value = samples[sampleName][activeSource];
+      const sample = samples[sampleName];
+      // @ts-ignore: Index signature -- we force selection from READ_STATS_SOURCES
+      const value = sample[activeSource] as number;
       valueList.push([sampleName, value]);
     });
 

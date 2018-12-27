@@ -6,7 +6,7 @@ export interface SvgRefProps {
 
 export default class D3DisplayContainer<D, P = {}> extends DisplayContainer<D, P> {
 
-  protected svgCanvas: SVGSVGElement | null;
+  protected svgCanvas: SVGSVGElement | null = null;
 
   /** @inheritdoc */
   saveSvg() {
