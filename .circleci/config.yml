@@ -1,16 +1,23 @@
 version: 2
 
 docker_build: &docker_build
-   command: |
-     docker build . -t $SERVICE_NAME:$COMMIT
-     docker tag $SERVICE_NAME:$COMMIT $DOCKER_ORG/$SERVICE_NAME:$DOCKER_TAG
-     if [ "$PUSH_GIT_COMMIT" = true ] ; then \
-       docker tag $SERVICE_NAME:$COMMIT $DOCKER_ORG/$SERVICE_NAME:$COMMIT; \
-     fi
-     if [ "$PUSH_GIT_TAG" = true ] && [ -n "$CIRCLE_TAG" ] ; then \
-       docker tag $SERVICE_NAME:$COMMIT $DOCKER_ORG/$SERVICE_NAME:$(echo "$COMMIT_TAG" | cut -c 2-); \
-     fi
-     docker push $DOCKER_ORG/$SERVICE_NAME
+  command: |
+    docker build . -t $SERVICE_NAME:$COMMIT
+    docker tag $SERVICE_NAME:$COMMIT $DOCKER_ORG/$SERVICE_NAME:$DOCKER_TAG
+    if [ "$PUSH_GIT_COMMIT" = true ] ; then \
+      docker tag $SERVICE_NAME:$COMMIT $DOCKER_ORG/$SERVICE_NAME:$COMMIT; \
+    fi
+    if [ "$PUSH_GIT_TAG" = true ] && [ -n "$CIRCLE_TAG" ] ; then \
+      # Remove leading 'v'
+      SEMVER=${CIRCLE_TAG#v} && \
+      # Tag full semver
+      docker tag $SERVICE_NAME:$COMMIT $DOCKER_ORG/$SERVICE_NAME:$SEMVER && \
+      # Tag major.minor
+      docker tag $SERVICE_NAME:$COMMIT $DOCKER_ORG/$SERVICE_NAME:${SEMVER%.*} && \
+      # Tag only major
+      docker tag $SERVICE_NAME:$COMMIT $DOCKER_ORG/$SERVICE_NAME:${SEMVER%.*.*}; \
+    fi
+    docker push $DOCKER_ORG/$SERVICE_NAME
 
 # Common steps for building client Docker image
 build_steps: &build_steps
