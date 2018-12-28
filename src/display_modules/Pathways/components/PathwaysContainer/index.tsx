@@ -21,7 +21,7 @@ export interface PathwaysState {
 
 export default class BetaDiversityContainer extends React.Component<PathwaysProps, PathwaysState> {
 
-  protected color: d3.ScaleOrdinal<string, string>;
+  protected color: d3.ScaleOrdinal<string, string> | undefined;
 
   constructor(props: PathwaysProps) {
     super(props);

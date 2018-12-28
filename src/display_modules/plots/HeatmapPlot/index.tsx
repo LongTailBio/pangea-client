@@ -9,10 +9,10 @@ export interface HeatMapProps extends HeatMapOptions, SvgRefProps { }
 
 export default class HeatMapPlot extends React.Component<HeatMapProps, {}> {
 
-  private rootDiv: HTMLDivElement | null;
-  private heatmapSvg: SVGSVGElement | null;
+  private rootDiv: HTMLDivElement | null = null;
+  private heatmapSvg: SVGSVGElement | null = null;
 
-  private heatmap: HeatMap | null;
+  private heatmap: HeatMap | null = null;
 
   componentDidMount() {
     if (!(this.rootDiv === null || this.heatmapSvg === null)) {

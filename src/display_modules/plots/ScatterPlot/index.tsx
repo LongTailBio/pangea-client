@@ -17,8 +17,8 @@ export interface ScatterPlotProps extends SvgRefProps {
 }
 
 export default class ScatterPlot extends React.Component<ScatterPlotProps, {}> {
-  private rootDiv: HTMLDivElement | null;
-  private scatterSVG: SVGSVGElement | null;
+  private rootDiv: HTMLDivElement | null = null;
+  private scatterSVG: SVGSVGElement | null = null;
 
   componentDidMount() {
     this.renderScatter(this.props);
