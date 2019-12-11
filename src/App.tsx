@@ -9,8 +9,7 @@ import Logout from './screens/Auth/scenes/Logout';
 import Home from './screens/Home';
 import About from './screens/About';
 import Organizations from './screens/Organizations';
-import SampleGroups from './screens/SampleGroups';
-import Samples from './screens/Samples';
+import SampleGroup from './screens/SampleGroup';
 import Dashboard from './screens/Dashboard';
 import Docs from './screens/Docs';
 
@@ -116,18 +115,10 @@ class App extends React.Component<{}, AppState> {
             )}
           />
           <Route
-            path="/sample-groups"
-            render={() => (
-              <SampleGroups
-                isAuthenticated={this.state.isAuthenticated}
-                updateTheme={this.updateTheme}
-              />
-            )}
-          />
-          <Route
-            path="/samples"
-            render={() => (
-              <Samples
+            path="/sample-groups/:uuid"
+            render={(routeProps) => (
+              <SampleGroup
+                groupUUID={routeProps.match.params.uuid}
                 isAuthenticated={this.state.isAuthenticated}
                 updateTheme={this.updateTheme}
               />

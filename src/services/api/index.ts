@@ -2,7 +2,7 @@ import { CancelTokenSource } from 'axios';
 
 import { API_BASE_URL, cancelableAxios } from './utils';
 import { JsonOrganizationType, OrganizationType } from './models/organization';
-import { SampleGroupType } from './models/analysisGroup';
+import { SampleGroupType } from './models/sampleGroup';
 import { SampleType } from './models/sample';
 import { AnalysisResultType, QueryResultWrapper } from './models/queryResult';
 
@@ -111,6 +111,8 @@ export const getUserStatus = (source: CancelTokenSource) => {
 };
 
 export const getSampleGroup = (uuid: string, source: CancelTokenSource) => {
+  // tslint:disable-next-line:no-console
+
   const options = {
     url: `${API_BASE_URL}/sample_groups/${uuid}`,
     method: 'get',
@@ -122,13 +124,21 @@ export const getSampleGroup = (uuid: string, source: CancelTokenSource) => {
 
   return cancelableAxios(options, source)
     .then(res => {
-      const rawDescription = res.data.data.sample_group.description;
+      // tslint:disable-next-line:no-console
+      console.log(res);
       const sampleGroup: SampleGroupType = {
-        uuid: res.data.data.sample_group.uuid,
-        name: res.data.data.sample_group.name,
-        analysisResultId: res.data.data.sample_group.analysis_result_uuid,
-        description: rawDescription !== undefined ? rawDescription : '[description not supported yet]',
-        theme: res.data.data.sample_group.theme,
+
+        uuid: res.data.sample_group.uuid,
+        name: res.data.sample_group.name,
+        organization_uuid: res.data.sample_group.organization_uuid,
+        description: res.data.sample_group.description,
+        is_library: res.data.sample_group.is_library,
+        is_public: res.data.sample_group.is_public,
+        created_at: res.data.sample_group.created_at,
+        sample_uuids: res.data.sample_group.sample_uuids,
+        sample_names: res.data.sample_group.sample_names,
+        analysis_result_uuids: res.data.sample_group.analysis_result_uuids,
+        analysis_result_names: res.data.sample_group.analysis_result_names,
       };
       return sampleGroup;
     });
