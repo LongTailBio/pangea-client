@@ -4,9 +4,13 @@ import { SampleGroupType } from './analysisGroup';
 export interface OrganizationType {
   uuid: string;
   name: string;
-  adminEmail: string;
-  users: Array<UserType>;
-  sampleGroups: Array<SampleGroupType>;
+  is_public: boolean,
+  is_deleted: boolean,
+  created_at: string,
+  primary_admin_uuid: string,
+  sample_group_uuids: Array<string>,
+  user_uuids: Array<string>,
+  user_usernames: Array<string>,
 }
 export interface JsonOrganizationType {
   uuid: string;

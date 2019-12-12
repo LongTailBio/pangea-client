@@ -8,8 +8,11 @@ import UserStatus from './screens/UserStatus';
 import Logout from './screens/Auth/scenes/Logout';
 import Home from './screens/Home';
 import About from './screens/About';
-import Organizations from './screens/Organizations';
+import OrganizationDetail from './screens/OrganizationDetail';
+import UserDetail from './screens/UserDetail';
 import SampleGroup from './screens/SampleGroup';
+import Sample from './screens/Sample';
+import AnalysisResult from './screens/AnalysisResult';
 import Dashboard from './screens/Dashboard';
 import Docs from './screens/Docs';
 
@@ -107,18 +110,48 @@ class App extends React.Component<{}, AppState> {
             )}
           />
           <Route
-            path="/organizations"
-            render={() => (
-              <Organizations
+            path="/organizations/:uuid"
+            render={(routeProps) => (
+              <OrganizationDetail
                 isAuthenticated={this.state.isAuthenticated}
+                uuid={routeProps.match.params.uuid}
               />
             )}
           />
+          <Route
+            path="/users/:uuid"
+            render={(routeProps) => (
+              <UserDetail
+                isAuthenticated={this.state.isAuthenticated}
+                userUUID={routeProps.match.params.uuid}
+              />
+            )}
+          />          
           <Route
             path="/sample-groups/:uuid"
             render={(routeProps) => (
               <SampleGroup
                 groupUUID={routeProps.match.params.uuid}
+                isAuthenticated={this.state.isAuthenticated}
+                updateTheme={this.updateTheme}
+              />
+            )}
+          />
+          <Route
+            path="/samples/:uuid"
+            render={(routeProps) => (
+              <Sample
+                sampleUUID={routeProps.match.params.uuid}
+                isAuthenticated={this.state.isAuthenticated}
+                updateTheme={this.updateTheme}
+              />
+            )}
+          />
+          <Route
+            path="/analysis-results/:uuid"
+            render={(routeProps) => (
+              <AnalysisResult
+                arUUID={routeProps.match.params.uuid}
                 isAuthenticated={this.state.isAuthenticated}
                 updateTheme={this.updateTheme}
               />

@@ -1,14 +1,14 @@
 import * as React from 'react';
 
-import { SampleGroupType } from '../../services/api/models/analysisGroup';
+// import { SampleGroupType } from '../../services/api/models/analysisGroup';
 
 import AnalysisGroupListItem from './components/AnalysisGroupListItem';
 
 import './analysisGroupList.css';
 
 interface Prop {
-    groups: Array<SampleGroupType>;
-    organization: string;
+    groupUUIDs: Array<string>;
+    organizationUUID: string;
 }
 
 class AnalysisGroupList extends React.Component<Prop, {}> {
@@ -16,12 +16,11 @@ class AnalysisGroupList extends React.Component<Prop, {}> {
     return (
       <ul className="analysis-group-list">
         {
-          this.props.groups.map((group) => {
+          this.props.groupUUIDs.map((groupUUID) => {
             return (
               <AnalysisGroupListItem
-                key={group.uuid}
-                group={group}
-                organization={this.props.organization}
+                groupUUID={groupUUID}
+                organizationUUID={this.props.organizationUUID}
               />
             );
           })

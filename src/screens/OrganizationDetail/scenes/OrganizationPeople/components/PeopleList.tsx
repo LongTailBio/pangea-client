@@ -2,32 +2,32 @@ import * as React from 'react';
 import { Row, Col, Panel, ListGroup, DropdownButton, MenuItem } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import { UserType } from '../../../../../../../services/api/models/user';
+// import { UserType } from '../../../../../services/api/models/user';
 
 interface PersonRowProps {
   orguuid: string;
-  user: UserType;
+  userUUID: string;
+  userUsername: string,
 }
 
 const PersonRow: React.SFC<PersonRowProps> = (props) => {
   return (
     <li className="list-group-item">
+      <Link to={`/users/${props.userUUID}`}>{props.userUsername}</Link>
       <span className="pull-right">
         <DropdownButton title="Settings" id={'dropdown-basic-uuid'} pullRight={true}>
           <MenuItem eventKey="1">Manage</MenuItem>
           <MenuItem eventKey="2" style={{color: 'red'}}>Remove from organization</MenuItem>
         </DropdownButton>
       </span>
-      <p><Link to={`/organizations/${props.orguuid}/people/${props.user.username}`}>
-        {props.user.username}
-      </Link></p>
     </li>
   );
 };
 
 interface PeopleListProps {
   orguuid: string;
-  people: Array<UserType>;
+  peopleUUIDs: string[];
+  peopleUsernames: string[];
 }
 
 const PeopleList: React.SFC<PeopleListProps> = (props) => {
@@ -39,8 +39,13 @@ const PeopleList: React.SFC<PeopleListProps> = (props) => {
           <Panel.Body>
             <ListGroup fill={true} componentClass="ul">
               {
-                props.people.map((user, index) => {
-                  return <PersonRow key={index} orguuid={props.orguuid} user={user} />;
+                props.peopleUUIDs.map((userUUID, index) => {
+                  return <PersonRow
+                    key={index}
+                    orguuid={props.orguuid}
+                    userUUID={userUUID}
+                    userUsername={props.peopleUsernames[index]}
+                  />;
                 })
               }
             </ListGroup>

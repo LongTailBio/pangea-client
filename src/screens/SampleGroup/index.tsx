@@ -42,8 +42,8 @@ class SampleGroupScreen extends React.Component<SampleGroupScreenProps, SampleGr
             .catch((error) => {
                 if (!axios.isCancel(error)) {
                     console.log(error);
-            }
-        });
+                }
+            });
     }
 
     render() {
@@ -53,34 +53,35 @@ class SampleGroupScreen extends React.Component<SampleGroupScreenProps, SampleGr
         }
         return (
             <div>
-            <Row>
-                <h1>{this.state.name}</h1>
-                <h2>Sample Group</h2>
-                <p>{publicity}</p>
-            </Row>
-            <Row>
-                <Link to={`/organizations/${this.state.organization_uuid}`}>Owner Organization</Link>
-            </Row>
-            <Row>
-                <h2>Samples</h2>
-                {
-                    this.state.sample_uuids.map((sample_uuid, i) => {
-                        return (
-                            <Link to={`/sample/${sample_uuid}`}>{this.state.sample_names[i]}</Link>
-                        );
-                    })
-                }
-            </Row>
-            <Row>
-                <h2>Analysis Results</h2>
-                {
-                    this.state.analysis_result_uuids.map((ar_uuid, i) => {
-                        return (
-                            <Link to={`/sample/${ar_uuid}`}>{this.state.analysis_result_names[i]}</Link>
-                        );
-                    })
-                }
-            </Row>
+                <Row>
+                    <h1>{this.state.name}</h1>
+                    <h2>Sample Group</h2>
+                    <p>{publicity}</p>
+                    <p>{this.state.created_at}</p>                 
+                </Row>
+                <Row>
+                    <Link to={`/organizations/${this.state.organization_uuid}`}>Owner Organization</Link>
+                </Row>
+                <Row>
+                    <h2>Samples</h2>
+                    {
+                        this.state.sample_uuids.map((sample_uuid, i) => {
+                            return (
+                                <Link to={`/samples/${sample_uuid}`}>{this.state.sample_names[i]}</Link>
+                            );
+                        })
+                    }
+                </Row>
+                <Row>
+                    <h2>Analysis Results</h2>
+                    {
+                        this.state.analysis_result_uuids.map((ar_uuid, i) => {
+                            return (
+                                <Link to={`/analysis-results/${ar_uuid}`}>{this.state.analysis_result_names[i]}</Link>
+                            );
+                        })
+                    }
+                </Row>
             </div>
         );
     }

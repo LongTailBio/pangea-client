@@ -11,11 +11,12 @@ import PeopleList from './scenes/OrganizationPeople/components/PeopleList';
 import PersonDetail from './scenes/OrganizationPeople/components/PersonDetail';
 import OrganizationSettings from './scenes/OrganizationSettings';
 
-import { OrganizationType } from '../../../../services/api/models/organization';
-import { getOrganization } from '../../../../services/api';
+import { OrganizationType } from '../../services/api/models/organization';
+import { getOrganization } from '../../services/api';
 
 interface OrganizationsProps {
   uuid: string;
+  isAuthenticated: boolean;
 }
 
 interface OrganizationState {
@@ -76,9 +77,9 @@ class OrganizationDetail extends React.Component<OrganizationsProps, Organizatio
             <Row>
               <Col lg={12}>
                 <h1>{this.state.organization.name}</h1>
-                <p>This is a lab. It would have a description at some point. Maybe?</p>
-                <p>Admin email: <Link to={`mailto:${this.state.organization.adminEmail}`}>
-                  {this.state.organization.adminEmail}
+                <h2>Organization</h2>
+                <p><Link to={`/users/${this.state.organization.primary_admin_uuid}`}>
+                  Primary Admin
                 </Link></p>
               </Col>
             </Row>
@@ -86,16 +87,13 @@ class OrganizationDetail extends React.Component<OrganizationsProps, Organizatio
               <Nav bsStyle="tabs" activeKey="1">
                 <LinkContainer to={`/organizations/${this.props.uuid}`} exact={true}>
                   <NavItem eventKey="1"><Glyphicon glyph="star" /> Sample Groups <Badge>
-                    {this.state.organization.sampleGroups.length}
+                    {this.state.organization.sample_group_uuids.length}
                   </Badge></NavItem>
                 </LinkContainer>
                 <LinkContainer to={`/organizations/${this.props.uuid}/people`}>
                   <NavItem eventKey="2"><Glyphicon glyph="user" /> People <Badge>
-                    {this.state.organization.users.length}
+                    {this.state.organization.user_uuids.length}
                   </Badge></NavItem>
-                </LinkContainer>
-                <LinkContainer to={`/organizations/${this.props.uuid}/settings`}>
-                  <NavItem eventKey="3"><Glyphicon glyph="cog" /> Settings</NavItem>
                 </LinkContainer>
               </Nav>
             </Row>
@@ -105,13 +103,13 @@ class OrganizationDetail extends React.Component<OrganizationsProps, Organizatio
                 exact={true}
                 path="/organizations/:uuid"
                 render={(props) => {
-                  const users = this.state.organization ? this.state.organization.users : [];
-                  const sampleGroups = this.state.organization ? this.state.organization.sampleGroups : [];
+                  const userUUIDs = this.state.organization ? this.state.organization.user_uuids : [];
+                  const sampleGroupUUIDs = this.state.organization ? this.state.organization.sample_group_uuids : [];
                   return (
                     <OrganizationProjects
                       uuid={props.match.params.uuid}
-                      users={users}
-                      sampleGroups={sampleGroups}
+                      userUUIDs={userUUIDs}
+                      sampleGroupUUIDs={sampleGroupUUIDs}
                     />
                   );
                 }}
@@ -120,9 +118,14 @@ class OrganizationDetail extends React.Component<OrganizationsProps, Organizatio
                 exact={true}
                 path="/organizations/:uuid/people"
                 render={(props) => {
-                  const users = this.state.organization ? this.state.organization.users : [];
+                  const userUUIDs = this.state.organization ? this.state.organization.user_uuids : [];
+                  const userUsernames = this.state.organization ? this.state.organization.user_usernames : [];
                   return (
-                    <PeopleList orguuid={props.match.params.uuid} people={users} />
+                    <PeopleList
+                      orguuid={props.match.params.uuid}
+                      peopleUUIDs={userUUIDs}
+                      peopleUsernames={userUsernames} 
+                    />
                   );
                 }}
               />
