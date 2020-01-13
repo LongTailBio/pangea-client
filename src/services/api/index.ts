@@ -23,6 +23,41 @@ export const authenticate = (formType: string, data: LoginType, source: CancelTo
   return cancelableAxios(options, source);
 };
 
+
+interface ObjectLink {
+    name: string;
+    uuid: string;
+}
+
+export interface SearchResultType {
+    search_term: string;
+    sample_groups: Array<ObjectLink>;
+    samples: Array<ObjectLink>;
+    users: Array<ObjectLink>;
+    organizations: Array<ObjectLink>;
+}
+
+export const search = (query: string, source: CancelTokenSource) => {
+  const options = {
+    url: `${API_BASE_URL}/search/${query}`,
+    method: 'get'
+  };
+
+  return cancelableAxios(options, source)
+    .then(res => {
+      const search_result: SearchResultType = {
+        search_term: res.data.search_term,
+        sample_groups: res.data.sample_groups,
+        samples: res.data.samples,
+        users: res.data.users,
+        organizations: res.data.organizations,
+      }
+
+      return search_result;
+    });
+};
+
+
 export const createOrganization = (name: string, adminEmail: string, source: CancelTokenSource) => {
   const options = {
     url: `${API_BASE_URL}/organizations`,

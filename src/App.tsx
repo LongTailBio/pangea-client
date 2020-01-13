@@ -15,6 +15,7 @@ import Sample from './screens/Sample';
 import AnalysisResult from './screens/AnalysisResult';
 import Dashboard from './screens/Dashboard';
 import Docs from './screens/Docs';
+import SearchResult from './screens/SearchResult';
 
 interface AppState {
   username: string;
@@ -157,6 +158,14 @@ class App extends React.Component<{}, AppState> {
               />
             )}
           />
+          <Route
+            path="/search/:query"
+            render={(routeProps) => (
+              <SearchResult
+                query={routeProps.match.params.query}
+              />
+            )}
+          />          
           <Route
             exact={true}
             path="/logout"

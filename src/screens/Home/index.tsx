@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col} from 'react-bootstrap';
+import { SearchBar } from '../../components/SearchBar'
 
+ 
 
 class HomeScreen extends React.Component {
   render() {
@@ -11,8 +13,11 @@ class HomeScreen extends React.Component {
         <h1>Pangea</h1>
         <h3>A content management system for the Life Sciences</h3>
 
+        <hr/>
 
-        <hr />
+        <SearchBar/>
+
+        <hr/>
 
         <Row>
           <Col lg={3} md={6}>
