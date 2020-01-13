@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Row } from 'react-bootstrap';
+import { Switch, Route } from 'react-router';
+import { LinkContainer } from 'react-router-bootstrap';
+import { Row, Col, Well, Nav, NavItem, Glyphicon, Badge } from 'react-bootstrap';
+import { Helmet } from 'react-helmet';
 import { default as axios, CancelTokenSource } from 'axios';
 import { getSample } from '../../services/api';
 import { SampleType } from '../../services/api/models/sample';
@@ -45,6 +48,9 @@ class SampleScreen extends React.Component<SampleScreenProps, SampleType> {
     render() {
         return (
             <div>
+                <Helmet>
+                    <title>{`Pangea :: ${this.state.name}`}</title>
+                </Helmet>
                 <Row>
                     <h1>{this.state.name}</h1>
                     <h2>Sample</h2>
@@ -52,16 +58,50 @@ class SampleScreen extends React.Component<SampleScreenProps, SampleType> {
                 <Row>
                     <Link to={`/sample-groups/${this.state.library_uuid}`}>Library</Link>
                 </Row>
+
                 <Row>
-                    <h2>Samples</h2>
-                    {
-                        this.state.analysis_result_uuids.map((ar_uuid, i) => {
-                            return (
-                                <Link to={`/analysis-results/${ar_uuid}`}>{this.state.analysis_result_names[i]}</Link>
-                            );
-                        })
-                    }
+                    <Nav bsStyle="tabs" activeKey="1">
+                        <LinkContainer to={`/samples/${this.props.sampleUUID}`}>
+                            <NavItem eventKey="1"><Glyphicon glyph="folder-open" /> Analysis Results <Badge>
+                                {this.state.analysis_result_names.length}
+                            </Badge></NavItem>
+                        </LinkContainer>
+                    </Nav>
                 </Row>
+
+                <br />
+
+                <Switch>
+                    <Route
+                        exact={true}
+                        path="/samples/:uuid"
+                        render={(props) => {
+                            return (
+                                <Row>
+                                    <Col lg={12}>
+                                        {this.state.analysis_result_uuids &&
+                                            this.state.analysis_result_uuids.map((ar_uuid, i) => {
+                                                return (
+                                                    <ul className="analysis-group-list">
+                                                        <li className="analysis-group-list-item">
+                                                            <Link to={`/analysis-results/${ar_uuid}`}>{this.state.analysis_result_names[i]}</Link>
+                                                        </li>
+                                                    </ul>
+                                                );
+                                            })
+                                        }
+                                        {!this.state.analysis_result_uuids &&
+                                            <Well className="text-center">
+                                                <h4>This sample has no analysis results.</h4>
+                                            </Well>
+                                        }
+                                    </Col>
+                                </Row>
+                            );
+                        }}
+                    />
+                </Switch>
+
             </div>
         );
     }                    
