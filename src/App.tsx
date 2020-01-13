@@ -32,7 +32,7 @@ class App extends React.Component<{}, AppState> {
     this.state = {
       username: '',
       email: '',
-      title: 'MetaGenScope',
+      title: 'Pangea',
       isAuthenticated: false,
       theme: undefined,
     };
@@ -65,8 +65,8 @@ class App extends React.Component<{}, AppState> {
       <DefaultLayout {...this.state}>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>MetaGenScope :: Home</title>
-          <link rel="canonical" href="http://metagenscope.com/" />
+          <title>Pangea :: Home</title>
+          <link rel="canonical" href="http://pangea.gimmebio.com/" />
         </Helmet>
         <Switch>
           <Route exact={true} path="/" component={Home} />

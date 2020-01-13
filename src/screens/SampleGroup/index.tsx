@@ -77,7 +77,7 @@ class SampleGroupScreen extends React.Component<SampleGroupScreenProps, SampleGr
                             </Badge></NavItem>
                         </LinkContainer>
                         <LinkContainer to={`/sample-groups/${this.props.groupUUID}/analysis-results`}>
-                            <NavItem eventKey="2"><Glyphicon glyph="user" /> Analysis Results <Badge>
+                            <NavItem eventKey="2"><Glyphicon glyph="folder-open" /> Analysis Results <Badge>
                                 {this.state.analysis_result_names.length}
                             </Badge></NavItem>
                         </LinkContainer>
