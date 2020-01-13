@@ -1,6 +1,9 @@
 import * as React from 'react';
+import { Switch, Route } from 'react-router';
 import { Link } from 'react-router-dom';
-import { Row } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
+import { Row, Col, Well, Nav, NavItem, Glyphicon, Badge } from 'react-bootstrap';
+import { Helmet } from 'react-helmet';
 import { default as axios, CancelTokenSource } from 'axios';
 import { getSampleGroup } from '../../services/api';
 import { SampleGroupType } from '../../services/api/models/sampleGroup';
@@ -53,6 +56,9 @@ class SampleGroupScreen extends React.Component<SampleGroupScreenProps, SampleGr
         }
         return (
             <div>
+                <Helmet>
+                    <title>{`Pangea :: ${this.state.name}`}</title>
+                </Helmet>
                 <Row>
                     <h1>{this.state.name}</h1>
                     <h2>Sample Group</h2>
@@ -62,26 +68,82 @@ class SampleGroupScreen extends React.Component<SampleGroupScreenProps, SampleGr
                 <Row>
                     <Link to={`/organizations/${this.state.organization_uuid}`}>Owner Organization</Link>
                 </Row>
+
                 <Row>
-                    <h2>Samples</h2>
-                    {
-                        this.state.sample_uuids.map((sample_uuid, i) => {
-                            return (
-                                <Link to={`/samples/${sample_uuid}`}>{this.state.sample_names[i]}</Link>
-                            );
-                        })
-                    }
+                    <Nav bsStyle="tabs" activeKey="1">
+                        <LinkContainer to={`/sample-groups/${this.props.groupUUID}`} exact={true}>
+                            <NavItem eventKey="1"><Glyphicon glyph="star" /> Samples <Badge>
+                                {this.state.sample_names.length}
+                            </Badge></NavItem>
+                        </LinkContainer>
+                        <LinkContainer to={`/sample-groups/${this.props.groupUUID}/analysis-results`}>
+                            <NavItem eventKey="2"><Glyphicon glyph="user" /> Analysis Results <Badge>
+                                {this.state.analysis_result_names.length}
+                            </Badge></NavItem>
+                        </LinkContainer>
+                    </Nav>
                 </Row>
-                <Row>
-                    <h2>Analysis Results</h2>
-                    {
-                        this.state.analysis_result_uuids.map((ar_uuid, i) => {
+
+                <br />
+                <Switch>
+                    <Route
+                        exact={true}
+                        path="/sample-groups/:uuid"
+                        render={(props) => {
                             return (
-                                <Link to={`/analysis-results/${ar_uuid}`}>{this.state.analysis_result_names[i]}</Link>
+                                <Row>
+                                    <Col lg={12}>
+                                        {this.state.sample_uuids && 
+                                            this.state.sample_uuids.map((sample_uuid, i) => {
+                                                return (
+                                                    <ul className="analysis-group-list">
+                                                        <li className="analysis-group-list-item">
+                                                            <Link to={`/samples/${sample_uuid}`}>{this.state.sample_names[i]}</Link>
+                                                        </li>
+                                                    </ul>
+                                                );
+                                            })
+                                        }
+                                        {!this.state.sample_uuids &&
+                                            <Well className="text-center">
+                                                <h4>This sample group has no samples.</h4>
+                                            </Well>
+                                        }
+                                    </Col>
+                                </Row>
                             );
-                        })
-                    }
-                </Row>
+                        }}
+                    />
+                    <Route
+                        exact={true}
+                        path="/sample-groups/:uuid/analysis-results"
+                        render={(props) => {
+                            return (
+                                <Row>
+                                    <Col lg={12}>
+                                        {this.state.analysis_result_uuids &&
+                                            this.state.analysis_result_uuids.map((ar_uuid, i) => {
+                                                return (
+                                                    <ul className="analysis-group-list">
+                                                        <li className="analysis-group-list-item">
+                                                            <Link to={`/analysis-results/${ar_uuid}`}>{this.state.analysis_result_names[i]}</Link>
+                                                        </li>
+                                                    </ul>
+                                                );
+                                            })
+                                        }
+                                        {!this.state.analysis_result_uuids &&
+                                            <Well className="text-center">
+                                                <h4>This sample group has no analysis results.</h4>
+                                            </Well>
+                                        }
+                                    </Col>
+                                </Row>
+                            );
+                        }}
+                    />
+                </Switch>
+
             </div>
         );
     }
