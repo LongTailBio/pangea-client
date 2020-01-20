@@ -27,10 +27,14 @@ class Footer extends React.Component<{}, FooterModelState> {
     return (
       <Grid>
         <Row>
-          <Col lg={12}>
+          <Col lg={10}>
             <hr />
             <Button bsStyle="link" onClick={this.open}>About/Attributions/License</Button>
           </Col>
+          <Col lg={2}>
+            <hr />
+            <a target="_blank" href="https://github.com/longtailbio" className="link">GitHub</a>
+          </Col>          
         </Row>
 
         <Modal show={this.state.showModal} onHide={this.close} bsSize="lg">
