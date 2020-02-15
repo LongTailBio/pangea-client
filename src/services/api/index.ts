@@ -1,4 +1,4 @@
-import { CancelTokenSource } from 'axios';
+import { CancelTokenSource, AxiosRequestConfig } from 'axios';
 
 import { API_BASE_URL, cancelableAxios } from './utils';
 import { OrganizationType } from './models/organization';
@@ -14,7 +14,7 @@ type LoginType = {
 };
 
 export const authenticate = (formType: string, data: LoginType, source: CancelTokenSource) => {
-  const options = {
+  const options: AxiosRequestConfig = {
     url: `${API_BASE_URL}/auth/${formType}`,
     method: 'post',
     data,
@@ -38,7 +38,7 @@ export interface SearchResultType {
 }
 
 export const search = (query: string, source: CancelTokenSource) => {
-  const options = {
+  const options: AxiosRequestConfig = {
     url: `${API_BASE_URL}/search/${query}`,
     method: 'get'
   };
@@ -59,7 +59,7 @@ export const search = (query: string, source: CancelTokenSource) => {
 
 
 export const createOrganization = (name: string, adminEmail: string, source: CancelTokenSource) => {
-  const options = {
+  const options: AxiosRequestConfig = {
     url: `${API_BASE_URL}/organizations`,
     method: 'post',
     headers: {
@@ -76,7 +76,7 @@ export const createOrganization = (name: string, adminEmail: string, source: Can
 };
 
 export const getOrganization = (uuid: string, source: CancelTokenSource) => {
-  const options = {
+  const options: AxiosRequestConfig = {
     url: `${API_BASE_URL}/organizations/${uuid}`,
     method: 'get',
     headers: {
@@ -104,7 +104,7 @@ export const getOrganization = (uuid: string, source: CancelTokenSource) => {
 };
 
 export const getUser = (uuid: string, source: CancelTokenSource) => {
-  const options = {
+  const options: AxiosRequestConfig = {
     url: `${API_BASE_URL}/users/${uuid}`,
     method: 'get',
     headers: {
@@ -129,7 +129,7 @@ export const getUser = (uuid: string, source: CancelTokenSource) => {
 };
 
 export const getUserStatus = (source: CancelTokenSource) => {
-  const options = {
+  const options: AxiosRequestConfig = {
     url: `${API_BASE_URL}/auth/status`,
     method: 'get',
     headers: {
@@ -143,7 +143,7 @@ export const getUserStatus = (source: CancelTokenSource) => {
 };
 
 export const getSampleGroup = (uuid: string, source: CancelTokenSource) => {
-  const options = {
+  const options: AxiosRequestConfig = {
     url: `${API_BASE_URL}/sample_groups/${uuid}`,
     method: 'get',
     headers: {
@@ -172,7 +172,7 @@ export const getSampleGroup = (uuid: string, source: CancelTokenSource) => {
 };
 
 export const getSampleGroupSamples = (uuid: string, source: CancelTokenSource) => {
-  const options = {
+  const options: AxiosRequestConfig = {
     url: `${API_BASE_URL}/sample_groups/${uuid}/samples`,
     method: 'get',
     headers: {
@@ -198,7 +198,7 @@ export const getSampleGroupSamples = (uuid: string, source: CancelTokenSource) =
 };
 
 export const getSample = (uuid: string, source: CancelTokenSource) => {
-  const options = {
+  const options: AxiosRequestConfig = {
     url: `${API_BASE_URL}/samples/${uuid}`,
     method: 'get',
     headers: {
@@ -223,7 +223,7 @@ export const getSample = (uuid: string, source: CancelTokenSource) => {
 };
 
 export const getAnalysisResult = (uuid: string, source: CancelTokenSource) => {
-  const options = {
+  const options: AxiosRequestConfig = {
     url: `${API_BASE_URL}/analysis_results/${uuid}`,
     method: 'get',
     headers: {
@@ -248,7 +248,7 @@ export const getAnalysisResult = (uuid: string, source: CancelTokenSource) => {
     });
 };
 export const getAnalysisResults = (uuid: string, source: CancelTokenSource) => {
-  const options = {
+  const options: AxiosRequestConfig = {
     url: `${API_BASE_URL}/analysis_results/${uuid}`,
     method: 'get',
     headers: {
