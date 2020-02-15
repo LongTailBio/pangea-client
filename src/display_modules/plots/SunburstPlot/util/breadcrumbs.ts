@@ -51,6 +51,7 @@ export const updateBreadcrumbs = function(nodeArray: Node[]) {
     }
   }
 
+  // const curMic = microbeDatabase[speciesName];
   if (microbeDatabase[speciesName] !== undefined) {
     const curMic = microbeDatabase[speciesName];
 

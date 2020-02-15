@@ -6,7 +6,7 @@ import { default as axios, CancelTokenSource } from 'axios';
 
 
 interface SearchFormDataType {
-    query: string;
+    [field: string]: string;
 }
 
 interface SearchBarState {
@@ -18,7 +18,6 @@ interface SearchBarState {
 export class SearchBar extends React.Component<{}, SearchBarState>{
 
     protected sourceToken: CancelTokenSource;
-    private referrer: string;
 
     constructor(props: {}) {
         super(props);
@@ -42,28 +41,25 @@ export class SearchBar extends React.Component<{}, SearchBarState>{
     }
 
 
-    handleFormChange(event: React.FormEvent<HTMLInputElement>) {
-        const obj = this.state.formData;
-        obj[event.currentTarget.name] = event.currentTarget.value;
-        this.setState({formData: obj});
+    handleFormChange = (event: React.FormEvent<HTMLInputElement>) => {
+        const { name, value } = event.currentTarget;
+        const formData = Object.assign({}, this.state.formData, { [name]: value });
+        this.setState({ formData });
     }
 
-    handleSubmitSearch(event: React.FormEvent<HTMLFormElement>) {
-        this.setState({
-            submitted: true
-        });
-    }
+    handleSubmitSearch = (event: React.FormEvent<HTMLFormElement>) =>
+        this.setState({ submitted: true });
 
     render() {
-        if(this.state.submitted && this.referrer !== this.state.formData.query){
+        if (this.state.submitted) {
             const path = `/search/${this.state.formData.query}`
             return (
                 <Redirect to={path}/>
-            )            
+            )
         }
         return (
             <Row>
-                <form onSubmit={(event) => this.handleSubmitSearch(event)}>
+                <form onSubmit={this.handleSubmitSearch}>
                     <Col lg={10}>
                         <div className="form-group">
                           <input

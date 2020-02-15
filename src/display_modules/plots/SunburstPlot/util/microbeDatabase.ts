@@ -1,5 +1,14 @@
+export interface MicrobeRecord {
+  // microbe_id: number,
+  [index: string]: any,
+}
+
+export interface MicrobeDatabaseShape {
+  [index: string]: MicrobeRecord,
+}
+
 // From 2017-09
-export const microbeDatabase = {
+export const microbeDatabase: MicrobeDatabaseShape = {
   'Abaca bunchy top virus': {
     microbe_id: 4497,
     kingdom: 'Viruses',

@@ -23,7 +23,7 @@ interface WrapperState<D> {
  */
 export class DisplayContainer<D, P = {}> extends React.Component<DisplayContainerProps & P, WrapperState<D>> {
 
-  protected title: string;
+  protected title: string | undefined;
   protected description: React.ReactNode;
 
   // Polling interval (ms)
@@ -177,7 +177,7 @@ export class DisplayContainer<D, P = {}> extends React.Component<DisplayContaine
         <Row>
           <Col lg={12}>
             <PlotHeader
-              title={this.title}
+              title={this.title || ''}
               description={this.description}
               downloadPng={this.saveSvg}
               downloadCsv={() => {}}    // tslint:disable-line:no-empty
