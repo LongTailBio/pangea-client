@@ -6,6 +6,10 @@ export interface AnalysisResultType {
     kind: string,
     status: string,
     created_at: string,
-    fields: {},
-    field_data: {},
+    fields: {
+        [index: string]: any,
+    },
+    field_data: {
+        [index: string]: any,
+    },
 }

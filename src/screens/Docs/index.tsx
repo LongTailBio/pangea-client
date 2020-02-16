@@ -49,7 +49,7 @@ class Docs extends React.Component {
             their experiments, common examples include date of collection, processing 
             technician, and more.
           </p>
-          <img src={dataModel} style={pipelineStyle} />
+          <img src={dataModel} alt="Pangea data model" style={pipelineStyle} />
           <p>
             To group samples into projects Pangea supports Sample-Groups. 
             Sample-Groups are quite literally just groups of samples. Samples may 

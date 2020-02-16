@@ -9,20 +9,20 @@ export interface SunburstProps extends SunburstOptionsType, SvgRefProps { }
 
 export default class SunburstPlot extends React.Component<SunburstProps, {}> {
 
-  private rootDiv: HTMLDivElement | null;
-  private sunburstSvg: SVGSVGElement | null;
+  private rootDiv: HTMLDivElement | undefined;
+  private sunburstSvg: SVGSVGElement | undefined;
 
-  private sunburst: Sunburst | null;
+  private sunburst: Sunburst | undefined;
 
   componentDidMount() {
-    if (!(this.rootDiv === null || this.sunburstSvg === null)) {
+    if (!(this.rootDiv === undefined || this.sunburstSvg === undefined)) {
       this.sunburst = new Sunburst(this.rootDiv, this.sunburstSvg);
       this.sunburst.update(this.props);
     }
   }
 
   componentWillReceiveProps(nextProps: SunburstProps) {
-    if (this.sunburst !== null) {
+    if (this.sunburst !== undefined) {
       this.sunburst.update(nextProps);
     }
   }
@@ -32,7 +32,7 @@ export default class SunburstPlot extends React.Component<SunburstProps, {}> {
   }
 
   componentWillUnmount() {
-    if (this.sunburst !== null) {
+    if (this.sunburst !== undefined) {
       this.sunburst.teardown();
     }
 
@@ -43,11 +43,13 @@ export default class SunburstPlot extends React.Component<SunburstProps, {}> {
 
   render() {
     return (
-      <div style={{textAlign: 'center'}} ref={(elem) => { this.rootDiv = elem; }}>
+      <div style={{textAlign: 'center'}} ref={(elem) => { if (elem) this.rootDiv = elem; }}>
         <svg
           ref={(elem) => {
-            this.sunburstSvg = elem;
-            this.props.svgRef(elem);
+            if (elem) {
+              this.sunburstSvg = elem;
+              this.props.svgRef(elem);
+            }
           }}
         />
       </div>

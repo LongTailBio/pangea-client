@@ -1,3 +1,5 @@
+/*eslint no-extend-native: ["error", { "exceptions": ["String"] }]*/
+
 // This file needs to be a module
 // https://github.com/Microsoft/TypeScript/issues/17736#issuecomment-323073256
 export {};

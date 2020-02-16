@@ -58,10 +58,11 @@ class AuthForm extends React.Component<FormProp, AuthFormState> {
     });
   }
 
-  handleFormChange(event: React.FormEvent<HTMLInputElement>) {
-    const obj = this.state.formData;
-    obj[event.currentTarget.name] = event.currentTarget.value;
-    this.setState({formData: obj});
+  handleFormChange = (event: React.FormEvent<HTMLInputElement>) => {
+    const { name, value } = event.currentTarget;
+    const fieldUpdate = { [name]: value }
+    const formData = Object.assign({}, this.state.formData, fieldUpdate)
+    this.setState({ formData });
   }
 
   handleUserFormSubmit(event: React.FormEvent<HTMLFormElement>) {

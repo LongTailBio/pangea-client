@@ -9,20 +9,20 @@ export interface HeatMapProps extends HeatMapOptions, SvgRefProps { }
 
 export default class HeatMapPlot extends React.Component<HeatMapProps, {}> {
 
-  private rootDiv: HTMLDivElement | null;
-  private heatmapSvg: SVGSVGElement | null;
+  private rootDiv: HTMLDivElement | undefined;
+  private heatmapSvg: SVGSVGElement | undefined;
 
-  private heatmap: HeatMap | null;
+  private heatmap: HeatMap | undefined;
 
   componentDidMount() {
-    if (!(this.rootDiv === null || this.heatmapSvg === null)) {
+    if (!(this.rootDiv === undefined || this.heatmapSvg === undefined)) {
       this.heatmap = new HeatMap(this.rootDiv, this.heatmapSvg);
       this.heatmap.update(this.props);
     }
   }
 
   componentWillReceiveProps(nextProps: HeatMapProps) {
-    if (this.heatmap !== null) {
+    if (this.heatmap !== undefined) {
       this.heatmap.update(nextProps);
     }
   }
@@ -32,7 +32,7 @@ export default class HeatMapPlot extends React.Component<HeatMapProps, {}> {
   }
 
   componentWillUnmount() {
-    if (this.heatmap !== null) {
+    if (this.heatmap !== undefined) {
       this.heatmap.teardown();
     }
 
@@ -43,11 +43,13 @@ export default class HeatMapPlot extends React.Component<HeatMapProps, {}> {
 
   render() {
     return (
-      <div ref={(elem) => { this.rootDiv = elem; }}>
+      <div ref={(elem) => { if (elem) this.rootDiv = elem; }}>
         <svg
           ref={(elem) => {
-            this.heatmapSvg = elem;
-            this.props.svgRef(elem);
+            if (elem) {
+              this.heatmapSvg = elem;
+              this.props.svgRef(elem);
+            }
           }}
         />
       </div>

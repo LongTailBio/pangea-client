@@ -17,8 +17,8 @@ export interface ScatterPlotProps extends SvgRefProps {
 }
 
 export default class ScatterPlot extends React.Component<ScatterPlotProps, {}> {
-  private rootDiv: HTMLDivElement | null;
-  private scatterSVG: SVGSVGElement | null;
+  private rootDiv: HTMLDivElement | undefined;
+  private scatterSVG: SVGSVGElement | undefined;
 
   componentDidMount() {
     this.renderScatter(this.props);
@@ -38,7 +38,7 @@ export default class ScatterPlot extends React.Component<ScatterPlotProps, {}> {
       focusedCategory: props.focusedCategory,
     };
 
-    if (this.rootDiv !== null && this.scatterSVG !== null) {
+    if (this.rootDiv !== undefined && this.scatterSVG !== undefined) {
       // TODO: hold onto D3 reference so we can later manipulate it when props update
       createScatter(this.rootDiv, this.scatterSVG, props.data, plotOptions, props.color);
     }
@@ -46,11 +46,13 @@ export default class ScatterPlot extends React.Component<ScatterPlotProps, {}> {
 
   render() {
     return (
-      <div ref={(elem) => { this.rootDiv = elem; }}>
+      <div ref={(elem) => { if (elem) this.rootDiv = elem; }}>
         <svg
           ref={(elem) => {
-            this.scatterSVG = elem;
-            this.props.svgRef(elem);
+            if (elem) {
+              this.scatterSVG = elem;
+              this.props.svgRef(elem);
+            }
           }}
         />
       </div>

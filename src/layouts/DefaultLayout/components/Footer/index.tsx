@@ -33,7 +33,14 @@ class Footer extends React.Component<{}, FooterModelState> {
           </Col>
           <Col lg={2}>
             <hr />
-            <a target="_blank" href="https://github.com/longtailbio" className="link">GitHub</a>
+            <a
+              href="https://github.com/longtailbio"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link"
+            >
+              GitHub
+            </a>
           </Col>          
         </Row>
 

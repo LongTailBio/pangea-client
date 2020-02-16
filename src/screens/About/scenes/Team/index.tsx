@@ -50,7 +50,11 @@ class Teammate extends React.Component<TeammateTypeProp, {}> {
     return (
       <Row>
         <Col lg={4}>
-          <img src={require(`./images/${this.teammate.imageName}`)} style={{height: '200px', borderRadius: '50%'}} />
+          <img
+            src={require(`./images/${this.teammate.imageName}`)}
+            style={{height: '200px', borderRadius: '50%'}}
+            alt={this.teammate.name}
+          />
         </Col>
         <Col lg={6} lgOffset={2}>
           <h4>{this.teammate.name}</h4>

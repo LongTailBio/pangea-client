@@ -20,7 +20,7 @@ export const WorldQuantHeader: React.SFC<{}> = (props) => {
           <Grid>
             <Row style={paddingStyle}>
               <Col lg={8} md={12} sm={12}>
-                <img src={wordMark} className="worldquant-logo" />
+                <img src={wordMark} alt="WorldQuant" className="worldquant-logo" />
                 <p style={{marginTop: '85px', marginBottom: '0px'}}>The WorldQuant Initiative for
                   Quantitative Prediction at Weill Cornell Medicine would like to thank you for
                   your participation in the Global Antibiotic Resistance Mapping Project at the
@@ -67,7 +67,7 @@ export const WorldQuantSampleHeader: React.SFC<{}> = (props) => {
           <Grid>
             <Row style={paddingStyle}>
               <Col lg={8} md={12} sm={12}>
-                <img src={wordMark} className="worldquant-logo" />
+                <img src={wordMark} alt="WorldQuant" className="worldquant-logo" />
               </Col>
             </Row>
           </Grid>
@@ -80,7 +80,7 @@ export const WorldQuantSampleHeader: React.SFC<{}> = (props) => {
               <Col lg={12}>
                 <a
                   className="back-link"
-                  href="#"
+                  href="#back"
                   onClick={event => {
                     event.preventDefault();
                     window.history.back();
@@ -106,7 +106,7 @@ export const WorldQuantFooter: React.SFC<{}> = (props) => {
             <Row>
               <Col lg={12} className="footer-wrapper">
                 <div style={{position: 'relative'}}>
-                  <img src={wordMark} className="worldquant-logo" />
+                  <img src={wordMark} alt="WorldQuant" className="worldquant-logo" />
                   <p>&copy; Copyright 2018</p>
                 </div>
               </Col>

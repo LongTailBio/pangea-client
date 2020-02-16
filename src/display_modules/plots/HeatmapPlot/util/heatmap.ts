@@ -20,12 +20,14 @@ export interface HeatMapPlotOptions {
   };
 }
 
+export interface HeatMapXAxisOptions {
+  name: string;
+  category?: string;
+}
+
 export interface HeatMapOptions extends HeatMapPlotOptions {
   axis: {
-    x: {
-      name: string;
-      category?: string;
-    }[];
+    x: HeatMapXAxisOptions[];
     y: string[];
     categoryColors?: string[];
   };
@@ -38,12 +40,12 @@ export default class HeatMap {
   protected rootDiv: d3.Selection<HTMLDivElement, {}, null, undefined>;
   protected svg: d3.Selection<SVGSVGElement, {}, null, undefined>;
 
-  protected tooltip: d3.Selection<d3.BaseType, {}, null, undefined>;
-  protected xAxis: d3.Selection<d3.BaseType, {}, null, undefined>;
-  protected yAxis: d3.Selection<d3.BaseType, {}, null, undefined>;
-  protected canvas: d3.Selection<d3.BaseType, {}, null, undefined>;
-  protected legend: d3.Selection<d3.BaseType, {}, null, undefined>;
-  protected legendTitle: d3.Selection<d3.BaseType, {}, null, undefined>;
+  protected tooltip: d3.Selection<HTMLDivElement, {}, null, undefined>;
+  protected xAxis: d3.Selection<SVGGElement, {}, null, undefined>;
+  protected yAxis: d3.Selection<SVGGElement, {}, null, undefined>;
+  protected canvas: d3.Selection<SVGGElement, {}, null, undefined>;
+  protected legend: d3.Selection<SVGGElement, {}, null, undefined>;
+  protected legendTitle: d3.Selection<SVGTextElement, {}, null, undefined>;
 
   protected margin: {top: number, right: number, bottom: number, left: number};
 
@@ -136,7 +138,7 @@ export default class HeatMap {
     const axisNameSize = options.axisNameSize >= 0 ? options.axisNameSize : gridSize;
 
     // Column names
-    const columnNames = this.xAxis.selectAll('.column-name')
+    const columnNames = this.xAxis.selectAll<SVGTextElement, HeatMapXAxisOptions>('.column-name')
         .data(data.axis.x, (d: {name: string, category?: string}) => d.name);
     const maxStringLength = d3.max(data.axis.x.map(d => d.name.length))!;
     const itemHeight = Math.min(maxStringLength * gridSize, options.maxAxisNameLength);
@@ -155,8 +157,8 @@ export default class HeatMap {
     canvasHeight += itemHeight + axisLabelMargin;
 
     // Row names
-    const rowNames = this.yAxis.selectAll('.row-name')
-        .data(data.axis.y, (d: {name: string, category?: string}) => d.name);
+    const rowNames = this.yAxis.selectAll<SVGTextElement, string>('.row-name')
+        .data(data.axis.y);
     rowNames.enter().append('text')
       .attr('class', 'row-name')
       .attr('text-anchor', 'end')
@@ -177,7 +179,7 @@ export default class HeatMap {
         .domain([0, valMax])
         .range(colors);
 
-    const cards = this.canvas.selectAll('.cell')
+    const cards = this.canvas.selectAll<SVGRectElement, HeatMapDatum>('.cell')
         .data(data.data, (d: HeatMapDatum) => `${d.x}:${d.y}`);
 
     const safeRootDiv = this.rootDiv;
