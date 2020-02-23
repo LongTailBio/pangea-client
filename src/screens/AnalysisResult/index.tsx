@@ -10,7 +10,7 @@ interface AnalysisResultScreenProps {
   kind: "sample" | "sample-group";
 }
 
-export const NewAnalysisResultScreen = (props: AnalysisResultScreenProps) => {
+export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
   const apiPath = props.kind === "sample" ? "sample_ars" : `sample_group_ars`;
   const [{ data, loading, error }] = usePangeaAxios<AnalysisResultType>(
     `/${apiPath}/${props.uuid}`
@@ -68,4 +68,4 @@ export const NewAnalysisResultScreen = (props: AnalysisResultScreenProps) => {
   );
 };
 
-export default NewAnalysisResultScreen;
+export default AnalysisResultScreen;
