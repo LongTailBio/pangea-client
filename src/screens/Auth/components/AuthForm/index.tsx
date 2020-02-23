@@ -1,167 +1,125 @@
-import * as React from 'react';
-import { Redirect, Link } from 'react-router-dom';
-import { Row, Col } from 'react-bootstrap';
-import { Helmet } from 'react-helmet';
-import { default as axios, CancelTokenSource } from 'axios';
+import React, { useState } from "react";
+import { Redirect, Link } from "react-router-dom";
+import { Row, Col } from "react-bootstrap";
+import { Helmet } from "react-helmet";
+import { AxiosError } from "axios";
 
-import { authenticate } from '../../../../services/api';
-
-interface FormDataType {
-  username: string;
-  email: string;
-  password: string;
-}
-
-interface AuthFormState {
-  formData: FormDataType;
-}
+import { createAxios } from "../../../../services/api";
 
 interface FormProp {
   formType: string;
   isAuthenticated: boolean;
-  loginUser(token: string): void;
+  onLoginUser(token: string): void;
 }
 
-class AuthForm extends React.Component<FormProp, AuthFormState> {
+export const AuthForm = (props: FormProp) => {
+  const { formType, isAuthenticated, onLoginUser } = props;
 
-  protected sourceToken: CancelTokenSource;
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [authErrors, setAuthErrors] = useState<string[]>([]);
 
-  constructor(props: FormProp) {
-    super(props);
+  if (isAuthenticated) return <Redirect to="/" />;
 
-    this.sourceToken = axios.CancelToken.source();
-    this.state = {
-      formData: {
-        username: '',
-        email: '',
-        password: ''
-      }
-    };
+  const handleAuthError = (error: AxiosError) => {
+    let errorMessages = [error.message];
 
-    this.handleUserFormSubmit = this.handleUserFormSubmit.bind(this);
-    this.handleFormChange = this.handleFormChange.bind(this);
-  }
-
-  componentWillReceiveProps(nextProps: FormProp) {
-    if (this.props.formType !== nextProps.formType) {
-      this.clearForm();
+    if (error.response) {
+      const data = error.response.data as { [key: string]: string[] };
+      errorMessages = Object.keys(error.response.data).reduce(
+        (acc, key) => acc.concat(data[key]),
+        [error.message]
+      );
     }
-  }
 
-  componentWillUnmount() {
-    this.sourceToken.cancel();
-  }
+    setAuthErrors(errorMessages);
+  };
 
-  clearForm() {
-    this.setState({
-      formData: {username: '', email: '', password: ''}
-    });
-  }
-
-  handleFormChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const { name, value } = event.currentTarget;
-    const fieldUpdate = { [name]: value }
-    const formData = Object.assign({}, this.state.formData, fieldUpdate)
-    this.setState({ formData });
-  }
-
-  handleUserFormSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const handleUserFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formType = this.props.formType;
-    // tslint:disable-next-line no-any
-    let request: Promise<any>;
-    if (formType === 'login') {
-      const payload = {
-        email: this.state.formData.email,
-        password: this.state.formData.password,
-      };
-      request = authenticate(formType, payload, this.sourceToken);
-    }
-    if (formType === 'register') {
-      const payload = {
-        username: this.state.formData.username,
-        email: this.state.formData.email,
-        password: this.state.formData.password,
-      };
-      request = authenticate(formType, payload, this.sourceToken);
-    }
-    request!
-      .then((res) => {
-        this.clearForm();
-        this.props.loginUser(res.data.auth_token);
-      })
-      .catch((error) => {
-        if (!axios.isCancel(error)) {
-          console.log(error);
-        }
-      });
-  }
+    setAuthErrors([]);
 
-  render() {
-    if (this.props.isAuthenticated) {
-      return <Redirect to="/" />;
+    const client = createAxios();
+    const payload = { email, password };
+
+    const register = () => client.post("/auth/users/", payload);
+    const login = () =>
+      client.post("/auth/token/login/", payload).then(res => {
+        setEmail("");
+        setPassword("");
+        onLoginUser(res.data.auth_token);
+      });
+
+    if (formType === "login") {
+      return login().catch(handleAuthError);
     }
-    return (
-      <Row>
-        <Helmet>
-          <title>MetaGenScope :: {this.props.formType.capitalize()}</title>
-        </Helmet>
-        <h1>{this.props.formType.capitalize()}</h1>
-        <hr/><br/>
-        <Col lg={6} lgOffset={3}>
-          <form onSubmit={(event) => this.handleUserFormSubmit(event)}>
-            {this.props.formType === 'register' &&
-              <div className="form-group">
-                <input
-                  name="username"
-                  className="form-control input-lg"
-                  type="text"
-                  placeholder="Enter a username"
-                  required={true}
-                  value={this.state.formData.username}
-                  onChange={this.handleFormChange}
-                />
-              </div>
-            }
-            <div className="form-group">
-              <input
-                name="email"
-                className="form-control input-lg"
-                type="email"
-                placeholder="Enter an email address"
-                required={true}
-                value={this.state.formData.email}
-                onChange={this.handleFormChange}
-              />
-            </div>
-            <div className="form-group">
-              <input
-                name="password"
-                className="form-control input-lg"
-                type="password"
-                placeholder="Enter a password"
-                required={true}
-                value={this.state.formData.password}
-                onChange={this.handleFormChange}
-              />
-            </div>
+    if (formType === "register") {
+      return register()
+        .then(login)
+        .catch(handleAuthError);
+    }
+  };
+
+  const displayFormType = formType.capitalize();
+
+  return (
+    <Row>
+      <Helmet>
+        <title>MetaGenScope :: {displayFormType}</title>
+      </Helmet>
+      <h1>{displayFormType}</h1>
+      <hr />
+      <br />
+      <Col lg={6} lgOffset={3}>
+        <form onSubmit={handleUserFormSubmit}>
+          {authErrors &&
+            authErrors.map(authError => (
+              <p key={authError} style={{ color: "red" }}>
+                {authError}
+              </p>
+            ))}
+          <div className="form-group">
             <input
-              type="submit"
-              className="btn btn-primary btn-lg btn-block"
-              value="Submit"
+              name="email"
+              className="form-control input-lg"
+              type="email"
+              placeholder="Enter an email address"
+              required={true}
+              value={email}
+              onChange={event => setEmail(event.currentTarget.value)}
             />
-          </form>
-          <br />
-          {this.props.formType === 'register' &&
-            <p>Already have an account? <Link to="/login">Log in.</Link></p>
-          }
-          {this.props.formType === 'login' &&
-            <p>Don't have an account? <Link to="/register">Create one.</Link></p>
-          }
-        </Col>
-      </Row>
-    );
-  }
-}
+          </div>
+          <div className="form-group">
+            <input
+              name="password"
+              className="form-control input-lg"
+              type="password"
+              placeholder="Enter a password"
+              required={true}
+              value={password}
+              onChange={event => setPassword(event.currentTarget.value)}
+            />
+          </div>
+          <input
+            type="submit"
+            className="btn btn-primary btn-lg btn-block"
+            value="Submit"
+          />
+        </form>
+        <br />
+        {formType === "register" && (
+          <p>
+            Already have an account? <Link to="/login">Log in.</Link>
+          </p>
+        )}
+        {formType === "login" && (
+          <p>
+            Don't have an account? <Link to="/register">Create one.</Link>
+          </p>
+        )}
+      </Col>
+    </Row>
+  );
+};
 
 export default AuthForm;

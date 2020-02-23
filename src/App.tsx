@@ -66,7 +66,7 @@ export const App = () => {
             <AuthForm
               formType={"register"}
               isAuthenticated={isAuthenticated}
-              loginUser={handleOnLoginUser}
+              onLoginUser={handleOnLoginUser}
             />
           )}
         />
@@ -77,7 +77,7 @@ export const App = () => {
             <AuthForm
               formType={"login"}
               isAuthenticated={isAuthenticated}
-              loginUser={handleOnLoginUser}
+              onLoginUser={handleOnLoginUser}
             />
           )}
         />
