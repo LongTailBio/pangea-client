@@ -15,7 +15,7 @@ function getHost(): string {
   return `${protocol}//${host}${port}`;
 }
 
-export const API_BASE_URL = `${getHost()}/api/v1`;
+export const API_BASE_URL = `${getHost()}/api`;
 
 /**
  * Similar to `makeCancelable` but uses axios' implementation:

@@ -64,7 +64,7 @@ export const createOrganization = (name: string, adminEmail: string, source: Can
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${window.localStorage.authToken}`
+      Authorization: `Token ${window.localStorage.authToken}`
     },
     data: {
       name,
@@ -81,7 +81,7 @@ export const getOrganization = (uuid: string, source: CancelTokenSource) => {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${window.localStorage.authToken}`
+      Authorization: `Token ${window.localStorage.authToken}`
     }
   };
 
@@ -109,7 +109,7 @@ export const getUser = (uuid: string, source: CancelTokenSource) => {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${window.localStorage.authToken}`
+      Authorization: `Token ${window.localStorage.authToken}`
     },
   };
 
@@ -134,7 +134,7 @@ export const getUserStatus = (source: CancelTokenSource) => {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${window.localStorage.authToken}`
+      Authorization: `Token ${window.localStorage.authToken}`
     },
   };
 
@@ -148,7 +148,7 @@ export const getSampleGroup = (uuid: string, source: CancelTokenSource) => {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${window.localStorage.authToken}`
+      Authorization: `Token ${window.localStorage.authToken}`
     },
   };
 
@@ -177,14 +177,14 @@ export const getSampleGroupSamples = (uuid: string, source: CancelTokenSource) =
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${window.localStorage.authToken}`
+      Authorization: `Token ${window.localStorage.authToken}`
     },
   };
 
   return cancelableAxios(options, source)
     .then(res => {
       const rawSamples = res.data.data.samples;
-      
+
       const samples: SampleType[] = rawSamples.map((rawSample: any) => {
         return {
           uuid: rawSample.uuid,
@@ -203,7 +203,7 @@ export const getSample = (uuid: string, source: CancelTokenSource) => {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${window.localStorage.authToken}`
+      Authorization: `Token ${window.localStorage.authToken}`
     },
   };
 
@@ -228,7 +228,7 @@ export const getAnalysisResult = (uuid: string, source: CancelTokenSource) => {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${window.localStorage.authToken}`
+      Authorization: `Token ${window.localStorage.authToken}`
     },
   };
 
@@ -253,7 +253,7 @@ export const getAnalysisResults = (uuid: string, source: CancelTokenSource) => {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${window.localStorage.authToken}`
+      Authorization: `Token ${window.localStorage.authToken}`
     },
   };
 
