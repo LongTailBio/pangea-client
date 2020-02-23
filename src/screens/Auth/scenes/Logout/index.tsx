@@ -1,28 +1,29 @@
-import * as React from 'react';
-import { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 interface LogoutProp {
-  isAuthenticated: boolean;
-  logoutUser(): void;
+  onLogoutUser(): void;
 }
 
-class Logout extends Component<LogoutProp, {}> {
-  componentDidMount() {
-    this.props.logoutUser();
-  }
+export const Logout = (props: LogoutProp) => {
+  const { onLogoutUser } = props;
 
-  render() {
-    return (
-      <div>
-        <Helmet>
-          <title>MetaGenScope :: Logged Out</title>
-        </Helmet>
-        <p>You are now logged out. Click <Link to="/login">here</Link> to log back in.</p>
-      </div>
-    );
-  }
-}
+  useEffect(() => {
+    onLogoutUser();
+  }, [onLogoutUser]);
+
+  return (
+    <div>
+      <Helmet>
+        <title>MetaGenScope :: Logged Out</title>
+      </Helmet>
+      <p>
+        You are now logged out. Click <Link to="/login">here</Link> to log back
+        in.
+      </p>
+    </div>
+  );
+};
 
 export default Logout;

@@ -1,5 +1,5 @@
 import axios, { CancelTokenSource, AxiosRequestConfig } from 'axios';
-import useAxios, { Options } from "axios-hooks";
+import { Options, makeUseAxios } from "axios-hooks";
 
 import { history } from "../../history";
 import { API_BASE_URL, cancelableAxios } from './utils';
@@ -10,30 +10,39 @@ export interface PaginatedResult<T> {
   results: T[];
 }
 
-axios.interceptors.response.use(undefined, error => {
-  const { status } = error.response;
-  if (status === 401 || status === 403) {
-    Promise.reject(error);
-    // Allow component state update to complete before navigating away
-    setTimeout(() => history.push("/login"), 0);
-  }
-})
-
-export const usePangeaAxios = <T = any>(config: AxiosRequestConfig | string, options?: Options) => {
+export const createAxios = () => {
   const { authToken } = window.localStorage;
-  const baseConfig: AxiosRequestConfig = {
+  const client = axios.create({
     baseURL: API_BASE_URL,
-    url: typeof config === 'string' ? config : undefined,
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: authToken ? `Token ${authToken}` : undefined,
+      "Content-Type": "application/json",
+      Authorization: authToken ? `Token ${authToken}` : undefined
     }
-  };
-  config = Object.assign(baseConfig, config);
+  });
 
+  client.interceptors.response.use(undefined, error => {
+    const { status } = error.response;
+    if (status === 401) {
+      Promise.reject(error);
+      // Allow component state update to complete before navigating away
+      setTimeout(() => {
+        window.localStorage.removeItem("authToken");
+        history.push("/login");
+      }, 0);
+    }
+  });
+
+  return client;
+};
+
+export const usePangeaAxios = <T = any>(
+  config: AxiosRequestConfig | string,
+  options?: Options
+) => {
+  const client = createAxios();
+  const useAxios = makeUseAxios({ axios: client });
   return useAxios<T>(config, options);
-}
-
+};
 
 type LoginType = {
   email: string;
