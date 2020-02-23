@@ -23,13 +23,13 @@ export const createAxios = () => {
   client.interceptors.response.use(undefined, error => {
     const { status } = error.response;
     if (status === 401) {
-      Promise.reject(error);
       // Allow component state update to complete before navigating away
       setTimeout(() => {
         window.localStorage.removeItem("authToken");
         history.push("/login");
       }, 0);
     }
+    return Promise.reject(error);
   });
 
   return client;
