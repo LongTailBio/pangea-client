@@ -27,7 +27,7 @@ const useSampleGroup = (uuid: string) => {
   );
   const [analysisResultsResult] = usePangeaAxios<
     PaginatedResult<AnalysisResultType>
-  >(`/sample_group_ars?sample_group=${uuid}`);
+  >(`/sample_group_ars?sample_group_id=${uuid}`);
 
   const data = {
     group: sampleGroupResult.data,
