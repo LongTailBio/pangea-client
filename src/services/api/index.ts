@@ -1,6 +1,7 @@
-import { CancelTokenSource, AxiosRequestConfig } from 'axios';
+import axios, { CancelTokenSource, AxiosRequestConfig } from 'axios';
 import useAxios, { Options } from "axios-hooks";
 
+import { history } from "../../history";
 import { API_BASE_URL, cancelableAxios } from './utils';
 import { UserType } from './models/user';
 
@@ -8,6 +9,15 @@ export interface PaginatedResult<T> {
   count: number;
   results: T[];
 }
+
+axios.interceptors.response.use(undefined, error => {
+  const { status } = error.response;
+  if (status === 401 || status === 403) {
+    Promise.reject(error);
+    // Allow component state update to complete before navigating away
+    setTimeout(() => history.push("/login"), 0);
+  }
+})
 
 export const usePangeaAxios = <T = any>(config: AxiosRequestConfig | string, options?: Options) => {
   const { authToken } = window.localStorage;
