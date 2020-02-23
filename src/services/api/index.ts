@@ -14,11 +14,17 @@ type LoginType = {
 };
 
 export const authenticate = (formType: string, data: LoginType, source: CancelTokenSource) => {
-  const options: AxiosRequestConfig = {
-    url: `${API_BASE_URL}/auth/${formType}`,
-    method: 'post',
-    data,
-  };
+  const options: AxiosRequestConfig = formType === 'login'
+    ? {
+      url: `${API_BASE_URL}/auth/token/login/`,
+      method: 'post',
+      data,
+    }
+    : {
+      url: `${API_BASE_URL}/auth/${formType}`,
+      method: 'post',
+      data,
+    };
 
   return cancelableAxios(options, source);
 };
