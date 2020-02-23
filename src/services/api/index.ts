@@ -8,6 +8,10 @@ import { SampleGroupType } from './models/sampleGroup';
 import { SampleType } from './models/sample';
 import { AnalysisResultType } from './models/analysisResult';
 
+export interface PaginatedResult<T> {
+  count: number;
+  results: T[];
+}
 
 export const usePangeaAxios = <T = any>(config: AxiosRequestConfig | string, options?: Options) => {
   const { authToken } = window.localStorage;

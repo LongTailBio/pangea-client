@@ -122,7 +122,6 @@ class App extends React.Component<{}, AppState> {
             path="/organizations/:uuid"
             render={(routeProps) => (
               <OrganizationDetail
-                isAuthenticated={this.state.isAuthenticated}
                 uuid={routeProps.match.params.uuid}
               />
             )}
@@ -135,7 +134,7 @@ class App extends React.Component<{}, AppState> {
                 userUUID={routeProps.match.params.uuid}
               />
             )}
-          />          
+          />
           <Route
             path="/sample-groups/:uuid"
             render={(routeProps) => (
@@ -173,7 +172,7 @@ class App extends React.Component<{}, AppState> {
                 query={routeProps.match.params.query}
               />
             )}
-          />          
+          />
           <Route
             exact={true}
             path="/logout"
