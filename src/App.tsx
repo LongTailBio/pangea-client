@@ -139,9 +139,7 @@ class App extends React.Component<{}, AppState> {
             path="/sample-groups/:uuid"
             render={(routeProps) => (
               <SampleGroup
-                groupUUID={routeProps.match.params.uuid}
-                isAuthenticated={this.state.isAuthenticated}
-                updateTheme={this.updateTheme}
+                uuid={routeProps.match.params.uuid}
               />
             )}
           />

@@ -172,7 +172,7 @@ export const getSampleGroup = (uuid: string, source: CancelTokenSource) => {
     .then(res => {
       const sampleGroup: SampleGroupType = {
         uuid: res.data.sample_group.uuid,
-        organization_id: res.data.sample_group.organization_id,
+        organization: res.data.sample_group.organization_id,
         name: res.data.sample_group.name,
         description: res.data.sample_group.description,
         is_public: res.data.sample_group.is_public,

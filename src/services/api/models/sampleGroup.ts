@@ -1,6 +1,6 @@
 export interface SampleGroupType {
   uuid: string;
-  organization_id: string;
+  organization: string;
   name: string;
   description: string;
   is_public: boolean;
