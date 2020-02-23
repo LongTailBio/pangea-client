@@ -95,7 +95,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
         <h1>{group.name}</h1>
         <h2>Sample Group</h2>
         <p>{group.is_public ? "Public" : "Private"}</p>
-        <p>{new Date(group.created_at).toLocaleDateString()}</p>
+        <p>{new Date(group.created_at).toLocaleString()}</p>
       </Row>
       <Row>
         <Link to={`/organizations/${group.organization}`}>
