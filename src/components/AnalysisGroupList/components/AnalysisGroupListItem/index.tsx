@@ -21,15 +21,12 @@ class AnalysisGroupListItem extends React.Component<Prop, SampleGroupType> {
       this.state = {
           uuid: '',
           name: '',
-          organization_uuid: '',
+          organization_id: '',
           description: '',
-          is_library: false,
           is_public: false,
+          theme: '',
           created_at: '',
-          sample_uuids: [],
-          sample_names: [],
-          analysis_result_uuids: [],
-          analysis_result_names: [],
+          updated_at: '',
       };
   }
 

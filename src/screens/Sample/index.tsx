@@ -24,11 +24,10 @@ class SampleScreen extends React.Component<SampleScreenProps, SampleType> {
         this.state = {
             uuid: '',
             name: '',
-            library_uuid: '',
-            created_at: '',
-            analysis_result_uuids: [],
-            analysis_result_names: [],
+            library_id: '',
             metadata: {},
+            created_at: '',
+            updated_at: '',
         };
     }
 
@@ -56,14 +55,14 @@ class SampleScreen extends React.Component<SampleScreenProps, SampleType> {
                     <h2>Sample</h2>
                 </Row>
                 <Row>
-                    <Link to={`/sample-groups/${this.state.library_uuid}`}>Library</Link>
+                    <Link to={`/sample-groups/${this.state.library_id}`}>Library</Link>
                 </Row>
 
                 <Row>
                     <Nav bsStyle="tabs" activeKey="1">
                         <LinkContainer to={`/samples/${this.props.sampleUUID}`}>
                             <NavItem eventKey="1"><Glyphicon glyph="folder-open" /> Analysis Results <Badge>
-                                {this.state.analysis_result_names.length}
+                                0
                             </Badge></NavItem>
                         </LinkContainer>
                     </Nav>
@@ -79,18 +78,18 @@ class SampleScreen extends React.Component<SampleScreenProps, SampleType> {
                             return (
                                 <Row>
                                     <Col lg={12}>
-                                        {this.state.analysis_result_uuids &&
-                                            this.state.analysis_result_uuids.map((ar_uuid, i) => {
+                                        {false &&
+                                            [].map((ar_uuid, i) => {
                                                 return (
                                                     <ul className="analysis-group-list">
                                                         <li className="analysis-group-list-item">
-                                                            <Link to={`/analysis-results/${ar_uuid}`}>{this.state.analysis_result_names[i]}</Link>
+                                                            <Link to={`/analysis-results/${ar_uuid}`}>{[][i]}</Link>
                                                         </li>
                                                     </ul>
                                                 );
                                             })
                                         }
-                                        {!this.state.analysis_result_uuids &&
+                                        {true &&
                                             <Well className="text-center">
                                                 <h4>This sample has no analysis results.</h4>
                                             </Well>

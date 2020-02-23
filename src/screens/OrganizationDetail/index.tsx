@@ -78,21 +78,18 @@ class OrganizationDetail extends React.Component<OrganizationsProps, Organizatio
               <Col lg={12}>
                 <h1>{this.state.organization.name}</h1>
                 <h2>Organization</h2>
-                <p><Link to={`/users/${this.state.organization.primary_admin_uuid}`}>
-                  Primary Admin
-                </Link></p>
               </Col>
             </Row>
             <Row>
               <Nav bsStyle="tabs" activeKey="1">
                 <LinkContainer to={`/organizations/${this.props.uuid}`} exact={true}>
                   <NavItem eventKey="1"><Glyphicon glyph="star" /> Sample Groups <Badge>
-                    {this.state.organization.sample_group_uuids.length}
+                    0
                   </Badge></NavItem>
                 </LinkContainer>
                 <LinkContainer to={`/organizations/${this.props.uuid}/people`}>
                   <NavItem eventKey="2"><Glyphicon glyph="user" /> People <Badge>
-                    {this.state.organization.user_uuids.length}
+                    0
                   </Badge></NavItem>
                 </LinkContainer>
               </Nav>
@@ -103,13 +100,11 @@ class OrganizationDetail extends React.Component<OrganizationsProps, Organizatio
                 exact={true}
                 path="/organizations/:uuid"
                 render={(props) => {
-                  const userUUIDs = this.state.organization ? this.state.organization.user_uuids : [];
-                  const sampleGroupUUIDs = this.state.organization ? this.state.organization.sample_group_uuids : [];
                   return (
                     <OrganizationProjects
                       uuid={props.match.params.uuid}
-                      userUUIDs={userUUIDs}
-                      sampleGroupUUIDs={sampleGroupUUIDs}
+                      userUUIDs={[]}
+                      sampleGroupUUIDs={[]}
                     />
                   );
                 }}
@@ -118,13 +113,11 @@ class OrganizationDetail extends React.Component<OrganizationsProps, Organizatio
                 exact={true}
                 path="/organizations/:uuid/people"
                 render={(props) => {
-                  const userUUIDs = this.state.organization ? this.state.organization.user_uuids : [];
-                  const userUsernames = this.state.organization ? this.state.organization.user_usernames : [];
                   return (
                     <PeopleList
                       orguuid={props.match.params.uuid}
-                      peopleUUIDs={userUUIDs}
-                      peopleUsernames={userUsernames} 
+                      peopleUUIDs={[]}
+                      peopleUsernames={[]}
                     />
                   );
                 }}

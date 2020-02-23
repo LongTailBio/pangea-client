@@ -10,7 +10,6 @@ import { AnalysisResultType } from './models/analysisResult';
 type LoginType = {
   email: string;
   password: string;
-  username?: string;
 };
 
 export const authenticate = (formType: string, data: LoginType, source: CancelTokenSource) => {
@@ -74,7 +73,6 @@ export const createOrganization = (name: string, adminEmail: string, source: Can
     },
     data: {
       name,
-      admin_email: adminEmail,
     },
   };
 
@@ -96,13 +94,8 @@ export const getOrganization = (uuid: string, source: CancelTokenSource) => {
       const organization: OrganizationType = {
         uuid: res.data.organization.uuid,
         name: res.data.organization.name,
-        is_public: res.data.organization.is_public,
-        is_deleted: res.data.organization.is_deleted,
         created_at: res.data.organization.created_at,
-        primary_admin_uuid: res.data.organization.primary_admin_uuid,
-        sample_group_uuids: res.data.organization.sample_group_uuids,
-        user_uuids: res.data.organization.user_uuids,
-        user_usernames: res.data.organization.user_usernames,
+        updated_at: res.data.organization.updated_at,
       }
 
       return organization;
@@ -122,13 +115,8 @@ export const getUser = (uuid: string, source: CancelTokenSource) => {
   return cancelableAxios(options, source)
     .then(res => {
       const sample: UserType = {
-          uuid: res.data.user.uuid,
-          username: res.data.user.username,
+          id: res.data.user.id,
           email: res.data.user.email,
-          is_deleted: res.data.user.is_deleted,
-          created_at: res.data.user.created_at,
-          organization_uuids: res.data.user.organization_uuids,
-          organization_names: res.data.user.organization_names,
       };
       return sample;
     });
@@ -162,16 +150,13 @@ export const getSampleGroup = (uuid: string, source: CancelTokenSource) => {
     .then(res => {
       const sampleGroup: SampleGroupType = {
         uuid: res.data.sample_group.uuid,
+        organization_id: res.data.sample_group.organization_id,
         name: res.data.sample_group.name,
-        organization_uuid: res.data.sample_group.organization_uuid,
         description: res.data.sample_group.description,
-        is_library: res.data.sample_group.is_library,
         is_public: res.data.sample_group.is_public,
+        theme: res.data.sample_group.theme,
         created_at: res.data.sample_group.created_at,
-        sample_uuids: res.data.sample_group.sample_uuids,
-        sample_names: res.data.sample_group.sample_names,
-        analysis_result_uuids: res.data.sample_group.analysis_result_uuids,
-        analysis_result_names: res.data.sample_group.analysis_result_names,
+        updated_at: res.data.organization.updated_at,
       };
       return sampleGroup;
     });
@@ -217,12 +202,11 @@ export const getSample = (uuid: string, source: CancelTokenSource) => {
     .then(res => {
       const sample: SampleType = {
           uuid: res.data.sample.uuid,
+          library_id: res.data.sample.library_id,
           name: res.data.sample.name,
-          library_uuid: res.data.sample.library_uuid,
-          created_at: res.data.sample.created_at,
-          analysis_result_uuids: res.data.sample.analysis_result_uuids,
-          analysis_result_names: res.data.sample.analysis_result_names,
           metadata: res.data.sample_metadata,
+          created_at: res.data.sample.created_at,
+          updated_at: res.data.sample.updated_at,
       };
       return sample;
     });

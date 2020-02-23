@@ -23,16 +23,13 @@ class SampleGroupScreen extends React.Component<SampleGroupScreenProps, SampleGr
         this.sourceToken = axios.CancelToken.source();
         this.state = {
             uuid: '',
+            organization_id: '',
             name: '',
-            organization_uuid: '',
             description: '',
-            is_library: false,
+            theme: '',
             is_public: false,
             created_at: '',
-            sample_uuids: [],
-            sample_names: [],
-            analysis_result_uuids: [],
-            analysis_result_names: [],
+            updated_at: '',
         };
     }
 
@@ -66,19 +63,19 @@ class SampleGroupScreen extends React.Component<SampleGroupScreenProps, SampleGr
                     <p>{this.state.created_at}</p>                 
                 </Row>
                 <Row>
-                    <Link to={`/organizations/${this.state.organization_uuid}`}>Owner Organization</Link>
+                    <Link to={`/organizations/${this.state.organization_id}`}>Owner Organization</Link>
                 </Row>
 
                 <Row>
                     <Nav bsStyle="tabs" activeKey="1">
                         <LinkContainer to={`/sample-groups/${this.props.groupUUID}`} exact={true}>
                             <NavItem eventKey="1"><Glyphicon glyph="star" /> Samples <Badge>
-                                {this.state.sample_names.length}
+                                0
                             </Badge></NavItem>
                         </LinkContainer>
                         <LinkContainer to={`/sample-groups/${this.props.groupUUID}/analysis-results`}>
                             <NavItem eventKey="2"><Glyphicon glyph="folder-open" /> Analysis Results <Badge>
-                                {this.state.analysis_result_names.length}
+                                0
                             </Badge></NavItem>
                         </LinkContainer>
                     </Nav>
@@ -93,18 +90,18 @@ class SampleGroupScreen extends React.Component<SampleGroupScreenProps, SampleGr
                             return (
                                 <Row>
                                     <Col lg={12}>
-                                        {this.state.sample_uuids && 
-                                            this.state.sample_uuids.map((sample_uuid, i) => {
+                                        {false &&
+                                            [].map((sample_uuid, i) => {
                                                 return (
                                                     <ul className="analysis-group-list">
                                                         <li className="analysis-group-list-item">
-                                                            <Link to={`/samples/${sample_uuid}`}>{this.state.sample_names[i]}</Link>
+                                                            <Link to={`/samples/${sample_uuid}`}>{[][i]}</Link>
                                                         </li>
                                                     </ul>
                                                 );
                                             })
                                         }
-                                        {!this.state.sample_uuids &&
+                                        {true &&
                                             <Well className="text-center">
                                                 <h4>This sample group has no samples.</h4>
                                             </Well>
@@ -121,18 +118,18 @@ class SampleGroupScreen extends React.Component<SampleGroupScreenProps, SampleGr
                             return (
                                 <Row>
                                     <Col lg={12}>
-                                        {this.state.analysis_result_uuids &&
-                                            this.state.analysis_result_uuids.map((ar_uuid, i) => {
+                                        {false &&
+                                            [].map((ar_uuid, i) => {
                                                 return (
                                                     <ul className="analysis-group-list">
                                                         <li className="analysis-group-list-item">
-                                                            <Link to={`/analysis-results/${ar_uuid}`}>{this.state.analysis_result_names[i]}</Link>
+                                                            <Link to={`/analysis-results/${ar_uuid}`}>{[][i]}</Link>
                                                         </li>
                                                     </ul>
                                                 );
                                             })
                                         }
-                                        {!this.state.analysis_result_uuids &&
+                                        {true &&
                                             <Well className="text-center">
                                                 <h4>This sample group has no analysis results.</h4>
                                             </Well>
