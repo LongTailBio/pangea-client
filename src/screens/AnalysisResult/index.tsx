@@ -22,6 +22,7 @@ class AnalysisResultScreen extends React.Component<AnalysisResultScreenProps, An
             uuid: '',
             parent_uuid: '',
             module_name: '',
+            replicate: '',
             kind: '',
             status: '',
             created_at: '',

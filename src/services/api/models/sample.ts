@@ -1,6 +1,6 @@
 export interface SampleType {
   uuid: string;
-  library_id: string;
+  library: string;
   name: string;
   metadata: { [key: string]: any };
   created_at: string;

@@ -146,11 +146,7 @@ class App extends React.Component<{}, AppState> {
           <Route
             path="/samples/:uuid"
             render={(routeProps) => (
-              <Sample
-                sampleUUID={routeProps.match.params.uuid}
-                isAuthenticated={this.state.isAuthenticated}
-                updateTheme={this.updateTheme}
-              />
+              <Sample uuid={routeProps.match.params.uuid} />
             )}
           />
           <Route

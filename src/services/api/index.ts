@@ -224,7 +224,7 @@ export const getSample = (uuid: string, source: CancelTokenSource) => {
     .then(res => {
       const sample: SampleType = {
           uuid: res.data.sample.uuid,
-          library_id: res.data.sample.library_id,
+          library: res.data.sample.library_id,
           name: res.data.sample.name,
           metadata: res.data.sample_metadata,
           created_at: res.data.sample.created_at,
@@ -250,6 +250,7 @@ export const getAnalysisResult = (uuid: string, source: CancelTokenSource) => {
           uuid: res.data.analysis_result.uuid,
           parent_uuid: res.data.analysis_result.parent_uuid,
           module_name: res.data.analysis_result.module_name,
+          replicate: res.data.analysis_result.replicate,
           kind: res.data.analysis_result.kind,
           status: res.data.analysis_result.status,
           created_at: res.data.analysis_result.created_at,
