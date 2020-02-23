@@ -97,11 +97,7 @@ class App extends React.Component<{}, AppState> {
           <Route
             exact={true}
             path="/status"
-            render={() => (
-              <UserStatus
-                isAuthenticated={this.state.isAuthenticated}
-              />
-            )}
+            render={() => <UserStatus />}
           />
           <Route
             path="/dashboard"

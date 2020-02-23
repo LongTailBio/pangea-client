@@ -1,72 +1,32 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
-import { default as axios, CancelTokenSource } from 'axios';
+import React from "react";
+import { Helmet } from "react-helmet";
 
-import { getUserStatus } from '../../services/api';
+import { usePangeaAxios } from "../../services/api";
+import { UserType } from "../../services/api/models/user";
 
-interface UserProps {
-  isAuthenticated: boolean;
-}
+export const UserStatus = () => {
+  const [{ data, loading, error }] = usePangeaAxios<UserType>(
+    "/auth/users/me/"
+  );
 
-interface UserState {
-  created_at: string;
-  email: string;
-  id: string;
-  username: string;
-}
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error.message}</p>;
 
-class UserStatus extends React.Component<UserProps, UserState> {
-
-  protected sourceToken: CancelTokenSource;
-
-  constructor (props: UserProps) {
-    super(props);
-
-    this.sourceToken = axios.CancelToken.source();
-    this.state = {
-      created_at: '',
-      email: '',
-      id: '',
-      username: ''
-    };
-  }
-
-  componentDidMount() {
-    if (this.props.isAuthenticated) {
-      getUserStatus(this.sourceToken)
-        .then((userState) => {
-          this.setState(userState);
-        })
-        .catch((error) => {
-          if (!axios.isCancel(error)) {
-            console.log(error);
-          }
-        });
-    }
-  }
-
-  componentWillUnmount() {
-    this.sourceToken.cancel();
-  }
-
-  render() {
-    if (!this.props.isAuthenticated) {
-      return <p>You must be logged in to view this. Click <Link to="/login">here</Link> to log back in.</p>;
-    }
-    return (
-      <div>
-        <Helmet>
-          <title>MetaGenScope :: User Status</title>
-        </Helmet>
-        <ul>
-          <li><strong>User ID:</strong> {this.state.id}</li>
-          <li><strong>Email:</strong> {this.state.email}</li>
-          <li><strong>Username:</strong> {this.state.username}</li>
-        </ul>
-      </div>
-    );
-  }
-}
+  return (
+    <>
+      <Helmet>
+        <title>MetaGenScope :: User Status</title>
+      </Helmet>
+      <ul>
+        <li>
+          <strong>User ID:</strong> {data.id}
+        </li>
+        <li>
+          <strong>Email:</strong> {data.email}
+        </li>
+      </ul>
+    </>
+  );
+};
 
 export default UserStatus;
