@@ -1,4 +1,5 @@
 import { CancelTokenSource, AxiosRequestConfig } from 'axios';
+import useAxios, { Options } from "axios-hooks";
 
 import { API_BASE_URL, cancelableAxios } from './utils';
 import { OrganizationType } from './models/organization';
@@ -6,6 +7,23 @@ import { UserType } from './models/user';
 import { SampleGroupType } from './models/sampleGroup';
 import { SampleType } from './models/sample';
 import { AnalysisResultType } from './models/analysisResult';
+
+
+export const usePangeaAxios = <T = any>(config: AxiosRequestConfig | string, options?: Options) => {
+  const { authToken } = window.localStorage;
+  const baseConfig: AxiosRequestConfig = {
+    baseURL: API_BASE_URL,
+    url: typeof config === 'string' ? config : undefined,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: authToken ? `Token ${authToken}` : undefined,
+    }
+  };
+  config = Object.assign(baseConfig, config);
+
+  return useAxios<T>(config, options);
+}
+
 
 type LoginType = {
   email: string;
