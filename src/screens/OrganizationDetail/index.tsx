@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Switch, Route } from "react-router";
 import { LinkContainer } from "react-router-bootstrap";
 import { Row, Col, Nav, NavItem, Glyphicon, Badge } from "react-bootstrap";
@@ -9,17 +9,42 @@ import PeopleList from "./scenes/OrganizationPeople/components/PeopleList";
 import PersonDetail from "./scenes/OrganizationPeople/components/PersonDetail";
 import OrganizationSettings from "./scenes/OrganizationSettings";
 
+import { usePangeaAxios, PaginatedResult } from "../../services/api";
 import { OrganizationType } from "../../services/api/models/organization";
-import { usePangeaAxios } from "../../services/api";
+import { SampleGroupType } from "../../services/api/models/analysisGroup";
+import { UserType } from "../../services/api/models/user";
+
+const useOrganization = (uuid: string) => {
+  const [organization] = usePangeaAxios<OrganizationType>(
+    `/organizations/${uuid}`
+  );
+  const [sampleGroups] = usePangeaAxios<PaginatedResult<SampleGroupType>>(
+    `/sample_groups?organization_id=${uuid}`
+  );
+
+  const [people] = usePangeaAxios<PaginatedResult<UserType>>(
+    `/organizations/${uuid}/users`
+  );
+
+  const data = {
+    organization: organization.data,
+    sampleGroups: sampleGroups.data,
+    people: people.data
+  };
+  const loading =
+    organization.loading || sampleGroups.loading || people.loading;
+  const error =
+    organization.error || sampleGroups.error || people.error || undefined;
+
+  return [{ data, loading, error }];
+};
 
 interface OrganizationsProps {
   uuid: string;
 }
 
 export const OrganizationDetail = (props: OrganizationsProps) => {
-  const [{ data, loading, error }] = usePangeaAxios<OrganizationType>(
-    `/organizations/${props.uuid}`
-  );
+  const [{ data, loading, error }] = useOrganization(props.uuid);
 
   if (loading) {
     return (
@@ -52,15 +77,17 @@ export const OrganizationDetail = (props: OrganizationsProps) => {
     );
   }
 
+  const { organization, sampleGroups, people } = data;
+
   return (
     <>
       <Helmet>
-        <title>{`Pangea :: ${data.name}`}</title>
+        <title>{`Pangea :: ${organization.name}`}</title>
       </Helmet>
       <Row>
         <Row>
           <Col lg={12}>
-            <h1>{data.name}</h1>
+            <h1>{organization.name}</h1>
             <h2>Organization</h2>
           </Col>
         </Row>
@@ -68,12 +95,13 @@ export const OrganizationDetail = (props: OrganizationsProps) => {
           <Nav bsStyle="tabs" activeKey="1">
             <LinkContainer to={`/organizations/${props.uuid}`} exact={true}>
               <NavItem eventKey="1">
-                <Glyphicon glyph="star" /> Sample Groups <Badge>0</Badge>
+                <Glyphicon glyph="star" /> Sample Groups{" "}
+                <Badge>{sampleGroups.count}</Badge>
               </NavItem>
             </LinkContainer>
             <LinkContainer to={`/organizations/${props.uuid}/people`}>
               <NavItem eventKey="2">
-                <Glyphicon glyph="user" /> People <Badge>0</Badge>
+                <Glyphicon glyph="user" /> People <Badge>{people.count}</Badge>
               </NavItem>
             </LinkContainer>
           </Nav>
@@ -83,20 +111,14 @@ export const OrganizationDetail = (props: OrganizationsProps) => {
           <Route
             exact={true}
             path="/organizations/:uuid"
-            render={() => <OrganizationProjects uuid={props.uuid} />}
+            render={() => (
+              <OrganizationProjects sampleGroups={sampleGroups.results} />
+            )}
           />
           <Route
             exact={true}
             path="/organizations/:uuid/people"
-            render={props => {
-              return (
-                <PeopleList
-                  orguuid={props.match.params.uuid}
-                  peopleUUIDs={[]}
-                  peopleUsernames={[]}
-                />
-              );
-            }}
+            render={props => <PeopleList people={people.results} />}
           />
           <Route
             exact={true}

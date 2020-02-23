@@ -1,25 +1,16 @@
-import * as React from "react";
+import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Row, Col, Well, Button } from "react-bootstrap";
 
-import { usePangeaAxios, PaginatedResult } from "../../../../services/api";
 import { SampleGroupType } from "../../../../services/api/models/analysisGroup";
-
 import AnalysisGroupList from "../../../../components/AnalysisGroupList";
 
 interface OrganizationProjectsProps {
-  uuid: string;
+  sampleGroups: SampleGroupType[];
 }
 
 const OrganizationProjects = (props: OrganizationProjectsProps) => {
-  const [{ data, loading, error }] = usePangeaAxios<
-    PaginatedResult<SampleGroupType>
-  >(`/sample_groups?organization_id=${props.uuid}`);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error.message}</p>;
-
-  const sampleGroups = data.results;
+  const sampleGroups = props.sampleGroups;
 
   return (
     <Row>
