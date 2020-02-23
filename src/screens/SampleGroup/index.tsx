@@ -113,7 +113,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
           <LinkContainer to={`/sample-groups/${props.uuid}/analysis-results`}>
             <NavItem eventKey="2">
               <Glyphicon glyph="folder-open" /> Analysis Results{" "}
-              <Badge>0</Badge>
+              <Badge>{analysisResults.count}</Badge>
             </NavItem>
           </LinkContainer>
         </Nav>
@@ -159,8 +159,11 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
                       className="analysis-group-list"
                     >
                       <li className="analysis-group-list-item">
-                        <Link to={`/analysis-results/${analysisResult.uuid}`}>
-                          {analysisResult.module_name}
+                        <Link
+                          to={`/sample-groups/${props.uuid}/analysis-results/${analysisResult.uuid}`}
+                        >
+                          {analysisResult.module_name} -{" "}
+                          {analysisResult.replicate}
                         </Link>
                       </li>
                     </ul>

@@ -112,7 +112,9 @@ export const SampleScreen = (props: SampleScreenProps) => {
                       className="analysis-group-list"
                     >
                       <li className="analysis-group-list-item">
-                        <Link to={`/analysis-results/${analysisResult.uuid}`}>
+                        <Link
+                          to={`/samples/${sample.uuid}/analysis-results/${analysisResult.uuid}`}
+                        >
                           {analysisResult.module_name} -{" "}
                           {analysisResult.replicate}
                         </Link>

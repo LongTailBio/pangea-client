@@ -136,10 +136,28 @@ class App extends React.Component<{}, AppState> {
             )}
           />
           <Route
+            exact={true}
+            path="/sample-groups/:group_uuid/analysis-results/:uuid"
+            render={(routeProps) => (
+              <AnalysisResult
+                uuid={routeProps.match.params.uuid}
+                kind='sample-group'
+              />
+            )}
+          />
+          <Route
             path="/sample-groups/:uuid"
             render={(routeProps) => (
-              <SampleGroup
+              <SampleGroup uuid={routeProps.match.params.uuid} />
+            )}
+          />
+          <Route
+            exact={true}
+            path="/samples/:sample_uuid/analysis-results/:uuid"
+            render={(routeProps) => (
+              <AnalysisResult
                 uuid={routeProps.match.params.uuid}
+                kind="sample"
               />
             )}
           />
@@ -147,16 +165,6 @@ class App extends React.Component<{}, AppState> {
             path="/samples/:uuid"
             render={(routeProps) => (
               <Sample uuid={routeProps.match.params.uuid} />
-            )}
-          />
-          <Route
-            path="/analysis-results/:uuid"
-            render={(routeProps) => (
-              <AnalysisResult
-                arUUID={routeProps.match.params.uuid}
-                isAuthenticated={this.state.isAuthenticated}
-                updateTheme={this.updateTheme}
-              />
             )}
           />
           <Route

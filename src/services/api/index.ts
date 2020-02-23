@@ -248,14 +248,12 @@ export const getAnalysisResult = (uuid: string, source: CancelTokenSource) => {
     .then(res => {
       const ar: AnalysisResultType = {
           uuid: res.data.analysis_result.uuid,
-          parent_uuid: res.data.analysis_result.parent_uuid,
           module_name: res.data.analysis_result.module_name,
           replicate: res.data.analysis_result.replicate,
-          kind: res.data.analysis_result.kind,
-          status: res.data.analysis_result.status,
           created_at: res.data.analysis_result.created_at,
-          fields: res.data.analysis_result.fields,
-          field_data: res.data.data,
+          updated_at: res.data.analysis_result.updated_at,
+          sample: res.data.analysis_result.sample,
+          sample_group: res.data.analysis_result.sample_group,
       };
       return ar;
     });
