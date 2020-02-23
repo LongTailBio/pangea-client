@@ -8,6 +8,7 @@ import UserStatus from './screens/UserStatus';
 import Logout from './screens/Auth/scenes/Logout';
 import Home from './screens/Home';
 import About from './screens/About';
+import OrganizationList from "./screens/OrganizationList";
 import OrganizationDetail from './screens/OrganizationDetail';
 import UserDetail from './screens/UserDetail';
 import SampleGroup from './screens/SampleGroup';
@@ -108,6 +109,13 @@ class App extends React.Component<{}, AppState> {
               <Dashboard
                 isAuthenticated={this.state.isAuthenticated}
               />
+            )}
+          />
+          <Route
+            exact={true}
+            path="/organizations"
+            render={() => (
+              <OrganizationList />
             )}
           />
           <Route
