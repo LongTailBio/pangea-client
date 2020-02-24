@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Router } from "react-router";
+import { Router, Route } from "react-router";
+import { QueryParamProvider } from "use-query-params";
 
 import App from "./App";
 import { unregister } from "./registerServiceWorker";
@@ -10,7 +11,9 @@ import "./index.css";
 
 ReactDOM.render(
   <Router history={history}>
-    <App />
+    <QueryParamProvider ReactRouterRoute={Route}>
+      <App />
+    </QueryParamProvider>
   </Router>,
   document.getElementById("root") as HTMLElement
 );
