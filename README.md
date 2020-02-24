@@ -1,10 +1,8 @@
-# MetaGenScope Client
+# Pangea Client
 
-> MetaGenScope client web application.
+> Pangea client web application.
 
 ## Getting Started
-
-`metagenscope-client` is run as part of [`metagenscope-main`](https://github.com/longtailbio/metagenscope-main).
 
 ### Running
 
@@ -24,7 +22,7 @@ $ typings install
 Then run the app:
 
 ```sh
-$ npm start
+$ yarn start
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -37,7 +35,7 @@ You will also see any lint errors in the console.
 
 Developer documentation can be found in [`docs/`](./docs/).
 
-MetaGenScope uses the GitFlow branching strategy along with Pull Requests for code reviews. Check out [this post](https://devblog.dwarvesf.com/post/git-best-practices/) by the Dwarves Foundation for more information.
+Pangea uses the GitFlow branching strategy along with Pull Requests for code reviews. Check out [this post](https://devblog.dwarvesf.com/post/git-best-practices/) by the Dwarves Foundation for more information.
 
 This project uses JSDoc, see their [Getting Started](http://usejsdoc.org/about-getting-started.html) page if you are unfamilair.
 
@@ -59,7 +57,7 @@ See [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Authors
 
-* **Benjamin Chrobot** - _Initial work_ - [bchrobot](https://github.com/bchrobot)
+- **Benjamin Chrobot** - _Initial work_ - [bchrobot](https://github.com/bchrobot)
 
 See also the list of [contributors][contributors] who participated in this project.
 
@@ -67,6 +65,5 @@ See also the list of [contributors][contributors] who participated in this proje
 
 This project is licensed under the MIT License - see the [`LICENSE.md`](LICENSE.md) file for details.
 
-
-[project-tags]: https://github.com/longtailbio/metagenscope-client/tags
-[contributors]: https://github.com/longtailbio/metagenscope-client/contributors
+[project-tags]: https://github.com/longtailbio/pangea-client/tags
+[contributors]: https://github.com/longtailbio/pangea-client/contributors
