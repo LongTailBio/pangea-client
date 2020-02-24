@@ -1,18 +1,17 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
+import React from "react";
+import ReactDOM from "react-dom";
+import { Router } from "react-router";
 
-import App from './App';
-import { unregister } from './registerServiceWorker';
-import './utils';
-import './index.css';
+import App from "./App";
+import { unregister } from "./registerServiceWorker";
+import { history } from "./history";
+import "./utils";
+import "./index.css";
 
 ReactDOM.render(
-  (
-    <Router>
-      <App />
-    </Router>
-  ),
-  document.getElementById('root') as HTMLElement
+  <Router history={history}>
+    <App />
+  </Router>,
+  document.getElementById("root") as HTMLElement
 );
 unregister();

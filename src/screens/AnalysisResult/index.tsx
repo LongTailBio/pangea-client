@@ -1,78 +1,71 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { Row } from 'react-bootstrap';
-import { default as axios, CancelTokenSource } from 'axios';
-import { getAnalysisResult } from '../../services/api';
-import { AnalysisResultType } from '../../services/api/models/analysisResult';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Row } from "react-bootstrap";
+
+import { usePangeaAxios } from "../../services/api";
+import { AnalysisResultType } from "../../services/api/models/analysisResult";
 
 interface AnalysisResultScreenProps {
-  arUUID: string;
-  isAuthenticated: boolean;
-  updateTheme?(theme?: string): void;
+  uuid: string;
+  kind: "sample" | "sample-group";
 }
 
-class AnalysisResultScreen extends React.Component<AnalysisResultScreenProps, AnalysisResultType> {
-    
-    protected sourceToken: CancelTokenSource;
+export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
+  const apiPath = props.kind === "sample" ? "sample_ars" : `sample_group_ars`;
+  const [{ data, loading, error }] = usePangeaAxios<AnalysisResultType>(
+    `/${apiPath}/${props.uuid}`
+  );
 
-    constructor(props: AnalysisResultScreenProps) {
-        super(props);
-        this.sourceToken = axios.CancelToken.source();
-        this.state = {
-            uuid: '',
-            parent_uuid: '',
-            module_name: '',
-            kind: '',
-            status: '',
-            created_at: '',
-            fields: {},
-            field_data: {},
-        };
-    }
+  if (loading) {
+    return (
+      <Row>
+        <h1>Loading...</h1>
+        <h2>Analysis Result</h2>
+      </Row>
+    );
+  }
 
-    componentDidMount() {
-        // Assume that we are authenticated because Dashboard catches that
-        getAnalysisResult(this.props.arUUID, this.sourceToken)
-            .then((ar) => {
-                this.setState(ar);
-            })
-            .catch((error) => {
-                if (!axios.isCancel(error)) {
-                    console.log(error);
-                }
-            });
-    }
+  if (error) {
+    const { status } = error.response || {};
+    const title = status === 404 ? "Not Found" : "Error";
+    return (
+      <Row>
+        <h1>{title}</h1>
+        <h2>Analysis Result</h2>
+        <p>{error.message}</p>
+      </Row>
+    );
+  }
 
-    render() {
-        let parent = 'samples';
-        if (this.state.kind === "sample_group"){
-            parent = 'sample-groups';
-        }
-        return (
+  console.log(data);
+
+  const parentPath =
+    props.kind === "sample"
+      ? `/samples/${data.sample}`
+      : `/sample-groups/${data.sample_group}`;
+  return (
+    <>
+      <Row>
+        <h1>{data.module_name}</h1>
+        <h2>Analysis Result</h2>
+        <p>{new Date(data.created_at).toLocaleString()}</p>
+      </Row>
+      <Row>
+        <Link to={parentPath}>Parent</Link>
+      </Row>
+      <Row>
+        <h2>Fields</h2>
+        {/* {Object.keys(data.field_data).map(key => {
+          const value = data.field_data[key];
+          return (
             <div>
-                <Row>
-                    <h1>{this.state.module_name}</h1>
-                    <h2>Analysis Result</h2>
-                    <p>{this.state.created_at}</p>
-                </Row>
-                <Row>
-                    <Link to={`/${parent}/${this.state.parent_uuid}`}>Parent</Link>
-                </Row>
-                <Row>
-                    <h2>Fields</h2>
-                    {
-                        Object.keys(this.state.field_data).map((key) => {
-                            // tslint:disable-next-line:no-console
-                            console.log(key)
-                            let value = this.state.field_data[key];
-                            return ( <div><p>{key}</p> <p>{JSON.stringify(value)}</p></div> );
-                        })
-                    }
-                </Row>               
+              <p>{key}</p> <p>{JSON.stringify(value)}</p>
             </div>
-        );
-    }                    
-
-}
+          );
+        })} */}
+      </Row>
+    </>
+  );
+};
 
 export default AnalysisResultScreen;

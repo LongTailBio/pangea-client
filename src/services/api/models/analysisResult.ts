@@ -1,15 +1,9 @@
-
 export interface AnalysisResultType {
-    uuid: string,
-    parent_uuid: string,
-    module_name: string,
-    kind: string,
-    status: string,
-    created_at: string,
-    fields: {
-        [index: string]: any,
-    },
-    field_data: {
-        [index: string]: any,
-    },
+  uuid: string;
+  module_name: string;
+  replicate: string;
+  created_at: string;
+  updated_at: string;
+  sample?: string;
+  sample_group?: string;
 }

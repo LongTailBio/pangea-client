@@ -1,33 +1,21 @@
-import * as React from 'react';
+import * as React from "react";
 
-// import { SampleGroupType } from '../../services/api/models/analysisGroup';
+import AnalysisGroupListItem from "./components/AnalysisGroupListItem";
 
-import AnalysisGroupListItem from './components/AnalysisGroupListItem';
-
-import './analysisGroupList.css';
+import "./analysisGroupList.css";
 
 interface Prop {
-    groupUUIDs: Array<string>;
-    organizationUUID: string;
+  groupUUIDs: Array<string>;
 }
 
-class AnalysisGroupList extends React.Component<Prop, {}> {
-  render() {
-    return (
-      <ul className="analysis-group-list">
-        {
-          this.props.groupUUIDs.map((groupUUID) => {
-            return (
-              <AnalysisGroupListItem
-                groupUUID={groupUUID}
-                organizationUUID={this.props.organizationUUID}
-              />
-            );
-          })
-        }
-      </ul>
-    );
-  }
-}
+export const AnalysisGroupList = (props: Prop) => {
+  return (
+    <ul className="analysis-group-list">
+      {props.groupUUIDs.map(groupUUID => (
+        <AnalysisGroupListItem key={groupUUID} groupUUID={groupUUID} />
+      ))}
+    </ul>
+  );
+};
 
 export default AnalysisGroupList;

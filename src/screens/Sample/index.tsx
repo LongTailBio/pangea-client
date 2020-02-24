@@ -1,111 +1,138 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { Switch, Route } from 'react-router';
-import { LinkContainer } from 'react-router-bootstrap';
-import { Row, Col, Well, Nav, NavItem, Glyphicon, Badge } from 'react-bootstrap';
-import { Helmet } from 'react-helmet';
-import { default as axios, CancelTokenSource } from 'axios';
-import { getSample } from '../../services/api';
-import { SampleType } from '../../services/api/models/sample';
+import * as React from "react";
+import { Link } from "react-router-dom";
+import { Switch, Route } from "react-router";
+import { LinkContainer } from "react-router-bootstrap";
+import {
+  Row,
+  Col,
+  Well,
+  Nav,
+  NavItem,
+  Glyphicon,
+  Badge
+} from "react-bootstrap";
+import { Helmet } from "react-helmet";
+
+import { usePangeaAxios, PaginatedResult } from "../../services/api";
+import { SampleType } from "../../services/api/models/sample";
+import { AnalysisResultType } from "../../services/api/models/analysisResult";
+
+const useGroup = (uuid: string) => {
+  const [sampleResult] = usePangeaAxios<SampleType>(`/samples/${uuid}`);
+  const [analysisResultsResult] = usePangeaAxios<
+    PaginatedResult<AnalysisResultType>
+  >(`/sample_ars?sample_id=${uuid}`);
+
+  const data = {
+    sample: sampleResult.data,
+    analysisResults: analysisResultsResult.data
+  };
+  const loading = sampleResult.loading || analysisResultsResult.loading;
+  const error = sampleResult.error || analysisResultsResult.error || undefined;
+  return [{ data, loading, error }];
+};
 
 interface SampleScreenProps {
-  sampleUUID: string;
-  isAuthenticated: boolean;
-  updateTheme?(theme?: string): void;
+  uuid: string;
 }
 
-class SampleScreen extends React.Component<SampleScreenProps, SampleType> {
-    
-    protected sourceToken: CancelTokenSource;
+export const SampleScreen = (props: SampleScreenProps) => {
+  const [{ data, loading, error }] = useGroup(props.uuid);
 
-    constructor(props: SampleScreenProps) {
-        super(props);
-        this.sourceToken = axios.CancelToken.source();
-        this.state = {
-            uuid: '',
-            name: '',
-            library_uuid: '',
-            created_at: '',
-            analysis_result_uuids: [],
-            analysis_result_names: [],
-            metadata: {},
-        };
-    }
+  if (loading) {
+    return (
+      <>
+        <Helmet>
+          <title>Pangea :: Sample</title>
+        </Helmet>
+        <Row>
+          <h1>Loading...</h1>
+          <h2>Sample</h2>
+        </Row>
+      </>
+    );
+  }
 
-    componentDidMount() {
-        // Assume that we are authenticated because Dashboard catches that
-        getSample(this.props.sampleUUID, this.sourceToken)
-            .then((sample) => {
-                this.setState(sample);
-            })
-            .catch((error) => {
-                if (!axios.isCancel(error)) {
-                    console.log(error);
-                }
-            });
-    }
+  if (error) {
+    const { status } = error.response || {};
+    const title = status === 404 ? "Not Found" : "Error";
+    return (
+      <>
+        <Helmet>
+          <title>{`Pangea :: ${title}`}</title>
+        </Helmet>
+        <Row>
+          <h1>{title}</h1>
+          <h2>Sample</h2>
+          <p>{error.message}</p>
+        </Row>
+      </>
+    );
+  }
 
-    render() {
-        return (
-            <div>
-                <Helmet>
-                    <title>{`Pangea :: ${this.state.name}`}</title>
-                </Helmet>
-                <Row>
-                    <h1>{this.state.name}</h1>
-                    <h2>Sample</h2>
-                </Row>
-                <Row>
-                    <Link to={`/sample-groups/${this.state.library_uuid}`}>Library</Link>
-                </Row>
+  const { sample, analysisResults } = data;
 
-                <Row>
-                    <Nav bsStyle="tabs" activeKey="1">
-                        <LinkContainer to={`/samples/${this.props.sampleUUID}`}>
-                            <NavItem eventKey="1"><Glyphicon glyph="folder-open" /> Analysis Results <Badge>
-                                {this.state.analysis_result_names.length}
-                            </Badge></NavItem>
-                        </LinkContainer>
-                    </Nav>
-                </Row>
+  return (
+    <>
+      <Helmet>
+        <title>{`Pangea :: ${sample.name}`}</title>
+      </Helmet>
+      <Row>
+        <h1>{sample.name}</h1>
+        <h2>Sample</h2>
+      </Row>
+      <Row>
+        <Link to={`/sample-groups/${sample.library}`}>Library</Link>
+      </Row>
 
-                <br />
+      <Row>
+        <Nav bsStyle="tabs" activeKey="1">
+          <LinkContainer to={`/samples/${sample.uuid}`}>
+            <NavItem eventKey="1">
+              <Glyphicon glyph="folder-open" /> Analysis Results{" "}
+              <Badge>{analysisResults.count}</Badge>
+            </NavItem>
+          </LinkContainer>
+        </Nav>
+      </Row>
 
-                <Switch>
-                    <Route
-                        exact={true}
-                        path="/samples/:uuid"
-                        render={(props) => {
-                            return (
-                                <Row>
-                                    <Col lg={12}>
-                                        {this.state.analysis_result_uuids &&
-                                            this.state.analysis_result_uuids.map((ar_uuid, i) => {
-                                                return (
-                                                    <ul className="analysis-group-list">
-                                                        <li className="analysis-group-list-item">
-                                                            <Link to={`/analysis-results/${ar_uuid}`}>{this.state.analysis_result_names[i]}</Link>
-                                                        </li>
-                                                    </ul>
-                                                );
-                                            })
-                                        }
-                                        {!this.state.analysis_result_uuids &&
-                                            <Well className="text-center">
-                                                <h4>This sample has no analysis results.</h4>
-                                            </Well>
-                                        }
-                                    </Col>
-                                </Row>
-                            );
-                        }}
-                    />
-                </Switch>
+      <br />
 
-            </div>
-        );
-    }                    
-
-}
+      <Switch>
+        <Route
+          exact={true}
+          path="/samples/:uuid"
+          render={() => (
+            <Row>
+              <Col lg={12}>
+                {analysisResults.count > 0 &&
+                  analysisResults.results.map(analysisResult => (
+                    <ul
+                      key={analysisResult.uuid}
+                      className="analysis-group-list"
+                    >
+                      <li className="analysis-group-list-item">
+                        <Link
+                          to={`/samples/${sample.uuid}/analysis-results/${analysisResult.uuid}`}
+                        >
+                          {analysisResult.module_name} -{" "}
+                          {analysisResult.replicate}
+                        </Link>
+                      </li>
+                    </ul>
+                  ))}
+                {analysisResults.count === 0 && (
+                  <Well className="text-center">
+                    <h4>This sample has no analysis results.</h4>
+                  </Well>
+                )}
+              </Col>
+            </Row>
+          )}
+        />
+      </Switch>
+    </>
+  );
+};
 
 export default SampleScreen;

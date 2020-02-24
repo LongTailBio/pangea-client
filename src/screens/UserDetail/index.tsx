@@ -22,13 +22,8 @@ class UserDetailScreen extends React.Component<UserDetailScreenProps, UserType> 
         super(props);
         this.sourceToken = axios.CancelToken.source();
         this.state = {
-            uuid: '',
-            username: '',
+            id: '',
             email: '',
-            is_deleted: false,
-            created_at: '',
-            organization_uuids: [],
-            organization_names: [],
         };
     }
 
@@ -49,20 +44,18 @@ class UserDetailScreen extends React.Component<UserDetailScreenProps, UserType> 
         return (
             <div>
                 <Helmet>
-                    <title>{`Pangea :: ${this.state.username}`}</title>
+                    <title>{`Pangea :: ${this.state.email}`}</title>
                 </Helmet>         
                 <Row>
-                    <h1>{this.state.username}</h1>
+                    <h1>{this.state.email}</h1>
                     <h2>User</h2>
-                    <p>{this.state.email}</p>
-                    <p>{this.state.created_at}</p>
                 </Row>
 
                 <Row>
                     <Nav bsStyle="tabs" activeKey="1">
                         <LinkContainer to={`/users/${this.props.userUUID}`}>
                             <NavItem eventKey="1"><Glyphicon glyph="star" /> Organizations <Badge>
-                                {this.state.organization_uuids.length}
+                                0
                             </Badge></NavItem>
                         </LinkContainer>
                     </Nav>
@@ -78,18 +71,18 @@ class UserDetailScreen extends React.Component<UserDetailScreenProps, UserType> 
                             return (
                                 <Row>
                                     <Col lg={12}>
-                                        {this.state.organization_uuids &&
-                                            this.state.organization_uuids.map((org_uuid, i) => {
+                                        {false &&
+                                            [].map((org_uuid, i) => {
                                                 return (
                                                     <ul className="analysis-group-list">
                                                         <li className="analysis-group-list-item">
-                                                            <Link to={`/organizations/${org_uuid}`}>{this.state.organization_names[i]}</Link>
+                                                            <Link to={`/organizations/${org_uuid}`}>{[][i]}</Link>
                                                         </li>
                                                     </ul>
                                                 );
                                             })
                                         }
-                                        {!this.state.organization_uuids &&
+                                        {true &&
                                             <Well className="text-center">
                                                 <h4>This user is not in any organizations.</h4>
                                             </Well>

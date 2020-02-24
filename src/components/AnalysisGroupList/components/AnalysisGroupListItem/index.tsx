@@ -1,62 +1,28 @@
-import * as React from 'react';
+import * as React from "react";
+import { Link } from "react-router-dom";
 
-import { default as axios, CancelTokenSource } from 'axios';
-import { getSampleGroup } from '../../../../services/api';
-import { SampleGroupType } from '../../../../services/api/models/sampleGroup';
-import { Link } from 'react-router-dom';
+import { usePangeaAxios } from "../../../../services/api";
+import { SampleGroupType } from "../../../../services/api/models/sampleGroup";
 
 interface Prop {
   groupUUID: string;
-  organizationUUID: string;
 }
 
-class AnalysisGroupListItem extends React.Component<Prop, SampleGroupType> {
+export const SampleGroupListItem = (props: Prop) => {
+  const [{ data }] = usePangeaAxios<SampleGroupType>(
+    `/sample_groups/${props.groupUUID}`
+  );
 
-  protected sourceToken: CancelTokenSource;
+  if (!data) return null;
 
-  constructor(props: Prop) {
-      super(props);
-      this.sourceToken = axios.CancelToken.source();
+  return (
+    <li className="analysis-group-list-item">
+      <Link to={`/sample-groups/${props.groupUUID}`}>
+        <h4>{data.name}</h4>
+      </Link>
+      <p>{data.description}</p>
+    </li>
+  );
+};
 
-      this.state = {
-          uuid: '',
-          name: '',
-          organization_uuid: '',
-          description: '',
-          is_library: false,
-          is_public: false,
-          created_at: '',
-          sample_uuids: [],
-          sample_names: [],
-          analysis_result_uuids: [],
-          analysis_result_names: [],
-      };
-  }
-
-  componentDidMount() {
-      // TODO: not an efficient way to do this
-      // Assume that we are authenticated because Dashboard catches that
-      getSampleGroup(this.props.groupUUID, this.sourceToken)
-          .then((sampleGroup) => {
-              this.setState(sampleGroup);
-          })
-          .catch((error) => {
-              if (!axios.isCancel(error)) {
-                  console.log(error);
-              }
-          });
-  }
-
-  render() {
-    return (
-      <li className="analysis-group-list-item">
-        <Link to={`/sample-groups/${this.props.groupUUID}`}>
-          <h4>{this.state.name}</h4>
-        </Link>
-        <p>{this.state.description}</p>
-      </li>
-    );
-  }
-}
-
-export default AnalysisGroupListItem;
+export default SampleGroupListItem;

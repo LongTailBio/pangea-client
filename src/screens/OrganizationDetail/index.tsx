@@ -1,156 +1,145 @@
-import * as React from 'react';
-import { Switch, Route } from 'react-router';
-import { Link } from 'react-router-dom';
-import { LinkContainer } from 'react-router-bootstrap';
-import { Row, Col, Nav, NavItem, Glyphicon, Badge } from 'react-bootstrap';
-import { Helmet } from 'react-helmet';
-import { default as axios, CancelTokenSource } from 'axios';
+import React from "react";
+import { Switch, Route } from "react-router";
+import { LinkContainer } from "react-router-bootstrap";
+import { Row, Col, Nav, NavItem, Glyphicon, Badge } from "react-bootstrap";
+import { Helmet } from "react-helmet";
 
-import OrganizationProjects from './scenes/OrganizationProjects';
-import PeopleList from './scenes/OrganizationPeople/components/PeopleList';
-import PersonDetail from './scenes/OrganizationPeople/components/PersonDetail';
-import OrganizationSettings from './scenes/OrganizationSettings';
+import OrganizationProjects from "./scenes/OrganizationProjects";
+import PeopleList from "./scenes/OrganizationPeople/components/PeopleList";
+import PersonDetail from "./scenes/OrganizationPeople/components/PersonDetail";
+import OrganizationSettings from "./scenes/OrganizationSettings";
 
-import { OrganizationType } from '../../services/api/models/organization';
-import { getOrganization } from '../../services/api';
+import { usePangeaAxios, PaginatedResult } from "../../services/api";
+import { OrganizationType } from "../../services/api/models/organization";
+import { SampleGroupType } from "../../services/api/models/analysisGroup";
+import { UserType } from "../../services/api/models/user";
+
+const useOrganization = (uuid: string) => {
+  const [organization] = usePangeaAxios<OrganizationType>(
+    `/organizations/${uuid}`
+  );
+  const [sampleGroups] = usePangeaAxios<PaginatedResult<SampleGroupType>>(
+    `/sample_groups?organization_id=${uuid}`
+  );
+
+  const [people] = usePangeaAxios<PaginatedResult<UserType>>(
+    `/organizations/${uuid}/users`
+  );
+
+  const data = {
+    organization: organization.data,
+    sampleGroups: sampleGroups.data,
+    people: people.data
+  };
+  const loading =
+    organization.loading || sampleGroups.loading || people.loading;
+  const error =
+    organization.error || sampleGroups.error || people.error || undefined;
+
+  return [{ data, loading, error }];
+};
 
 interface OrganizationsProps {
   uuid: string;
-  isAuthenticated: boolean;
 }
 
-interface OrganizationState {
-  organization?: OrganizationType;
-}
+export const OrganizationDetail = (props: OrganizationsProps) => {
+  const [{ data, loading, error }] = useOrganization(props.uuid);
 
-class OrganizationDetail extends React.Component<OrganizationsProps, OrganizationState> {
-
-  protected sourceToken: CancelTokenSource;
-
-  constructor(props: OrganizationsProps) {
-    super(props);
-
-    this.sourceToken = axios.CancelToken.source();
-    this.state = {
-      organization: undefined,
-    };
-  }
-
-  componentDidMount() {
-    // Assume that we are authenticated because Dashboard catches that
-    getOrganization(this.props.uuid, this.sourceToken)
-      .then((organization) => {
-        this.setState({ organization });
-      })
-      .catch((error) => {
-        if (!axios.isCancel(error)) {
-          console.log(error);
-        }
-      });
-  }
-
-  componentWillUnmount() {
-    this.sourceToken.cancel();
-  }
-
-  render() {
+  if (loading) {
     return (
-      <div>
+      <>
         <Helmet>
-          {this.state.organization &&
-            <title>{`MetaGenScope :: ${this.state.organization.name}`}</title>
-          }
-          {!this.state.organization &&
-            <title>MetaGenScope :: Not Found</title>
-          }
+          <title>Pangea :: Organizations</title>
         </Helmet>
-        {!this.state.organization &&
-          <Row>
-            <Col lg={12}>
-              <h1>Not Found</h1>
-              Go back to the <Link to="/organizations">organizations list</Link>.
-            </Col>
-          </Row>
-        }
-        {this.state.organization &&
-          <div>
-            <Row>
-              <Col lg={12}>
-                <h1>{this.state.organization.name}</h1>
-                <h2>Organization</h2>
-                <p><Link to={`/users/${this.state.organization.primary_admin_uuid}`}>
-                  Primary Admin
-                </Link></p>
-              </Col>
-            </Row>
-            <Row>
-              <Nav bsStyle="tabs" activeKey="1">
-                <LinkContainer to={`/organizations/${this.props.uuid}`} exact={true}>
-                  <NavItem eventKey="1"><Glyphicon glyph="star" /> Sample Groups <Badge>
-                    {this.state.organization.sample_group_uuids.length}
-                  </Badge></NavItem>
-                </LinkContainer>
-                <LinkContainer to={`/organizations/${this.props.uuid}/people`}>
-                  <NavItem eventKey="2"><Glyphicon glyph="user" /> People <Badge>
-                    {this.state.organization.user_uuids.length}
-                  </Badge></NavItem>
-                </LinkContainer>
-              </Nav>
-            </Row>
-            <br />
-            <Switch>
-              <Route
-                exact={true}
-                path="/organizations/:uuid"
-                render={(props) => {
-                  const userUUIDs = this.state.organization ? this.state.organization.user_uuids : [];
-                  const sampleGroupUUIDs = this.state.organization ? this.state.organization.sample_group_uuids : [];
-                  return (
-                    <OrganizationProjects
-                      uuid={props.match.params.uuid}
-                      userUUIDs={userUUIDs}
-                      sampleGroupUUIDs={sampleGroupUUIDs}
-                    />
-                  );
-                }}
-              />
-              <Route
-                exact={true}
-                path="/organizations/:uuid/people"
-                render={(props) => {
-                  const userUUIDs = this.state.organization ? this.state.organization.user_uuids : [];
-                  const userUsernames = this.state.organization ? this.state.organization.user_usernames : [];
-                  return (
-                    <PeopleList
-                      orguuid={props.match.params.uuid}
-                      peopleUUIDs={userUUIDs}
-                      peopleUsernames={userUsernames} 
-                    />
-                  );
-                }}
-              />
-              <Route
-                exact={true}
-                path="/organizations/:uuid/people/:username"
-                render={(props) => (
-                  <PersonDetail
-                    orguuid={props.match.params.uuid}
-                    username={props.match.params.username}
-                  />
-                )}
-              />
-              <Route
-                path="/organizations/:uuid/settings"
-                render={(props) => (
-                  <OrganizationSettings uuid={props.match.params.uuid} />
-                )}
-              />
-            </Switch>
-          </div>
-        }
-      </div>
+        <Row>
+          <h1>Loading...</h1>
+          <h2>Organizations</h2>
+        </Row>
+      </>
     );
   }
-}
+
+  if (error) {
+    const { status } = error.response || {};
+    const title = status === 404 ? "Not Found" : "Error";
+    return (
+      <>
+        <Helmet>
+          <title>{`Pangea :: ${title}`}</title>
+        </Helmet>
+        <Row>
+          <h1>{title}</h1>
+          <h2>Organization</h2>
+          <p>{error.message}</p>
+        </Row>
+      </>
+    );
+  }
+
+  const { organization, sampleGroups, people } = data;
+
+  return (
+    <>
+      <Helmet>
+        <title>{`Pangea :: ${organization.name}`}</title>
+      </Helmet>
+      <Row>
+        <Row>
+          <Col lg={12}>
+            <h1>{organization.name}</h1>
+            <h2>Organization</h2>
+          </Col>
+        </Row>
+        <Row>
+          <Nav bsStyle="tabs" activeKey="1">
+            <LinkContainer to={`/organizations/${props.uuid}`} exact={true}>
+              <NavItem eventKey="1">
+                <Glyphicon glyph="star" /> Sample Groups{" "}
+                <Badge>{sampleGroups.count}</Badge>
+              </NavItem>
+            </LinkContainer>
+            <LinkContainer to={`/organizations/${props.uuid}/people`}>
+              <NavItem eventKey="2">
+                <Glyphicon glyph="user" /> People <Badge>{people.count}</Badge>
+              </NavItem>
+            </LinkContainer>
+          </Nav>
+        </Row>
+        <br />
+        <Switch>
+          <Route
+            exact={true}
+            path="/organizations/:uuid"
+            render={() => (
+              <OrganizationProjects sampleGroups={sampleGroups.results} />
+            )}
+          />
+          <Route
+            exact={true}
+            path="/organizations/:uuid/people"
+            render={props => <PeopleList people={people.results} />}
+          />
+          <Route
+            exact={true}
+            path="/organizations/:uuid/people/:username"
+            render={props => (
+              <PersonDetail
+                orguuid={props.match.params.uuid}
+                username={props.match.params.username}
+              />
+            )}
+          />
+          <Route
+            path="/organizations/:uuid/settings"
+            render={props => (
+              <OrganizationSettings uuid={props.match.params.uuid} />
+            )}
+          />
+        </Switch>
+      </Row>
+    </>
+  );
+};
 
 export default OrganizationDetail;

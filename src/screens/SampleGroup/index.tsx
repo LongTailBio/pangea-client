@@ -1,153 +1,185 @@
-import * as React from 'react';
-import { Switch, Route } from 'react-router';
-import { Link } from 'react-router-dom';
-import { LinkContainer } from 'react-router-bootstrap';
-import { Row, Col, Well, Nav, NavItem, Glyphicon, Badge } from 'react-bootstrap';
-import { Helmet } from 'react-helmet';
-import { default as axios, CancelTokenSource } from 'axios';
-import { getSampleGroup } from '../../services/api';
-import { SampleGroupType } from '../../services/api/models/sampleGroup';
+import * as React from "react";
+import { Switch, Route } from "react-router";
+import { Link } from "react-router-dom";
+import { LinkContainer } from "react-router-bootstrap";
+import {
+  Row,
+  Col,
+  Well,
+  Nav,
+  NavItem,
+  Glyphicon,
+  Badge
+} from "react-bootstrap";
+import { Helmet } from "react-helmet";
+
+import { usePangeaAxios, PaginatedResult } from "../../services/api";
+import { SampleGroupType } from "../../services/api/models/sampleGroup";
+import { SampleType } from "../../services/api/models/sample";
+import { AnalysisResultType } from "../../services/api/models/analysisResult";
+
+const useSampleGroup = (uuid: string) => {
+  const [sampleGroupResult] = usePangeaAxios<SampleGroupType>(
+    `/sample_groups/${uuid}`
+  );
+  const [samplesResult] = usePangeaAxios<PaginatedResult<SampleType>>(
+    `/sample_groups/${uuid}/samples`
+  );
+  const [analysisResultsResult] = usePangeaAxios<
+    PaginatedResult<AnalysisResultType>
+  >(`/sample_group_ars?sample_group_id=${uuid}`);
+
+  const data = {
+    group: sampleGroupResult.data,
+    samples: samplesResult.data,
+    analysisResults: analysisResultsResult.data
+  };
+  const loading =
+    sampleGroupResult.loading ||
+    samplesResult.loading ||
+    analysisResultsResult.loading;
+  const error =
+    sampleGroupResult.error ||
+    samplesResult.error ||
+    analysisResultsResult.error ||
+    undefined;
+  return [{ data, loading, error }];
+};
 
 interface SampleGroupScreenProps {
-  groupUUID: string;
-  isAuthenticated: boolean;
-  updateTheme?(theme?: string): void;
+  uuid: string;
 }
 
-class SampleGroupScreen extends React.Component<SampleGroupScreenProps, SampleGroupType> {
+export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
+  const [{ data, loading, error }] = useSampleGroup(props.uuid);
 
-    protected sourceToken: CancelTokenSource;
+  if (loading) {
+    return (
+      <>
+        <Helmet>
+          <title>Pangea :: Sample Group</title>
+        </Helmet>
+        <Row>
+          <h1>Loading...</h1>
+          <h2>Sample Group</h2>
+        </Row>
+      </>
+    );
+  }
 
-    constructor(props: SampleGroupScreenProps) {
-        super(props);
-        this.sourceToken = axios.CancelToken.source();
-        this.state = {
-            uuid: '',
-            name: '',
-            organization_uuid: '',
-            description: '',
-            is_library: false,
-            is_public: false,
-            created_at: '',
-            sample_uuids: [],
-            sample_names: [],
-            analysis_result_uuids: [],
-            analysis_result_names: [],
-        };
-    }
+  if (error) {
+    const { status } = error.response || {};
+    const title = status === 404 ? "Not Found" : "Error";
+    return (
+      <>
+        <Helmet>
+          <title>{`Pangea :: ${title}`}</title>
+        </Helmet>
+        <Row>
+          <h1>{title}</h1>
+          <h2>Sample Group</h2>
+          <p>{error.message}</p>
+        </Row>
+      </>
+    );
+  }
 
-    componentDidMount() {
-        // Assume that we are authenticated because Dashboard catches that
-        getSampleGroup(this.props.groupUUID, this.sourceToken)
-            .then((sampleGroup) => {
-                this.setState(sampleGroup);
-            })
-            .catch((error) => {
-                if (!axios.isCancel(error)) {
-                    console.log(error);
-                }
-            });
-    }
+  const { group, samples, analysisResults } = data;
 
-    render() {
-        let publicity = 'Public';
-        if (! this.state.is_public){
-            publicity = 'Private';
-        }
-        return (
-            <div>
-                <Helmet>
-                    <title>{`Pangea :: ${this.state.name}`}</title>
-                </Helmet>
-                <Row>
-                    <h1>{this.state.name}</h1>
-                    <h2>Sample Group</h2>
-                    <p>{publicity}</p>
-                    <p>{this.state.created_at}</p>                 
-                </Row>
-                <Row>
-                    <Link to={`/organizations/${this.state.organization_uuid}`}>Owner Organization</Link>
-                </Row>
+  return (
+    <>
+      <Helmet>
+        <title>{`Pangea :: ${group.name}`}</title>
+      </Helmet>
+      <Row>
+        <h1>{group.name}</h1>
+        <h2>Sample Group</h2>
+        <p>{group.is_public ? "Public" : "Private"}</p>
+        <p>{new Date(group.created_at).toLocaleString()}</p>
+      </Row>
+      <Row>
+        <Link to={`/organizations/${group.organization}`}>
+          Owner Organization
+        </Link>
+      </Row>
 
-                <Row>
-                    <Nav bsStyle="tabs" activeKey="1">
-                        <LinkContainer to={`/sample-groups/${this.props.groupUUID}`} exact={true}>
-                            <NavItem eventKey="1"><Glyphicon glyph="star" /> Samples <Badge>
-                                {this.state.sample_names.length}
-                            </Badge></NavItem>
-                        </LinkContainer>
-                        <LinkContainer to={`/sample-groups/${this.props.groupUUID}/analysis-results`}>
-                            <NavItem eventKey="2"><Glyphicon glyph="folder-open" /> Analysis Results <Badge>
-                                {this.state.analysis_result_names.length}
-                            </Badge></NavItem>
-                        </LinkContainer>
-                    </Nav>
-                </Row>
+      <Row>
+        <Nav bsStyle="tabs" activeKey="1">
+          <LinkContainer to={`/sample-groups/${props.uuid}`} exact={true}>
+            <NavItem eventKey="1">
+              <Glyphicon glyph="star" /> Samples <Badge>{samples.count}</Badge>
+            </NavItem>
+          </LinkContainer>
+          <LinkContainer to={`/sample-groups/${props.uuid}/analysis-results`}>
+            <NavItem eventKey="2">
+              <Glyphicon glyph="folder-open" /> Analysis Results{" "}
+              <Badge>{analysisResults.count}</Badge>
+            </NavItem>
+          </LinkContainer>
+        </Nav>
+      </Row>
 
-                <br />
-                <Switch>
-                    <Route
-                        exact={true}
-                        path="/sample-groups/:uuid"
-                        render={(props) => {
-                            return (
-                                <Row>
-                                    <Col lg={12}>
-                                        {this.state.sample_uuids && 
-                                            this.state.sample_uuids.map((sample_uuid, i) => {
-                                                return (
-                                                    <ul className="analysis-group-list">
-                                                        <li className="analysis-group-list-item">
-                                                            <Link to={`/samples/${sample_uuid}`}>{this.state.sample_names[i]}</Link>
-                                                        </li>
-                                                    </ul>
-                                                );
-                                            })
-                                        }
-                                        {!this.state.sample_uuids &&
-                                            <Well className="text-center">
-                                                <h4>This sample group has no samples.</h4>
-                                            </Well>
-                                        }
-                                    </Col>
-                                </Row>
-                            );
-                        }}
-                    />
-                    <Route
-                        exact={true}
-                        path="/sample-groups/:uuid/analysis-results"
-                        render={(props) => {
-                            return (
-                                <Row>
-                                    <Col lg={12}>
-                                        {this.state.analysis_result_uuids &&
-                                            this.state.analysis_result_uuids.map((ar_uuid, i) => {
-                                                return (
-                                                    <ul className="analysis-group-list">
-                                                        <li className="analysis-group-list-item">
-                                                            <Link to={`/analysis-results/${ar_uuid}`}>{this.state.analysis_result_names[i]}</Link>
-                                                        </li>
-                                                    </ul>
-                                                );
-                                            })
-                                        }
-                                        {!this.state.analysis_result_uuids &&
-                                            <Well className="text-center">
-                                                <h4>This sample group has no analysis results.</h4>
-                                            </Well>
-                                        }
-                                    </Col>
-                                </Row>
-                            );
-                        }}
-                    />
-                </Switch>
-
-            </div>
-        );
-    }
-
-}
+      <br />
+      <Switch>
+        <Route
+          exact={true}
+          path="/sample-groups/:uuid"
+          render={() => (
+            <Row>
+              <Col lg={12}>
+                {samples.count > 0 &&
+                  samples.results.map(sample => (
+                    <ul key={sample.uuid} className="analysis-group-list">
+                      <li className="analysis-group-list-item">
+                        <Link to={`/samples/${sample.uuid}`}>
+                          {sample.name}
+                        </Link>
+                      </li>
+                    </ul>
+                  ))}
+                {samples.count === 0 && (
+                  <Well className="text-center">
+                    <h4>This sample group has no samples.</h4>
+                  </Well>
+                )}
+              </Col>
+            </Row>
+          )}
+        />
+        <Route
+          exact={true}
+          path="/sample-groups/:uuid/analysis-results"
+          render={() => (
+            <Row>
+              <Col lg={12}>
+                {analysisResults.count > 0 &&
+                  analysisResults.results.map(analysisResult => (
+                    <ul
+                      key={analysisResult.uuid}
+                      className="analysis-group-list"
+                    >
+                      <li className="analysis-group-list-item">
+                        <Link
+                          to={`/sample-groups/${props.uuid}/analysis-results/${analysisResult.uuid}`}
+                        >
+                          {analysisResult.module_name} -{" "}
+                          {analysisResult.replicate}
+                        </Link>
+                      </li>
+                    </ul>
+                  ))}
+                {analysisResults.count === 0 && (
+                  <Well className="text-center">
+                    <h4>This sample group has no analysis results.</h4>
+                  </Well>
+                )}
+              </Col>
+            </Row>
+          )}
+        />
+      </Switch>
+    </>
+  );
+};
 
 export default SampleGroupScreen;
