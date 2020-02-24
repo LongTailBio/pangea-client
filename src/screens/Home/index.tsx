@@ -34,13 +34,22 @@ export const HomeScreen = () => (
           </Link>
         </p>
       </Col>
-      <Col lg={3} md={6} lgPush={3}>
+      <Col lg={3} md={6}>
         <h4>For Developers</h4>
         <p>Documentation and API.</p>
         <p>
           <Link to="/docs" className="btn btn-primary">
             API
           </Link>
+        </p>
+      </Col>
+      <Col lg={3} md={6}>
+        <h4>Longtail Biotech</h4>
+        <p>Powerful tools for modern biotech.</p>
+        <p>
+          <a href="https://www.longtailbio.com/" className="btn btn-primary">
+            Visit
+          </a>
         </p>
       </Col>
     </Row>
