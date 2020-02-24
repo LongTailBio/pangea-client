@@ -70,6 +70,7 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
       <Row>
         <h2>Fields</h2>
       </Row>
+    </>
   );
 };
 
