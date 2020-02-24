@@ -69,11 +69,7 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
       </Row>
       <Row>
         <h2>Fields</h2>
-        {data.analysisResultFields.map(arF => (
-            <p>
-              {arF.name} {arF.stored_data}
-            </p>
-        ))}
+        {data.analysisResultFields}
       </Row>
     </>
   );
