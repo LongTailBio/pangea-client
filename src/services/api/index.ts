@@ -75,13 +75,12 @@ export interface SearchResultType {
     search_term: string;
     sample_groups: Array<ObjectLink>;
     samples: Array<ObjectLink>;
-    users: Array<ObjectLink>;
     organizations: Array<ObjectLink>;
 }
 
 export const search = (query: string, source: CancelTokenSource) => {
   const options: AxiosRequestConfig = {
-    url: `${API_BASE_URL}/search/${query}`,
+    url: `${API_BASE_URL}/search.json?query=${query}`,
     method: 'get'
   };
 
@@ -91,7 +90,6 @@ export const search = (query: string, source: CancelTokenSource) => {
         search_term: res.data.search_term,
         sample_groups: res.data.sample_groups,
         samples: res.data.samples,
-        users: res.data.users,
         organizations: res.data.organizations,
       }
 
