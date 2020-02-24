@@ -81,7 +81,7 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
             <li>
               {val.name}
               {" "}
-              {display}
+              {sdata}
             </li>
           )
         })}
