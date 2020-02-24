@@ -73,11 +73,11 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
           const val = data.analysisResultFields.results[key];
           var sdata = JSON.parse(val.stored_data);
           if(sdata.hasOwnProperty('__type__') && sdata['__type__'] === 's3'){
-            sdata = sdata['endpoint_url'] + '/' + sdata['uri'].slice(5)
-            sdata = (<a href={sdata}>{val.name}</a>)
+            sdata = sdata['endpoint_url'] + '/' + sdata['uri'].slice(5);
+            sdata = (<a href={sdata}>{val.name}</a>);
           } else {
-            sdata = sdata.toString()
-            sdata = {val.name}{" "}{sdata}
+            sdata = sdata.toString();
+            sdata = val.name + " " + sdata;
           }
           return (
             <li>
