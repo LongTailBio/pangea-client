@@ -28,7 +28,7 @@ const useGroup = (apiPath: string, uuid: string) => {
 
 export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
   const apiPath = props.kind === "sample" ? "sample_ar" : `sample_group_ar`;
-  const [{ data, loading, error }] = useGroup(apiPath, props.uuid);
+  const [{ data, loading, error }] = useGroup(apiPath, props.uuid)
 
   if (loading) {
     return (
@@ -69,6 +69,9 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
       </Row>
       <Row>
         <h2>Fields</h2>
+        {data.analysisResultFields.map(arF => (
+            <li className="analysis-group-list-item">{arF.name} {arF.stored_data}<li>
+        ))}
       </Row>
     </>
   );
