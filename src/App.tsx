@@ -19,6 +19,7 @@ import AnalysisResult from "./screens/AnalysisResult";
 import Dashboard from "./screens/Dashboard";
 import Docs from "./screens/Docs";
 import SearchResult from "./screens/SearchResult";
+import ContribRouter from "./contrib/router";
 
 export const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -146,6 +147,7 @@ export const App = () => {
         />
         <Route exact={true} path="/about" component={About} />
         <Route exact={true} path="/docs" component={Docs} />
+        <Route path="/contrib" component={ContribRouter} />
       </Switch>
     </DefaultLayout>
   );
