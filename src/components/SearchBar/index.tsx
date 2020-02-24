@@ -52,7 +52,7 @@ export class SearchBar extends React.Component<{}, SearchBarState>{
 
     render() {
         if (this.state.submitted) {
-            const path = `/search.json/?query=${this.state.formData.query}`
+            const path = `/search/${this.state.formData.query}`
             return (
                 <Redirect to={path}/>
             )

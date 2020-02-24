@@ -81,7 +81,7 @@ export interface SearchResultType {
 
 export const search = (query: string, source: CancelTokenSource) => {
   const options: AxiosRequestConfig = {
-    url: `${API_BASE_URL}/search/${query}`,
+    url: `${API_BASE_URL}/search.json/?query=${query}`,
     method: 'get'
   };
 
