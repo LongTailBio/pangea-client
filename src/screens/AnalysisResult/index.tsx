@@ -69,7 +69,7 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
       </Row>
       <Row>
         <h2>Fields</h2>
-        {
+        {{
           data.analysisResultFields.map(arF => {
             return (
               <div>
@@ -77,7 +77,7 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
               </div>
             );
           })
-        }
+        }}
       </Row>
   );
 };
