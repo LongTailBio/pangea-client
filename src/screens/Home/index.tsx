@@ -44,6 +44,26 @@ export const HomeScreen = () => (
         </p>
       </Col>
     </Row>
+    <Row>
+      <Col lg={3} md={6}>
+        <h4>Sequence Search</h4>
+        <p>Search DNA Sequences</p>
+        <p>
+          <a href="http://dnaloc.ethz.ch/" className="btn btn-primary">
+            Search
+          </a>
+        </p>
+      </Col>
+      <Col lg={3} md={6}>
+        <h4>Resistance Map</h4>
+        <p>Map AMRs</p>
+        <p>
+          <a href="https://resistanceopen.org/" className="btn btn-primary">
+            AMRs
+          </a>
+        </p>
+      </Col>
+    </Row>
   </>
 );
 
