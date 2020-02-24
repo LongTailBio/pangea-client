@@ -69,7 +69,13 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
       </Row>
       <Row>
         <h2>Fields</h2>
-        {Object.keys(data.analysisResultFields.results)}
+        {Object.keys(data.analysisResultFields.results).map(key => (
+          <li>
+            {data.analysisResultFields.results[key].name}
+            {" "}
+            {data.analysisResultFields.results[key].stored_data}
+          </li>
+        ))}
       </Row>
     </>
   );
