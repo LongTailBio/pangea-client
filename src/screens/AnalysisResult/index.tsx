@@ -69,7 +69,7 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
       </Row>
       <Row>
         <h2>Fields</h2>
-        {data.analysisResultFields}
+        {data.analysisResultFields.results.toString()}
       </Row>
     </>
   );
