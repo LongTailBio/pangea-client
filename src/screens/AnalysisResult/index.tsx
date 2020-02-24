@@ -2,19 +2,33 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Row } from "react-bootstrap";
 
-import { usePangeaAxios } from "../../services/api";
+import { usePangeaAxios, PaginatedResult } from "../../services/api";
 import { AnalysisResultType } from "../../services/api/models/analysisResult";
+import { AnalysisResultFieldType } from "../../services/api/models/analysisResultField";
 
 interface AnalysisResultScreenProps {
   uuid: string;
   kind: "sample" | "sample-group";
 }
 
+const useGroup = (apiPath: string, uuid: string) => {
+  const [analysisResultResult] = usePangeaAxios<AnalysisResultType>(`/${apiPath}s/${props.uuid}`);
+  const [analysisResultFieldsResult] = usePangeaAxios<
+    PaginatedResult<AnalysisResultFieldType>
+  >(`/${apiPath}_fields?analysis_result_id=${uuid}`);
+
+  const data = {
+    analysisResult: analysisResultResult.data,
+    analysisResultFields: analysisResultFieldsResult.data
+  };
+  const loading = analysisResultResult.loading || analysisResultFieldsResult.loading;
+  const error = analysisResultResult.error || analysisResultFieldsResult.error || undefined;
+  return [{ data, loading, error }];
+};
+
 export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
-  const apiPath = props.kind === "sample" ? "sample_ars" : `sample_group_ars`;
-  const [{ data, loading, error }] = usePangeaAxios<AnalysisResultType>(
-    `/${apiPath}/${props.uuid}`
-  );
+  const apiPath = props.kind === "sample" ? "sample_ar" : `sample_group_ar`;
+  const [{ data, loading, error }] = useGroup(apiPath, props.uuid)
 
   if (loading) {
     return (
@@ -41,30 +55,29 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
 
   const parentPath =
     props.kind === "sample"
-      ? `/samples/${data.sample}`
-      : `/sample-groups/${data.sample_group}`;
+      ? `/samples/${data.analysisResult.sample}`
+      : `/sample-groups/${data.analysisResult.sample_group}`;
   return (
     <>
       <Row>
-        <h1>{data.module_name}</h1>
+        <h1>{data.analysisResult.module_name}</h1>
         <h2>Analysis Result</h2>
-        <p>{new Date(data.created_at).toLocaleString()}</p>
+        <p>{new Date(data.analysisResult.created_at).toLocaleString()}</p>
       </Row>
       <Row>
         <Link to={parentPath}>Parent</Link>
       </Row>
       <Row>
         <h2>Fields</h2>
-        {/* {Object.keys(data.field_data).map(key => {
-          const value = data.field_data[key];
+        {{Object.keys(data.analysisResultFields).map(arF => {
+          const value = arF.stored_data[key];
           return (
             <div>
-              <p>{key}</p> <p>{JSON.stringify(value)}</p>
+              <p>{arF.name}</p> <p>{JSON.stringify(value)}</p>
             </div>
           );
-        })} */}
+        })}}
       </Row>
-    </>
   );
 };
 
