@@ -69,13 +69,22 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
       </Row>
       <Row>
         <h2>Fields</h2>
-        {Object.keys(data.analysisResultFields.results).map(key => (
-          <li>
-            {data.analysisResultFields.results[key].name}
-            {" "}
-            {data.analysisResultFields.results[key].stored_data}
-          </li>
-        ))}
+        {Object.keys(data.analysisResultFields.results).map(key => {
+          const val = data.analysisResultFields.results[key];
+          var data = JSON.parse(val.stored_data);
+          if(data.hasOwnProperty('__type__') && data['__type__'] == 's3'){
+            data = data['endpoint_url'] + '/' + data['uri'].slice(5)
+          } else {
+            data = data.toString()
+          }
+          return (
+            <li>
+              {val.name}
+              {" "}
+              {data}
+            </li>
+          )
+        })}
       </Row>
     </>
   );
