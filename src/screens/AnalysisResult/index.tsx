@@ -35,7 +35,7 @@ const useGroup = (kind: ARType, uuid: string) => {
 };
 
 const formatField = (field: AnalysisResultFieldType): ReactNode => {
-  const storedData = JSON.parse(field.stored_data);
+  const { stored_data: storedData } = field;
   const isStoredS3Field = storedData["__type__"] === "s3";
   if (isStoredS3Field) {
     const endpoint = storedData["endpoint_url"];
@@ -43,7 +43,7 @@ const formatField = (field: AnalysisResultFieldType): ReactNode => {
     const s3Path = `${endpoint}/${path}`;
     return <a href={s3Path}>{field.name}</a>;
   } else {
-    return `${field.name} ${storedData.toString()}`;
+    return `${field.name} ${JSON.stringify(storedData)}`;
   }
 };
 
