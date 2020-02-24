@@ -23,7 +23,6 @@ class SearchResultScreen extends React.Component<SearchResultScreenProps, Search
             search_term: '',
             sample_groups: [],
             samples: [],
-            users: [],
             organizations: [],
         };
     }
@@ -61,11 +60,6 @@ class SearchResultScreen extends React.Component<SearchResultScreenProps, Search
                         <LinkContainer to={`/search/${this.props.query}/samples`} exact={true}>
                             <NavItem eventKey="2"><Glyphicon glyph="star" /> Samples <Badge>
                                 {this.state.samples.length}
-                            </Badge></NavItem>
-                        </LinkContainer>
-                        <LinkContainer to={`/search/${this.props.query}/users`} exact={true}>
-                            <NavItem eventKey="3"><Glyphicon glyph="user" /> Users <Badge>
-                                {this.state.users.length}
                             </Badge></NavItem>
                         </LinkContainer>
                         <LinkContainer to={`/search/${this.props.query}/orgs`} exact={true}>
@@ -132,38 +126,6 @@ class SearchResultScreen extends React.Component<SearchResultScreenProps, Search
                                         {!this.state.samples &&
                                             <Well className="text-center">
                                                 <h4>This search did not find any samples.</h4>
-                                            </Well>
-                                        }
-                                    </Col>
-                                </Row>
-                            );
-                        }}
-                    />
-
-
-                    <Route
-                        exact={true}
-                        path="/search/:query/users"
-                        render={(props) => {
-                            return (
-                                <Row>
-                                    <Col lg={12}>
-                                        {this.state.users && 
-                                            this.state.users.map((user, i) => {
-                                                const name = user['name'];
-                                                const uuid = user['uuid'];
-                                                return (
-                                                    <ul className="analysis-group-list">
-                                                        <li className="analysis-group-list-item">
-                                                            <Link to={`/users/${uuid}`}>{name}</Link>
-                                                        </li>
-                                                    </ul>
-                                                );
-                                            })
-                                        }
-                                        {!this.state.users &&
-                                            <Well className="text-center">
-                                                <h4>This search did not find any users.</h4>
                                             </Well>
                                         }
                                     </Col>
