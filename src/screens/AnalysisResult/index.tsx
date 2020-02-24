@@ -70,9 +70,9 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
       <Row>
         <h2>Fields</h2>
         {data.analysisResultFields.map(arF => (
-            <li className="analysis-group-list-item">
+            <p>
               {arF.name} {arF.stored_data}
-            </li>
+            </p>
         ))}
       </Row>
     </>
