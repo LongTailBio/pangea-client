@@ -12,7 +12,7 @@ interface AnalysisResultScreenProps {
 }
 
 const useGroup = (apiPath: string, uuid: string) => {
-  const [analysisResultResult] = usePangeaAxios<AnalysisResultType>(`/${apiPath}s/${props.uuid}`);
+  const [analysisResultResult] = usePangeaAxios<AnalysisResultType>(`/${apiPath}s/${uuid}`);
   const [analysisResultFieldsResult] = usePangeaAxios<
     PaginatedResult<AnalysisResultFieldType>
   >(`/${apiPath}_fields?analysis_result_id=${uuid}`);
