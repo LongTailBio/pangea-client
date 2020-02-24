@@ -71,17 +71,17 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
         <h2>Fields</h2>
         {Object.keys(data.analysisResultFields.results).map(key => {
           const val = data.analysisResultFields.results[key];
-          var data = JSON.parse(val.stored_data);
+          const data = JSON.parse(val.stored_data);
           if(data.hasOwnProperty('__type__') && data['__type__'] == 's3'){
-            data = data['endpoint_url'] + '/' + data['uri'].slice(5)
+            const display = data['endpoint_url'] + '/' + data['uri'].slice(5)
           } else {
-            data = data.toString()
+            const display = data.toString()
           }
           return (
             <li>
               {val.name}
               {" "}
-              {data}
+              {display}
             </li>
           )
         })}
