@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Row } from "react-bootstrap";
 
@@ -6,29 +6,49 @@ import { usePangeaAxios, PaginatedResult } from "../../services/api";
 import { AnalysisResultType } from "../../services/api/models/analysisResult";
 import { AnalysisResultFieldType } from "../../services/api/models/analysisResultField";
 
+type ARType = "sample" | "sample-group";
+
 interface AnalysisResultScreenProps {
   uuid: string;
-  kind: "sample" | "sample-group";
+  kind: ARType;
 }
 
-const useGroup = (apiPath: string, uuid: string) => {
-  const [analysisResultResult] = usePangeaAxios<AnalysisResultType>(`/${apiPath}s/${uuid}`);
-  const [analysisResultFieldsResult] = usePangeaAxios<
-    PaginatedResult<AnalysisResultFieldType>
-  >(`/${apiPath}_fields?analysis_result_id=${uuid}`);
+const useGroup = (kind: ARType, uuid: string) => {
+  const arPath = kind === "sample" ? "sample_ars" : "sample_group_ars";
+  const [analysisResult] = usePangeaAxios<AnalysisResultType>(
+    `/${arPath}/${uuid}`
+  );
+
+  const fieldPath =
+    kind === "sample" ? "sample_ar_fields" : "sample_group_ar_fields";
+  const [fields] = usePangeaAxios<PaginatedResult<AnalysisResultFieldType>>(
+    `/${fieldPath}?analysis_result_id=${uuid}`
+  );
 
   const data = {
-    analysisResult: analysisResultResult.data,
-    analysisResultFields: analysisResultFieldsResult.data
+    analysisResult: analysisResult.data,
+    fields: fields.data
   };
-  const loading = analysisResultResult.loading || analysisResultFieldsResult.loading;
-  const error = analysisResultResult.error || analysisResultFieldsResult.error || undefined;
+  const loading = analysisResult.loading || fields.loading;
+  const error = analysisResult.error || fields.error || undefined;
   return [{ data, loading, error }];
 };
 
+const formatField = (field: AnalysisResultFieldType): ReactNode => {
+  const storedData = JSON.parse(field.stored_data);
+  const isStoredS3Field = storedData["__type__"] === "s3";
+  if (isStoredS3Field) {
+    const endpoint = storedData["endpoint_url"];
+    const path = storedData["uri"].slice(5);
+    const s3Path = `${endpoint}/${path}`;
+    return <a href={s3Path}>{field.name}</a>;
+  } else {
+    return `${field.name} ${storedData.toString()}`;
+  }
+};
+
 export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
-  const apiPath = props.kind === "sample" ? "sample_ar" : `sample_group_ar`;
-  const [{ data, loading, error }] = useGroup(apiPath, props.uuid)
+  const [{ data, loading, error }] = useGroup(props.kind, props.uuid);
 
   if (loading) {
     return (
@@ -51,40 +71,27 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
     );
   }
 
-  console.log(data);
-
   const parentPath =
     props.kind === "sample"
       ? `/samples/${data.analysisResult.sample}`
       : `/sample-groups/${data.analysisResult.sample_group}`;
+
+  const { analysisResult, fields } = data;
   return (
     <>
       <Row>
-        <h1>{data.analysisResult.module_name}</h1>
+        <h1>{analysisResult.module_name}</h1>
         <h2>Analysis Result</h2>
-        <p>{new Date(data.analysisResult.created_at).toLocaleString()}</p>
+        <p>{new Date(analysisResult.created_at).toLocaleString()}</p>
       </Row>
       <Row>
         <Link to={parentPath}>Parent</Link>
       </Row>
       <Row>
         <h2>Fields</h2>
-        {Object.keys(data.analysisResultFields.results).map(key => {
-          const val = data.analysisResultFields.results[key];
-          var sdata = JSON.parse(val.stored_data);
-          if(sdata.hasOwnProperty('__type__') && sdata['__type__'] === 's3'){
-            sdata = sdata['endpoint_url'] + '/' + sdata['uri'].slice(5);
-            sdata = (<a href={sdata}>{val.name}</a>);
-          } else {
-            sdata = sdata.toString();
-            sdata = val.name + " " + sdata;
-          }
-          return (
-            <li>
-              {sdata}
-            </li>
-          )
-        })}
+        {fields.results.map(field => (
+          <li key={field.uuid}>{formatField(field)}</li>
+        ))}
       </Row>
     </>
   );
