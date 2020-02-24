@@ -148,7 +148,7 @@ class SearchResultScreen extends React.Component<SearchResultScreenProps, Search
                                                 return (
                                                     <ul className="analysis-group-list">
                                                         <li className="analysis-group-list-item">
-                                                            <Link to={`/sample-groupss/${uuid}`}>{name}</Link>
+                                                            <Link to={`/organizations/${uuid}`}>{name}</Link>
                                                         </li>
                                                     </ul>
                                                 );
