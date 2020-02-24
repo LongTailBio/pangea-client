@@ -69,7 +69,7 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
       </Row>
       <Row>
         <h2>Fields</h2>
-        {{Object.keys(data.analysisResultFields).map(arF => {
+        {{data.analysisResultFields.map(arF => {
           const value = arF.stored_data[key];
           return (
             <div>
