@@ -11,7 +11,7 @@ import "@uppy/status-bar/dist/style.css";
 
 interface Covid19UploaderProps {
   userId: number;
-  onCompleteUpload(userId: number): void;
+  onCompleteUpload(userId: number, url: string): void;
 }
 
 interface Covid19UploaderState {
@@ -61,7 +61,7 @@ class Covid19Uploader extends React.Component<
     if (result.successful.length > 0) {
       const url = result.successful[0].uploadURL;
       console.log(`Successful S3 upload: ${url}`);
-      this.props.onCompleteUpload(this.props.userId);
+      this.props.onCompleteUpload(this.props.userId, url);
     }
   };
 

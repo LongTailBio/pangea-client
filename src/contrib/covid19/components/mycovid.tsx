@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { usePangeaAxios } from "../../../services/api";
 
@@ -9,25 +9,60 @@ interface CurrentUserResult {
   email: string;
 }
 
-const MyCovid19Result = () => {
-  const [didUpload, setDidUpload] = useState(false);
-  const [{ data: me, loading, error }] = usePangeaAxios<CurrentUserResult>(
-    "/auth/users/me/"
-  );
+interface TaskHashHook {
+  (): [
+    { taskHash: string; loading?: boolean; error?: Error },
+    (userId: number, rawReadsPath: string) => void
+  ];
+}
 
-  const handleOnCompleteUpload = (userId: number) => {
-    setDidUpload(true);
-    console.log(`TODO: kick off pangea job for user ${userId}`);
+const useTaskHash: TaskHashHook = () => {
+  const [{ data, loading, error }, execute] = usePangeaAxios<{
+    task_hash: string;
+  }>({ url: "/contrib/covid19/", method: "POST" }, { manual: true });
+
+  const taskHash = data ? data.task_hash : "";
+  const submitRawReads = (userId: number, rawReadsPath: string) => {
+    execute({
+      data: {
+        user: userId,
+        raw_reads_path: rawReadsPath
+      }
+    });
   };
+
+  return [{ taskHash, loading, error }, submitRawReads];
+};
+
+const MyCovid19Result = () => {
+  const [{ data: me, loading, error: authError }] = usePangeaAxios<
+    CurrentUserResult
+  >("/auth/users/me/");
+
+  const [{ taskHash, error: submitError }, submitRawReads] = useTaskHash();
+
+  const handleOnCompleteUpload = (userId: number, url: string) =>
+    submitRawReads(userId, url);
 
   return (
     <>
       {loading && <p>Loading...</p>}
-      {error && <p>Log in to mange your COVID-19 sample.</p>}
-      {didUpload && <p>You will receive an email with your results shortly.</p>}
-      {!didUpload && me && (
+      {authError && <p>Log in to mange your COVID-19 sample.</p>}
+      {taskHash && (
+        <>
+          <p>
+            Your sample has begun processing and you will receive an email with
+            your results shortly.
+          </p>
+          <p>
+            Please keep this unique ID for your records: <code>{taskHash}</code>
+          </p>
+        </>
+      )}
+      {!taskHash && me && (
         <>
           <h2>Your Covid Test</h2>
+          {submitError && <p>{submitError.message}</p>}
           <Covid19Uploader
             userId={me.id}
             onCompleteUpload={handleOnCompleteUpload}
