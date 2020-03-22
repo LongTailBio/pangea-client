@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { usePangeaAxios } from "../../../services/api";
 
@@ -35,12 +35,14 @@ const useTaskHash: TaskHashHook = () => {
 };
 
 const MyCovid19Result = () => {
+  const [uploadError, setUploadError] = useState<string | undefined>(undefined);
   const [{ data: me, loading, error: authError }] = usePangeaAxios<
     CurrentUserResult
   >("/auth/users/me/");
 
   const [{ taskHash, error: submitError }, submitRawReads] = useTaskHash();
 
+  const handleOnUploadError = (err: Error) => setUploadError(err.message);
   const handleOnCompleteUpload = (userId: number, url: string) =>
     submitRawReads(userId, url);
 
@@ -63,8 +65,10 @@ const MyCovid19Result = () => {
         <>
           <h2>Your Covid Test</h2>
           {submitError && <p>{submitError.message}</p>}
+          {uploadError && <p>{uploadError}</p>}
           <Covid19Uploader
             userId={me.id}
+            onUploadError={handleOnUploadError}
             onCompleteUpload={handleOnCompleteUpload}
           />
         </>

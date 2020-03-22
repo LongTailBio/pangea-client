@@ -11,6 +11,7 @@ import "@uppy/status-bar/dist/style.css";
 
 interface Covid19UploaderProps {
   userId: number;
+  onUploadError(err: Error): void;
   onCompleteUpload(userId: number, url: string): void;
 }
 
@@ -31,26 +32,23 @@ class Covid19Uploader extends React.Component<
   constructor(props: Covid19UploaderProps) {
     super(props);
 
-    const { userId } = props;
     this.uppy = Uppy<Uppy.StrictTypes>({
-      meta: { userId },
+      meta: { contrib_module: "covid19" },
       restrictions: { maxNumberOfFiles: 1 },
       autoProceed: true
     });
 
-    // const { authToken } = window.localStorage;
+    const { authToken } = window.localStorage;
     this.uppy.use(AwsS3Multipart, {
       limit: 4,
-      companionUrl: getCompanionHost()
-      // serverHeaders: {
-      //   "X-Pangea-Token": authToken
-      // },
-      // companionHeaders: {
-      //   "X-Pangea-Token": authToken
-      // }
+      companionUrl: getCompanionHost(),
+      companionHeaders: {
+        "X-Pangea-Token": authToken
+      }
     });
 
     this.uppy.on("complete", this.handleUppyComplete);
+    this.uppy.on("error", this.props.onUploadError);
   }
 
   componentWillUnmount() {
