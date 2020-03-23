@@ -62,19 +62,19 @@ const Covid19 = () => {
 
         <h3>How this app works</h3>
         <p>
-            This app uses <a href='https://github.com/DerrickWood/kraken2'>Kraken2</a>
+            This app uses <a href='https://github.com/DerrickWood/kraken2'> Kraken2</a>
             with a custom database to classify RNA reads. It primarily looks for reads
             that map to either the SARS-CoV-2 genome or the Human genome.
 
             If you want to use this database manually it can be downloaded
-            <a href='https://s3.wasabisys.com/metasub/covid/kraken2_covid_2020_03_13.tar.gz'>here</a>.
+            <a href='https://s3.wasabisys.com/metasub/covid/kraken2_covid_2020_03_13.tar.gz'> here</a>.
 
             The source code for this web app may be found
-            <a href='https://github.com/LongTailBio/pangea-django/tree/feat/add-covid19-contrib-module/pangea/contrib/covid19'>here</a>.
+            <a href='https://github.com/LongTailBio/pangea-django/tree/feat/add-covid19-contrib-module/pangea/contrib/covid19'> here</a>.
         </p>
         <h3>Comments, questions, and suggestions</h3>
         <p>
-            To make comments on this app please send us an email at dev@@longtailbio.com or
+            To make comments on this app please send us an email at dev@longtailbio.com or
             open an issue on <a href='https://github.com/LongTailBio/pangea-django'>GitHub</a>.
         </p>
         <h3>Disclaimer</h3>
