@@ -77,7 +77,7 @@ class Covid19Uploader extends React.Component<
 
     return (
       <>
-        <DragDrop uppy={this.uppy} note="Raw reads only" />
+        <DragDrop uppy={this.uppy} note="GZipped FASTQ Files Only" />
         <br />
         <StatusBar uppy={this.uppy} showProgressDetails={true} />
       </>

@@ -62,7 +62,7 @@ const Covid19 = () => {
 
         <h3>How this app works</h3>
         <p>
-            This app uses <a href='https://github.com/DerrickWood/kraken2'> Kraken2</a>
+            This app uses <a href='https://github.com/DerrickWood/kraken2'> Kraken2 </a>
             with a custom database to classify RNA reads. It primarily looks for reads
             that map to either the SARS-CoV-2 genome or the Human genome.
 
