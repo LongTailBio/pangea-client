@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Row, Col, Table } from "react-bootstrap";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Row, Col, Table } from 'react-bootstrap';
 
 interface TaxonResult {
   relative_abundance: number;
@@ -27,7 +27,7 @@ export const TaxaSearchResults = (props: SearchResultProps) => {
   const hasResults = Object.keys(results).length > 0;
 
   if (loading) return <p>Loading...</p>;
-  if (error.length > 0) return <p style={{ color: "red" }}>{error}</p>;
+  if (error.length > 0) return <p style={{ color: 'red' }}>{error}</p>;
   if (!hasResults && hasQuery) return <p>No results :(</p>;
   if (!hasResults && !hasQuery) return <p>Enter a query above</p>;
 

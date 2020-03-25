@@ -5,10 +5,9 @@ import { SvgRefProps } from '../../components/DisplayContainer/d3';
 
 import './style.css';
 
-export interface HeatMapProps extends HeatMapOptions, SvgRefProps { }
+export interface HeatMapProps extends HeatMapOptions, SvgRefProps {}
 
 export default class HeatMapPlot extends React.Component<HeatMapProps, {}> {
-
   private rootDiv: HTMLDivElement | undefined;
   private heatmapSvg: SVGSVGElement | undefined;
 
@@ -43,9 +42,13 @@ export default class HeatMapPlot extends React.Component<HeatMapProps, {}> {
 
   render() {
     return (
-      <div ref={(elem) => { if (elem) this.rootDiv = elem; }}>
+      <div
+        ref={elem => {
+          if (elem) this.rootDiv = elem;
+        }}
+      >
         <svg
-          ref={(elem) => {
+          ref={elem => {
             if (elem) {
               this.heatmapSvg = elem;
               this.props.svgRef(elem);

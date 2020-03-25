@@ -5,10 +5,9 @@ import { SvgRefProps } from '../../components/DisplayContainer/d3';
 
 import './style.css';
 
-export interface SunburstProps extends SunburstOptionsType, SvgRefProps { }
+export interface SunburstProps extends SunburstOptionsType, SvgRefProps {}
 
 export default class SunburstPlot extends React.Component<SunburstProps, {}> {
-
   private rootDiv: HTMLDivElement | undefined;
   private sunburstSvg: SVGSVGElement | undefined;
 
@@ -43,9 +42,14 @@ export default class SunburstPlot extends React.Component<SunburstProps, {}> {
 
   render() {
     return (
-      <div style={{textAlign: 'center'}} ref={(elem) => { if (elem) this.rootDiv = elem; }}>
+      <div
+        style={{ textAlign: 'center' }}
+        ref={elem => {
+          if (elem) this.rootDiv = elem;
+        }}
+      >
         <svg
-          ref={(elem) => {
+          ref={elem => {
             if (elem) {
               this.sunburstSvg = elem;
               this.props.svgRef(elem);

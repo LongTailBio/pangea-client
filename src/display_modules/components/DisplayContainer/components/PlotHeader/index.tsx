@@ -10,7 +10,7 @@ export interface PlotHeaderProps {
   downloadCsv(): void;
 }
 
-export const PlotHeader: React.StatelessComponent<PlotHeaderProps> = (props) => {
+export const PlotHeader: React.StatelessComponent<PlotHeaderProps> = props => {
   const popoverDescription = (description: React.ReactNode) => (
     <Popover id="popover-description" title="" arrowOffsetLeft="300">
       {description}
@@ -29,7 +29,7 @@ export const PlotHeader: React.StatelessComponent<PlotHeaderProps> = (props) => 
   ];
 
   return (
-    <h2 style={{marginTop: '50px'}}>
+    <h2 style={{ marginTop: '50px' }}>
       <div className="pull-right">
         <DownloadButton actions={actions} />
       </div>
@@ -40,7 +40,9 @@ export const PlotHeader: React.StatelessComponent<PlotHeaderProps> = (props) => 
         placement="bottom"
         overlay={popoverDescription(props.description)}
       >
-        <Button bsStyle="link" bsSize="large"><Glyphicon glyph="info-sign" /></Button>
+        <Button bsStyle="link" bsSize="large">
+          <Glyphicon glyph="info-sign" />
+        </Button>
       </OverlayTrigger>
     </h2>
   );

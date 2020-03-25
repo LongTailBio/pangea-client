@@ -1,5 +1,13 @@
 import * as React from 'react';
-import { Grid, Row, Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
+import {
+  Grid,
+  Row,
+  Navbar,
+  Nav,
+  NavItem,
+  NavDropdown,
+  MenuItem,
+} from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Link } from 'react-router-dom';
 
@@ -28,7 +36,7 @@ class Header extends React.Component<HeaderProps, {}> {
                 <LinkContainer to="/docs">
                   <NavItem>Documentation</NavItem>
                 </LinkContainer>
-                {this.props.isAuthenticated &&
+                {this.props.isAuthenticated && (
                   <NavDropdown title="+" id="basic-nav-dropdown">
                     <LinkContainer to="#">
                       <MenuItem>Project</MenuItem>
@@ -37,36 +45,34 @@ class Header extends React.Component<HeaderProps, {}> {
                       <MenuItem>Organization</MenuItem>
                     </LinkContainer>
                   </NavDropdown>
-                }
+                )}
                 <NavDropdown title="Account" id="basic-nav-dropdown">
-                  {!this.props.isAuthenticated &&
+                  {!this.props.isAuthenticated && (
                     <LinkContainer to="/register">
                       <MenuItem>Register</MenuItem>
                     </LinkContainer>
-                  }
-                  {!this.props.isAuthenticated &&
+                  )}
+                  {!this.props.isAuthenticated && (
                     <LinkContainer to="/login">
                       <MenuItem>Log In</MenuItem>
                     </LinkContainer>
-                  }
-                  {this.props.isAuthenticated &&
+                  )}
+                  {this.props.isAuthenticated && (
                     <LinkContainer to="/status">
                       <MenuItem>User Status</MenuItem>
                     </LinkContainer>
-                  }
-                  {this.props.isAuthenticated &&
+                  )}
+                  {this.props.isAuthenticated && (
                     <LinkContainer to="/dashboard">
                       <MenuItem>Dashboard</MenuItem>
                     </LinkContainer>
-                  }
-                  {this.props.isAuthenticated &&
-                    <MenuItem divider={true} />
-                  }
-                  {this.props.isAuthenticated &&
+                  )}
+                  {this.props.isAuthenticated && <MenuItem divider={true} />}
+                  {this.props.isAuthenticated && (
                     <LinkContainer to="/logout">
                       <MenuItem>Log Out</MenuItem>
                     </LinkContainer>
-                  }
+                  )}
                 </NavDropdown>
               </Nav>
             </Navbar.Collapse>

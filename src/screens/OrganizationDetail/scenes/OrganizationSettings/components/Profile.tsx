@@ -12,7 +12,10 @@ interface SettingsProps {
   uuid: string;
 }
 
-export default class OrganizationSettingsProfile extends React.Component<SettingsProps, {}> {
+export default class OrganizationSettingsProfile extends React.Component<
+  SettingsProps,
+  {}
+> {
   render() {
     return (
       <div>

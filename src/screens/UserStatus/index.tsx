@@ -1,12 +1,12 @@
-import React from "react";
-import { Helmet } from "react-helmet";
+import React from 'react';
+import { Helmet } from 'react-helmet';
 
-import { usePangeaAxios } from "../../services/api";
-import { UserType } from "../../services/api/models/user";
+import { usePangeaAxios } from '../../services/api';
+import { UserType } from '../../services/api/models/user';
 
 export const UserStatus = () => {
   const [{ data, loading, error }] = usePangeaAxios<UserType>(
-    "/auth/users/me/"
+    '/auth/users/me/',
   );
 
   if (loading) return <p>Loading...</p>;

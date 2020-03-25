@@ -2,10 +2,14 @@ import * as React from 'react';
 import { Grid } from 'react-bootstrap';
 
 import Header from './components/Header';
-import Footer from  './components/Footer';
+import Footer from './components/Footer';
 
 // Themes
-import { WorldQuantHeader, WorldQuantSampleHeader, WorldQuantFooter } from './themes/WorldQuant';
+import {
+  WorldQuantHeader,
+  WorldQuantSampleHeader,
+  WorldQuantFooter,
+} from './themes/WorldQuant';
 
 interface LayoutProps {
   title: string;
@@ -13,8 +17,10 @@ interface LayoutProps {
   theme?: string;
 }
 
-const DefaultLayout: React.SFC<LayoutProps> = (props) => {
-  let header = <Header title={props.title} isAuthenticated={props.isAuthenticated} />;
+const DefaultLayout: React.SFC<LayoutProps> = props => {
+  let header = (
+    <Header title={props.title} isAuthenticated={props.isAuthenticated} />
+  );
   let footer = <Footer />;
   const theme = props.theme !== undefined ? props.theme : '';
   const bodyClass = theme !== '' ? `${theme}-body` : '';
@@ -29,9 +35,7 @@ const DefaultLayout: React.SFC<LayoutProps> = (props) => {
   return (
     <div className={bodyClass}>
       {header}
-      <Grid>
-        {props.children}
-      </Grid>
+      <Grid>{props.children}</Grid>
       {footer}
     </div>
   );

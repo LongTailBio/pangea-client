@@ -1,8 +1,8 @@
-import * as React from "react";
+import * as React from 'react';
 
-import AnalysisGroupListItem from "./components/AnalysisGroupListItem";
+import AnalysisGroupListItem from './components/AnalysisGroupListItem';
 
-import "./analysisGroupList.css";
+import './analysisGroupList.css';
 
 interface Prop {
   groupUUIDs: Array<string>;

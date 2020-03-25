@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-interface CategoryItemProps  {
+interface CategoryItemProps {
   name: string;
   color: string;
   focusReceived(category: string): void;
@@ -18,9 +18,10 @@ class CategoryItem extends React.Component<CategoryItemProps, {}> {
   }
 
   render() {
-    return(
+    return (
       <li onMouseEnter={this.mouseEntered}>
-        <span style={{backgroundColor: this.props.color}} /> {this.props.name.displayFormat()}
+        <span style={{ backgroundColor: this.props.color }} />{' '}
+        {this.props.name.displayFormat()}
       </li>
     );
   }

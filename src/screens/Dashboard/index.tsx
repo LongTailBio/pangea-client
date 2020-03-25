@@ -10,7 +10,12 @@ interface DashboardProps {
 class Dashboard extends React.Component<DashboardProps, {}> {
   render() {
     if (!this.props.isAuthenticated) {
-      return <p>You must be logged in to view this. Click <Link to="/login">here</Link> to log back in.</p>;
+      return (
+        <p>
+          You must be logged in to view this. Click{' '}
+          <Link to="/login">here</Link> to log back in.
+        </p>
+      );
     }
     return (
       <Switch>

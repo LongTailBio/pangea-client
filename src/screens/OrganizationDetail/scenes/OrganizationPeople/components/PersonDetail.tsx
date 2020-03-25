@@ -1,5 +1,14 @@
 import * as React from 'react';
-import { Row, Col, Panel, Button, ListGroup, ListGroupItem, Well, Glyphicon } from 'react-bootstrap';
+import {
+  Row,
+  Col,
+  Panel,
+  Button,
+  ListGroup,
+  ListGroupItem,
+  Well,
+  Glyphicon,
+} from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
 interface PersonDetailProps {
@@ -15,19 +24,26 @@ class PersonDetail extends React.Component<PersonDetailProps, {}> {
           <Panel>
             <Panel.Heading>Benjamin Chrobot</Panel.Heading>
             <ListGroup fill={true}>
-              <LinkContainer to={`/organizations/${this.props.orguuid}/people/${this.props.username}`}>
+              <LinkContainer
+                to={`/organizations/${this.props.orguuid}/people/${this.props.username}`}
+              >
                 <ListGroupItem>0 Projects</ListGroupItem>
               </LinkContainer>
               <ListGroupItem>Membership</ListGroupItem>
             </ListGroup>
           </Panel>
-          <Button bsStyle="danger" block={true}>Remove from organization</Button>
+          <Button bsStyle="danger" block={true}>
+            Remove from organization
+          </Button>
         </Col>
         <Col lg={9}>
           <Well className="text-center">
             <Glyphicon glyph="book" />
             <h4>No projects</h4>
-            <p>It doesn’t look like <strong>bchrobot</strong> has access to any projects yet.</p>
+            <p>
+              It doesn’t look like <strong>bchrobot</strong> has access to any
+              projects yet.
+            </p>
           </Well>
         </Col>
       </Row>

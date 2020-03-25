@@ -1,13 +1,13 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-import { usePangeaAxios } from "../../../services/api";
-import { AnalysisResultType } from "../../../services/api/models/analysisResult";
+import { usePangeaAxios } from '../../../services/api';
+import { AnalysisResultType } from '../../../services/api/models/analysisResult';
 
 const Covid19Results = () => {
   const [{ data, loading, error }] = usePangeaAxios<{
     results: AnalysisResultType[];
-  }>("/sample_ars?module_name=covid19");
+  }>('/sample_ars?module_name=covid19');
   return (
     <>
       <h2>Covid Results</h2>

@@ -3,7 +3,7 @@ import { default as axios, AxiosRequestConfig, CancelTokenSource } from 'axios';
 function getHost(): string {
   // Use environment variable if present
   const envUrl = process.env.REACT_APP_METAGENSCOPE_SERVICE_URL;
-  if (typeof(envUrl) !== 'undefined' && envUrl) {
+  if (typeof envUrl !== 'undefined' && envUrl) {
     return envUrl;
   }
 
@@ -16,12 +16,12 @@ function getHost(): string {
 }
 
 export const getCompanionHost = (): string | undefined => {
-// Use environment variable if present
+  // Use environment variable if present
   const envUrl = process.env.REACT_APP_COMPANION_URL;
-  if (typeof(envUrl) !== 'undefined' && envUrl) {
+  if (typeof envUrl !== 'undefined' && envUrl) {
     return envUrl;
   }
-}
+};
 
 export const API_BASE_URL = `${getHost()}/api`;
 
@@ -30,12 +30,15 @@ export const API_BASE_URL = `${getHost()}/api`;
  * https://github.com/axios/axios#cancellation
  * @param options axios request options
  */
-export const cancelableAxios = (options: AxiosRequestConfig, source: CancelTokenSource) => {
+export const cancelableAxios = (
+  options: AxiosRequestConfig,
+  source: CancelTokenSource,
+) => {
   options.cancelToken = source.token;
   return axios(options);
 };
 
-export type CancelablePromise<T> = {promise: Promise<T>, cancel(): void};
+export type CancelablePromise<T> = { promise: Promise<T>; cancel(): void };
 
 /**
  * Wrap a promise to allow it to be cancelled (as this is not part of Promises by default)
@@ -47,13 +50,15 @@ export type CancelablePromise<T> = {promise: Promise<T>, cancel(): void};
  *
  * @param promise The promise to wrap
  */
-export const makeCancelable = <T>(promise: Promise<T>): CancelablePromise<T> => {
+export const makeCancelable = <T>(
+  promise: Promise<T>,
+): CancelablePromise<T> => {
   let _hasCanceled = false;
 
   const wrappedPromise = new Promise<T>((resolve, reject) => {
     promise.then(
-      val => _hasCanceled ? reject({isCanceled: true}) : resolve(val),
-      error => _hasCanceled ? reject({isCanceled: true}) : reject(error)
+      val => (_hasCanceled ? reject({ isCanceled: true }) : resolve(val)),
+      error => (_hasCanceled ? reject({ isCanceled: true }) : reject(error)),
     );
   });
 

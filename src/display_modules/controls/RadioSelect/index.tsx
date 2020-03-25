@@ -8,7 +8,7 @@ type RadioSelectProps = {
   handleOptionChange(newOption: string): void;
 };
 
-const RadioSelect: React.SFC<RadioSelectProps> = (props) => {
+const RadioSelect: React.SFC<RadioSelectProps> = props => {
   return (
     <form>
       <FormGroup>

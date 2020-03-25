@@ -14,5 +14,5 @@ declare module 'react-highcharts' {
 
   export default ReactHighcharts;
 
-  export class RedrawOnPrint extends React.Component{}
+  export class RedrawOnPrint extends React.Component {}
 }

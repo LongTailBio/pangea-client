@@ -1,11 +1,11 @@
-import React, { useRef, useEffect, useState } from "react";
-import { useQueryParam, StringParam } from "use-query-params";
+import React, { useRef, useEffect, useState } from 'react';
+import { useQueryParam, StringParam } from 'use-query-params';
 
-import { Row, Col } from "react-bootstrap";
-import { Helmet } from "react-helmet";
+import { Row, Col } from 'react-bootstrap';
+import { Helmet } from 'react-helmet';
 
-import { createAxios } from "../../services/api";
-import { TaxaSearchResults } from "./results";
+import { createAxios } from '../../services/api';
+import { TaxaSearchResults } from './results';
 
 interface TaxonResult {
   relative_abundance: number;
@@ -19,13 +19,13 @@ interface TaxaResults {
 }
 
 export const TaxaSearch = () => {
-  const [query, setQuery] = useQueryParam("query", StringParam);
+  const [query, setQuery] = useQueryParam('query', StringParam);
   const timeoutRef = useRef<NodeJS.Timer | null>(null);
   const [results, setResults] = useState<TaxaResults>({});
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
-  const safeQuery = query || "";
+  const safeQuery = query || '';
 
   // Clear timeout on unmount
   useEffect(() => {
@@ -38,7 +38,7 @@ export const TaxaSearch = () => {
   const updateQuery = (value: string) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setQuery(value);
-    setError("");
+    setError('');
     setResults({});
 
     if (value) {
@@ -46,7 +46,7 @@ export const TaxaSearch = () => {
       timeoutRef.current = setTimeout(() => {
         createAxios()
           .get<{ results: TaxaResults }>(
-            `/contrib/taxasearch/search?query=${value}`
+            `/contrib/taxasearch/search?query=${value}`,
           )
           .then(res => setResults(res.data.results))
           .catch(error => setError(error.message))

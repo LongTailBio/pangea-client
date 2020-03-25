@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Redirect, Link } from "react-router-dom";
-import { Row, Col } from "react-bootstrap";
-import { Helmet } from "react-helmet";
-import { AxiosError } from "axios";
+import React, { useState } from 'react';
+import { Redirect, Link } from 'react-router-dom';
+import { Row, Col } from 'react-bootstrap';
+import { Helmet } from 'react-helmet';
+import { AxiosError } from 'axios';
 
-import { createAxios } from "../../../../services/api";
+import { createAxios } from '../../../../services/api';
 
 interface FormProp {
   formType: string;
@@ -15,8 +15,8 @@ interface FormProp {
 export const AuthForm = (props: FormProp) => {
   const { formType, isAuthenticated, onLoginUser } = props;
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [authErrors, setAuthErrors] = useState<string[]>([]);
 
   if (isAuthenticated) return <Redirect to="/" />;
@@ -28,7 +28,7 @@ export const AuthForm = (props: FormProp) => {
       const data = error.response.data as { [key: string]: string[] };
       errorMessages = Object.keys(error.response.data).reduce(
         (acc, key) => acc.concat(data[key]),
-        [error.message]
+        [error.message],
       );
     }
 
@@ -42,18 +42,18 @@ export const AuthForm = (props: FormProp) => {
     const client = createAxios();
     const payload = { email, password };
 
-    const register = () => client.post("/auth/users/", payload);
+    const register = () => client.post('/auth/users/', payload);
     const login = () =>
-      client.post("/auth/token/login/", payload).then(res => {
-        setEmail("");
-        setPassword("");
+      client.post('/auth/token/login/', payload).then(res => {
+        setEmail('');
+        setPassword('');
         onLoginUser(res.data.auth_token);
       });
 
-    if (formType === "login") {
+    if (formType === 'login') {
       return login().catch(handleAuthError);
     }
-    if (formType === "register") {
+    if (formType === 'register') {
       return register()
         .then(login)
         .catch(handleAuthError);
@@ -74,7 +74,7 @@ export const AuthForm = (props: FormProp) => {
         <form onSubmit={handleUserFormSubmit}>
           {authErrors &&
             authErrors.map(authError => (
-              <p key={authError} style={{ color: "red" }}>
+              <p key={authError} style={{ color: 'red' }}>
                 {authError}
               </p>
             ))}
@@ -107,12 +107,12 @@ export const AuthForm = (props: FormProp) => {
           />
         </form>
         <br />
-        {formType === "register" && (
+        {formType === 'register' && (
           <p>
             Already have an account? <Link to="/login">Log in.</Link>
           </p>
         )}
-        {formType === "login" && (
+        {formType === 'login' && (
           <p>
             Don't have an account? <Link to="/register">Create one.</Link>
           </p>

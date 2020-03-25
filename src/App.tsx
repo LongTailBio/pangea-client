@@ -1,52 +1,52 @@
-import React, { useState, useEffect } from "react";
-import { Route, Switch } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import React, { useState, useEffect } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
-import { createAxios } from "./services/api";
+import { createAxios } from './services/api';
 
-import DefaultLayout from "./layouts/DefaultLayout";
-import AuthForm from "./screens/Auth/components/AuthForm";
-import UserStatus from "./screens/UserStatus";
-import Logout from "./screens/Auth/scenes/Logout";
-import Home from "./screens/Home";
-import About from "./screens/About";
-import OrganizationList from "./screens/OrganizationList";
-import OrganizationDetail from "./screens/OrganizationDetail";
-import UserDetail from "./screens/UserDetail";
-import SampleGroup from "./screens/SampleGroup";
-import Sample from "./screens/Sample";
-import AnalysisResult from "./screens/AnalysisResult";
-import Dashboard from "./screens/Dashboard";
-import Docs from "./screens/Docs";
-import SearchResult from "./screens/SearchResult";
-import ContribRouter from "./contrib/router";
+import DefaultLayout from './layouts/DefaultLayout';
+import AuthForm from './screens/Auth/components/AuthForm';
+import UserStatus from './screens/UserStatus';
+import Logout from './screens/Auth/scenes/Logout';
+import Home from './screens/Home';
+import About from './screens/About';
+import OrganizationList from './screens/OrganizationList';
+import OrganizationDetail from './screens/OrganizationDetail';
+import UserDetail from './screens/UserDetail';
+import SampleGroup from './screens/SampleGroup';
+import Sample from './screens/Sample';
+import AnalysisResult from './screens/AnalysisResult';
+import Dashboard from './screens/Dashboard';
+import Docs from './screens/Docs';
+import SearchResult from './screens/SearchResult';
+import ContribRouter from './contrib/router';
 
 export const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [title] = useState("Pangea");
+  const [title] = useState('Pangea');
   const [theme] = useState(undefined);
 
   useEffect(() => {
-    if (window.localStorage.getItem("authToken")) {
+    if (window.localStorage.getItem('authToken')) {
       setIsAuthenticated(true);
     }
   }, []);
 
   const handleOnLoginUser = (token: string) => {
-    window.localStorage.setItem("authToken", token);
+    window.localStorage.setItem('authToken', token);
     setIsAuthenticated(true);
   };
 
   const handleOnLogout = () => {
     createAxios()
-      .post("/auth/token/logout/")
+      .post('/auth/token/logout/')
       .catch(err => {
         if (!(err.response && err.response.status === 403)) {
           throw err;
         }
       })
       .then(() => {
-        window.localStorage.removeItem("authToken");
+        window.localStorage.removeItem('authToken');
         setIsAuthenticated(false);
       });
   };
@@ -69,7 +69,7 @@ export const App = () => {
           path="/register"
           render={() => (
             <AuthForm
-              formType={"register"}
+              formType={'register'}
               isAuthenticated={isAuthenticated}
               onLoginUser={handleOnLoginUser}
             />
@@ -80,7 +80,7 @@ export const App = () => {
           path="/login"
           render={() => (
             <AuthForm
-              formType={"login"}
+              formType={'login'}
               isAuthenticated={isAuthenticated}
               onLoginUser={handleOnLoginUser}
             />
