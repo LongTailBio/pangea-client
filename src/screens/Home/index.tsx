@@ -35,6 +35,14 @@ export const HomeScreen = () => (
         </p>
       </Col>
       <Col lg={3} md={6}>
+        <h4>COVID-19</h4>
+        <p>
+          <Link to="/contrib/covid-19" className="btn btn-primary">
+            Search
+          </Link>
+        </p>
+      </Col>
+      <Col lg={3} md={6}>
         <h4>For Developers</h4>
         <p>Documentation and API.</p>
         <p>
@@ -43,6 +51,8 @@ export const HomeScreen = () => (
           </Link>
         </p>
       </Col>
+    </Row>
+    <Row>
       <Col lg={3} md={6}>
         <h4>Longtail Biotech</h4>
         <p>Powerful tools for modern biotech.</p>
@@ -52,8 +62,6 @@ export const HomeScreen = () => (
           </a>
         </p>
       </Col>
-    </Row>
-    <Row>
       <Col lg={3} md={6}>
         <h4>Sequence Search</h4>
         <p>Search DNA Sequences</p>

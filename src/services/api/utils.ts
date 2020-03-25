@@ -15,6 +15,14 @@ function getHost(): string {
   return `${protocol}//${host}${port}`;
 }
 
+export const getCompanionHost = (): string | undefined => {
+// Use environment variable if present
+  const envUrl = process.env.REACT_APP_COMPANION_URL;
+  if (typeof(envUrl) !== 'undefined' && envUrl) {
+    return envUrl;
+  }
+}
+
 export const API_BASE_URL = `${getHost()}/api`;
 
 /**
