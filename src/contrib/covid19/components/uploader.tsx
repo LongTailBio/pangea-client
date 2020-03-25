@@ -36,7 +36,7 @@ class Covid19Uploader extends React.Component<
       meta: { contrib_module: 'covid19' },
       restrictions: {
         maxNumberOfFiles: 1,
-        allowedFileTypes: ['.fastq.gz', '.fq.gz'],
+        allowedFileTypes: ['.gz'],
       },
       autoProceed: true,
     });
