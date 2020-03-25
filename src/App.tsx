@@ -40,11 +40,15 @@ export const App = () => {
   const handleOnLogout = () => {
     createAxios()
       .post("/auth/token/logout/")
+      .catch(err => {
+        if (!(err.response && err.response.status === 403)) {
+          throw err;
+        }
+      })
       .then(() => {
         window.localStorage.removeItem("authToken");
         setIsAuthenticated(false);
-      })
-      .catch(console.error);
+      });
   };
 
   return (
