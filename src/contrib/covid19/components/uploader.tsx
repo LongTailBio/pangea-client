@@ -34,7 +34,10 @@ class Covid19Uploader extends React.Component<
 
     this.uppy = Uppy<Uppy.StrictTypes>({
       meta: { contrib_module: "covid19" },
-      restrictions: { maxNumberOfFiles: 1 },
+      restrictions: { 
+        maxNumberOfFiles: 1,
+        allowedFileTypes: ['.fastq.gz', '.fq.gz']
+      },
       autoProceed: true
     });
 
