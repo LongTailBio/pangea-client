@@ -1,12 +1,12 @@
-import React, { ReactNode } from "react";
-import { Link } from "react-router-dom";
-import { Row } from "react-bootstrap";
+import React, { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
+import { Row } from 'react-bootstrap';
 
-import { usePangeaAxios, PaginatedResult } from "../../services/api";
-import { AnalysisResultType } from "../../services/api/models/analysisResult";
-import { AnalysisResultFieldType } from "../../services/api/models/analysisResultField";
+import { usePangeaAxios, PaginatedResult } from '../../services/api';
+import { AnalysisResultType } from '../../services/api/models/analysisResult';
+import { AnalysisResultFieldType } from '../../services/api/models/analysisResultField';
 
-type ARType = "sample" | "sample-group";
+type ARType = 'sample' | 'sample-group';
 
 interface AnalysisResultScreenProps {
   uuid: string;
@@ -14,20 +14,20 @@ interface AnalysisResultScreenProps {
 }
 
 const useGroup = (kind: ARType, uuid: string) => {
-  const arPath = kind === "sample" ? "sample_ars" : "sample_group_ars";
+  const arPath = kind === 'sample' ? 'sample_ars' : 'sample_group_ars';
   const [analysisResult] = usePangeaAxios<AnalysisResultType>(
-    `/${arPath}/${uuid}`
+    `/${arPath}/${uuid}`,
   );
 
   const fieldPath =
-    kind === "sample" ? "sample_ar_fields" : "sample_group_ar_fields";
+    kind === 'sample' ? 'sample_ar_fields' : 'sample_group_ar_fields';
   const [fields] = usePangeaAxios<PaginatedResult<AnalysisResultFieldType>>(
-    `/${fieldPath}?analysis_result_id=${uuid}`
+    `/${fieldPath}?analysis_result_id=${uuid}`,
   );
 
   const data = {
     analysisResult: analysisResult.data,
-    fields: fields.data
+    fields: fields.data,
   };
   const loading = analysisResult.loading || fields.loading;
   const error = analysisResult.error || fields.error || undefined;
@@ -36,10 +36,10 @@ const useGroup = (kind: ARType, uuid: string) => {
 
 const formatField = (field: AnalysisResultFieldType): ReactNode => {
   const { stored_data: storedData } = field;
-  const isStoredS3Field = storedData["__type__"] === "s3";
+  const isStoredS3Field = storedData['__type__'] === 's3';
   if (isStoredS3Field) {
-    const endpoint = storedData["endpoint_url"];
-    const path = storedData["uri"].slice(5);
+    const endpoint = storedData['endpoint_url'];
+    const path = storedData['uri'].slice(5);
     const s3Path = `${endpoint}/${path}`;
     return <a href={s3Path}>{field.name}</a>;
   } else {
@@ -61,7 +61,7 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
 
   if (error) {
     const { status } = error.response || {};
-    const title = status === 404 ? "Not Found" : "Error";
+    const title = status === 404 ? 'Not Found' : 'Error';
     return (
       <Row>
         <h1>{title}</h1>
@@ -72,7 +72,7 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
   }
 
   const parentPath =
-    props.kind === "sample"
+    props.kind === 'sample'
       ? `/samples/${data.analysisResult.sample}`
       : `/sample-groups/${data.analysisResult.sample_group}`;
 

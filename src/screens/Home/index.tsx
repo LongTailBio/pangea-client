@@ -1,8 +1,8 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Row, Col } from "react-bootstrap";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Row, Col } from 'react-bootstrap';
 
-import { SearchBar } from "../../components/SearchBar";
+import { SearchBar } from '../../components/SearchBar';
 
 export const HomeScreen = () => (
   <>

@@ -13,8 +13,7 @@ declare global {
 }
 
 String.prototype.replaceAll = function(search: string, replacement: string) {
-  const target = this;
-  return target.split(search).join(replacement);
+  return this.split(search).join(replacement);
 };
 
 /// String.capitalize()
@@ -26,7 +25,11 @@ declare global {
 
 if (!String.prototype.capitalize) {
   String.prototype.capitalize = function(this: string) {
-    return this.replace( /(^|\s)([a-z])/g , function(m: string, p1: string, p2: string) {
+    return this.replace(/(^|\s)([a-z])/g, function(
+      m: string,
+      p1: string,
+      p2: string,
+    ) {
       return p1 + p2.toUpperCase();
     });
   };

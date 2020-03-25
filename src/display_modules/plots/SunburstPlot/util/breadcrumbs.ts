@@ -20,27 +20,35 @@ export const updateBreadcrumbs = function(nodeArray: Node[]) {
   const speciesName = displayTaxaName(curSpecies.data.name);
   let curRectCount = 0;
   const marLeft = 0,
-        marTop = 30,
-        rectWidth = 180,
-        rectHeight = 40;
+    marTop = 30,
+    rectWidth = 180,
+    rectHeight = 40;
 
   function addAnnotation(boxText: string, boxColor: string) {
-    d3.select('#sunburstAnnColumn').append('svg:rect')
-        .attr('x', marLeft)
-        .attr('y', marTop + (curRectCount * (rectHeight + 10)))
-        .attr('width', rectWidth)
-        .attr('height', rectHeight)
-        .attr('fill', boxColor);
-    d3.select('#sunburstAnnColumn').append('text')
-        .attr('x', marLeft + rectWidth / 2)
-        .attr('y', marTop + rectHeight / 2 + (curRectCount * (rectHeight + 10)))
-        .attr('dy', '0.35em')
-        .attr('text-anchor', 'middle')
-        .text(boxText);
+    d3.select('#sunburstAnnColumn')
+      .append('svg:rect')
+      .attr('x', marLeft)
+      .attr('y', marTop + curRectCount * (rectHeight + 10))
+      .attr('width', rectWidth)
+      .attr('height', rectHeight)
+      .attr('fill', boxColor);
+    d3.select('#sunburstAnnColumn')
+      .append('text')
+      .attr('x', marLeft + rectWidth / 2)
+      .attr('y', marTop + rectHeight / 2 + curRectCount * (rectHeight + 10))
+      .attr('dy', '0.35em')
+      .attr('text-anchor', 'middle')
+      .text(boxText);
     curRectCount++;
   }
 
-  function annotationBinary(data: number, boxText1: string, boxText0: string, boxColor1: string, boxColor0: string) {
+  function annotationBinary(
+    data: number,
+    boxText1: string,
+    boxText0: string,
+    boxColor1: string,
+    boxColor0: string,
+  ) {
     if (data !== undefined) {
       if (data === 0) {
         addAnnotation(boxText0, boxColor0);
@@ -61,7 +69,10 @@ export const updateBreadcrumbs = function(nodeArray: Node[]) {
     if (curMic.HMP_blood !== undefined && curMic.HMP_blood === 1) {
       addAnnotation('Human Blood Microbiome', '#bebada');
     }
-    if (curMic.HMP_gastrointestinalTract !== undefined && curMic.HMP_gastrointestinalTract === 1) {
+    if (
+      curMic.HMP_gastrointestinalTract !== undefined &&
+      curMic.HMP_gastrointestinalTract === 1
+    ) {
       addAnnotation('Human Gastrointestinal tract', '#bebada');
     }
     if (curMic.HMP_oral !== undefined && curMic.HMP_oral === 1) {
@@ -70,7 +81,10 @@ export const updateBreadcrumbs = function(nodeArray: Node[]) {
     if (curMic.HMP_skin !== undefined && curMic.HMP_skin === 1) {
       addAnnotation('Human Skin microbiome', '#bebada');
     }
-    if (curMic.HMP_urogenitalTract !== undefined && curMic.HMP_urogenitalTract === 1) {
+    if (
+      curMic.HMP_urogenitalTract !== undefined &&
+      curMic.HMP_urogenitalTract === 1
+    ) {
       addAnnotation('Human Urogenital tract', '#bebada');
     }
     if (curMic.HMP_unknown !== undefined && curMic.HMP_unknown === 1) {
@@ -98,14 +112,14 @@ export const updateBreadcrumbs = function(nodeArray: Node[]) {
       'Potential Animal Pathogen',
       'Non-pathogenic to animals',
       '#F08A5D',
-      '#495664'
+      '#495664',
     );
     annotationBinary(
       curMic.plant_pathogen,
       'Potential Plant Pathogen',
       'Non-pathogenic to plants',
       '#F08A5D',
-      '#495664'
+      '#495664',
     );
 
     if (curMic.gram_stain !== undefined) {
@@ -119,20 +133,41 @@ export const updateBreadcrumbs = function(nodeArray: Node[]) {
     }
 
     if (curMic.optimal_temperature !== undefined) {
-      addAnnotation(`Optimal Temperature: ${curMic.optimal_temperature}`, '#b3de69');
+      addAnnotation(
+        `Optimal Temperature: ${curMic.optimal_temperature}`,
+        '#b3de69',
+      );
     }
     if (curMic.optimal_pH !== undefined) {
       addAnnotation(`Optimal pH: ${curMic.optimal_pH}`, '#b3de69');
     }
-    annotationBinary(curMic.biofilm_forming, 'Biofilm forming', 'Doesn\'t form biofilm', '#fccde5', '#495664');
-    annotationBinary(curMic.spore_forming, 'Spore forming', 'Doesn\'t form spores', '#fccde5', '#495664');
-    annotationBinary(curMic.extreme_environment, 'Extremophilic', 'Non-extremophilic', '#fccde5', '#495664');
+    annotationBinary(
+      curMic.biofilm_forming,
+      'Biofilm forming',
+      "Doesn't form biofilm",
+      '#fccde5',
+      '#495664',
+    );
+    annotationBinary(
+      curMic.spore_forming,
+      'Spore forming',
+      "Doesn't form spores",
+      '#fccde5',
+      '#495664',
+    );
+    annotationBinary(
+      curMic.extreme_environment,
+      'Extremophilic',
+      'Non-extremophilic',
+      '#fccde5',
+      '#495664',
+    );
     annotationBinary(
       curMic.antimicrobial_susceptibility,
       'Anti-microbial susceptible',
       'Anti-microbial non-susceptible',
       '#495664',
-      '#fb8072'
+      '#fb8072',
     );
   }
   if (curRectCount === 0) {

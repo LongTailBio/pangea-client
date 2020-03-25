@@ -3,7 +3,7 @@ import { FormGroup } from 'react-bootstrap';
 
 class Search extends React.Component<{}, {}> {
   render() {
-    return(
+    return (
       <form>
         <FormGroup>
           <input placeholder="Search samples" />

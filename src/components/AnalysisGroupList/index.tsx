@@ -1,14 +1,14 @@
-import * as React from "react";
+import * as React from 'react';
 
-import AnalysisGroupListItem from "./components/AnalysisGroupListItem";
+import AnalysisGroupListItem from './components/AnalysisGroupListItem';
 
-import "./analysisGroupList.css";
+import './analysisGroupList.css';
 
 interface Prop {
   groupUUIDs: Array<string>;
 }
 
-export const AnalysisGroupList = (props: Prop) => {
+export const AnalysisGroupList: React.FC<Prop> = props => {
   return (
     <ul className="analysis-group-list">
       {props.groupUUIDs.map(groupUUID => (

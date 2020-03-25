@@ -9,7 +9,7 @@ type PlotSourceProps = {
 
 class SelectSource extends React.Component<PlotSourceProps, {}> {
   render() {
-    return(
+    return (
       <form>
         <FormGroup>
           <ControlLabel>Select Data Source:</ControlLabel>

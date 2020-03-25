@@ -1,7 +1,7 @@
-import * as React from "react";
-import { Link } from "react-router-dom";
-import { Switch, Route } from "react-router";
-import { LinkContainer } from "react-router-bootstrap";
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { Switch, Route } from 'react-router';
+import { LinkContainer } from 'react-router-bootstrap';
 import {
   Row,
   Col,
@@ -9,13 +9,13 @@ import {
   Nav,
   NavItem,
   Glyphicon,
-  Badge
-} from "react-bootstrap";
-import { Helmet } from "react-helmet";
+  Badge,
+} from 'react-bootstrap';
+import { Helmet } from 'react-helmet';
 
-import { usePangeaAxios, PaginatedResult } from "../../services/api";
-import { SampleType } from "../../services/api/models/sample";
-import { AnalysisResultType } from "../../services/api/models/analysisResult";
+import { usePangeaAxios, PaginatedResult } from '../../services/api';
+import { SampleType } from '../../services/api/models/sample';
+import { AnalysisResultType } from '../../services/api/models/analysisResult';
 
 const useGroup = (uuid: string) => {
   const [sampleResult] = usePangeaAxios<SampleType>(`/samples/${uuid}`);
@@ -25,7 +25,7 @@ const useGroup = (uuid: string) => {
 
   const data = {
     sample: sampleResult.data,
-    analysisResults: analysisResultsResult.data
+    analysisResults: analysisResultsResult.data,
   };
   const loading = sampleResult.loading || analysisResultsResult.loading;
   const error = sampleResult.error || analysisResultsResult.error || undefined;
@@ -55,7 +55,7 @@ export const SampleScreen = (props: SampleScreenProps) => {
 
   if (error) {
     const { status } = error.response || {};
-    const title = status === 404 ? "Not Found" : "Error";
+    const title = status === 404 ? 'Not Found' : 'Error';
     return (
       <>
         <Helmet>
@@ -89,7 +89,7 @@ export const SampleScreen = (props: SampleScreenProps) => {
         <Nav bsStyle="tabs" activeKey="1">
           <LinkContainer to={`/samples/${sample.uuid}`}>
             <NavItem eventKey="1">
-              <Glyphicon glyph="folder-open" /> Analysis Results{" "}
+              <Glyphicon glyph="folder-open" /> Analysis Results{' '}
               <Badge>{analysisResults.count}</Badge>
             </NavItem>
           </LinkContainer>
@@ -115,7 +115,7 @@ export const SampleScreen = (props: SampleScreenProps) => {
                         <Link
                           to={`/samples/${sample.uuid}/analysis-results/${analysisResult.uuid}`}
                         >
-                          {analysisResult.module_name} -{" "}
+                          {analysisResult.module_name} -{' '}
                           {analysisResult.replicate}
                         </Link>
                       </li>

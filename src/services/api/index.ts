@@ -1,7 +1,7 @@
 import axios, { CancelTokenSource, AxiosRequestConfig } from 'axios';
-import { Options, makeUseAxios } from "axios-hooks";
+import { Options, makeUseAxios } from 'axios-hooks';
 
-import { history } from "../../history";
+import { history } from '../../history';
 import { API_BASE_URL, cancelableAxios } from './utils';
 import { UserType } from './models/user';
 
@@ -15,9 +15,9 @@ export const createAxios = () => {
   const client = axios.create({
     baseURL: API_BASE_URL,
     headers: {
-      "Content-Type": "application/json",
-      Authorization: authToken ? `Token ${authToken}` : undefined
-    }
+      'Content-Type': 'application/json',
+      Authorization: authToken ? `Token ${authToken}` : undefined,
+    },
   });
 
   client.interceptors.response.use(undefined, error => {
@@ -25,8 +25,8 @@ export const createAxios = () => {
     if (status === 401) {
       // Allow component state update to complete before navigating away
       setTimeout(() => {
-        window.localStorage.removeItem("authToken");
-        history.push("/login");
+        window.localStorage.removeItem('authToken');
+        history.push('/login');
       }, 0);
     }
     return Promise.reject(error);
@@ -35,9 +35,9 @@ export const createAxios = () => {
   return client;
 };
 
-export const usePangeaAxios = <T = any>(
+export const usePangeaAxios = <T>(
   config: AxiosRequestConfig | string,
-  options?: Options
+  options?: Options,
 ) => {
   const client = createAxios();
   const useAxios = makeUseAxios({ axios: client });
@@ -49,52 +49,55 @@ type LoginType = {
   password: string;
 };
 
-export const authenticate = (formType: string, data: LoginType, source: CancelTokenSource) => {
-  const options: AxiosRequestConfig = formType === 'login'
-    ? {
-      url: `${API_BASE_URL}/auth/token/login/`,
-      method: 'post',
-      data,
-    }
-    : {
-      url: `${API_BASE_URL}/auth/${formType}`,
-      method: 'post',
-      data,
-    };
+export const authenticate = (
+  formType: string,
+  data: LoginType,
+  source: CancelTokenSource,
+) => {
+  const options: AxiosRequestConfig =
+    formType === 'login'
+      ? {
+          url: `${API_BASE_URL}/auth/token/login/`,
+          method: 'post',
+          data,
+        }
+      : {
+          url: `${API_BASE_URL}/auth/${formType}`,
+          method: 'post',
+          data,
+        };
 
   return cancelableAxios(options, source);
 };
 
-
 interface ObjectLink {
-    name: string;
-    uuid: string;
+  name: string;
+  uuid: string;
 }
 
 export interface SearchResultType {
-    search_term: string;
-    sample_groups: Array<ObjectLink>;
-    samples: Array<ObjectLink>;
-    organizations: Array<ObjectLink>;
+  search_term: string;
+  sample_groups: Array<ObjectLink>;
+  samples: Array<ObjectLink>;
+  organizations: Array<ObjectLink>;
 }
 
 export const search = (query: string, source: CancelTokenSource) => {
   const options: AxiosRequestConfig = {
     url: `${API_BASE_URL}/search.json?query=${query}`,
-    method: 'get'
+    method: 'get',
   };
 
-  return cancelableAxios(options, source)
-    .then(res => {
-      const search_result: SearchResultType = {
-        search_term: res.data.search_term,
-        sample_groups: res.data.sample_groups,
-        samples: res.data.samples,
-        organizations: res.data.organizations,
-      }
+  return cancelableAxios(options, source).then(res => {
+    const search_result: SearchResultType = {
+      search_term: res.data.search_term,
+      sample_groups: res.data.sample_groups,
+      samples: res.data.samples,
+      organizations: res.data.organizations,
+    };
 
-      return search_result;
-    });
+    return search_result;
+  });
 };
 
 export const getUser = (uuid: string, source: CancelTokenSource) => {
@@ -103,18 +106,17 @@ export const getUser = (uuid: string, source: CancelTokenSource) => {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Token ${window.localStorage.authToken}`
+      Authorization: `Token ${window.localStorage.authToken}`,
     },
   };
 
-  return cancelableAxios(options, source)
-    .then(res => {
-      const sample: UserType = {
-          id: res.data.user.id,
-          email: res.data.user.email,
-      };
-      return sample;
-    });
+  return cancelableAxios(options, source).then(res => {
+    const sample: UserType = {
+      id: res.data.user.id,
+      email: res.data.user.email,
+    };
+    return sample;
+  });
 };
 
 export const getUserStatus = (source: CancelTokenSource) => {
@@ -123,10 +125,9 @@ export const getUserStatus = (source: CancelTokenSource) => {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Token ${window.localStorage.authToken}`
+      Authorization: `Token ${window.localStorage.authToken}`,
     },
   };
 
-  return cancelableAxios(options, source)
-    .then(res => res.data.data);
+  return cancelableAxios(options, source).then(res => res.data.data);
 };

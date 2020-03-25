@@ -21,9 +21,9 @@ export const DownloadButton = (props: DownloadButtonProps) => {
         <Glyphicon glyph="download-alt" />
       </Dropdown.Toggle>
       <Dropdown.Menu>
-        {props.actions.map((action, index) =>
+        {props.actions.map((action, index) => (
           <DownloadButtonItem key={index} {...action} />
-        )}
+        ))}
       </Dropdown.Menu>
     </Dropdown>
   );

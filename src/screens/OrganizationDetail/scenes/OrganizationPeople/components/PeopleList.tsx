@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react';
 import {
   Row,
   Col,
   Panel,
   ListGroup,
   DropdownButton,
-  MenuItem
-} from "react-bootstrap";
-import { Link } from "react-router-dom";
+  MenuItem,
+} from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
-import { UserType } from "../../../../../services/api/models/user";
+import { UserType } from '../../../../../services/api/models/user';
 
 interface PersonRowProps {
   user: UserType;
@@ -22,11 +22,11 @@ const PersonRow = (props: PersonRowProps) => {
       <span className="pull-right">
         <DropdownButton
           title="Settings"
-          id={"dropdown-basic-uuid"}
+          id={'dropdown-basic-uuid'}
           pullRight={true}
         >
           <MenuItem eventKey="1">Manage</MenuItem>
-          <MenuItem eventKey="2" style={{ color: "red" }}>
+          <MenuItem eventKey="2" style={{ color: 'red' }}>
             Remove from organization
           </MenuItem>
         </DropdownButton>

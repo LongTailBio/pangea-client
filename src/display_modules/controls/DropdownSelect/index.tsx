@@ -9,7 +9,7 @@ type DropdownSelectProps = {
   handleOptionChange(newOption: string): void;
 };
 
-const DropdownSelect: React.SFC<DropdownSelectProps> = (props) => {
+const DropdownSelect: React.SFC<DropdownSelectProps> = props => {
   return (
     <form>
       <FormGroup controlId={props.controlId}>
@@ -17,11 +17,15 @@ const DropdownSelect: React.SFC<DropdownSelectProps> = (props) => {
         <select
           className="form-control"
           value={props.activeOption}
-          onChange={event => props.handleOptionChange(event.currentTarget.value)}
+          onChange={event =>
+            props.handleOptionChange(event.currentTarget.value)
+          }
         >
           {props.options.map((option, index) => {
             return (
-              <option key={index} value={option}>{option.displayFormat()}</option>
+              <option key={index} value={option}>
+                {option.displayFormat()}
+              </option>
             );
           })}
         </select>
