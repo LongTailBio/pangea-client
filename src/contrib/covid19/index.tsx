@@ -3,7 +3,7 @@ import React from 'react';
 import MyCovid19Result from './components/mycovid';
 import Covid19Results from './components/results';
 
-const Covid19 = () => {
+const Covid19: React.FC = () => {
   return (
     <>
       <h1>COVID-19</h1>
@@ -20,12 +20,13 @@ const Covid19 = () => {
         you have made an account and logged in you may use this app. To use this
         application simply upload a FASTQ file in the upload box below. Your
         FASTQ file must be compressed using gzip and should have either the file
-        extension ".fastq.gz" or ".fq.gz". Once your file is uploaded processing
-        will begin automatically. Processing may take several hours. You will
-        receive an email once processing is complete at the email address you
-        used for your account. This email will include a link to download your
-        results. You may upload multiple FASTQ files. If you have paired end
-        sequencing data simply upload one of the read files, either one will do.
+        extension &quote;.fastq.gz&quote; or &quote;.fq.gz&quote;. Once your
+        file is uploaded processing will begin automatically. Processing may
+        take several hours. You will receive an email once processing is
+        complete at the email address you used for your account. This email will
+        include a link to download your results. You may upload multiple FASTQ
+        files. If you have paired end sequencing data simply upload one of the
+        read files, either one will do.
       </p>
       <h3>How to read the report</h3>
       <p>

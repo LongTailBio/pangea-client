@@ -20,13 +20,13 @@ export default class SunburstPlot extends React.Component<SunburstProps, {}> {
     }
   }
 
-  componentWillReceiveProps(nextProps: SunburstProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: SunburstProps) {
     if (this.sunburst !== undefined) {
       this.sunburst.update(nextProps);
     }
   }
 
-  shouldComponentUpdate(nextProps: SunburstProps) {
+  shouldComponentUpdate(_nextProps: SunburstProps) {
     return false;
   }
 

@@ -3,6 +3,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 
 import './style.css';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const wordMark = require('./images/word_mark.svg');
 const paddingStyle: React.CSSProperties = {
   paddingTop: '85px',
@@ -12,7 +13,7 @@ const paddingStyle: React.CSSProperties = {
 // 40px + 20px top margin of h1 element = 60px
 const headerBottomMargin = '40px';
 
-export const WorldQuantHeader: React.SFC<{}> = props => {
+export const WorldQuantHeader: React.FC = () => {
   return (
     <Grid fluid={true} style={{ marginBottom: headerBottomMargin }}>
       <Row className="top-header">
@@ -64,7 +65,8 @@ export const WorldQuantHeader: React.SFC<{}> = props => {
   );
 };
 
-export const WorldQuantSampleHeader: React.SFC<{}> = props => {
+export const WorldQuantSampleHeader: React.FC = () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const miniBackground = require('./images/inter-hero.jpg');
   const miniStyle: React.CSSProperties = {
     backgroundImage: `url( ${miniBackground} )`,
@@ -113,7 +115,7 @@ export const WorldQuantSampleHeader: React.SFC<{}> = props => {
   );
 };
 
-export const WorldQuantFooter: React.SFC<{}> = props => {
+export const WorldQuantFooter: React.FC = () => {
   return (
     <Grid fluid={true}>
       <Row className="worldquant-footer">

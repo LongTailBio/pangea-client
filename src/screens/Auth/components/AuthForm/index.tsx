@@ -114,7 +114,7 @@ export const AuthForm = (props: FormProp) => {
         )}
         {formType === 'login' && (
           <p>
-            Don't have an account? <Link to="/register">Create one.</Link>
+            Don&apos;t have an account? <Link to="/register">Create one.</Link>
           </p>
         )}
       </Col>

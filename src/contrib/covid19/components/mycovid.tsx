@@ -34,7 +34,7 @@ const useTaskHash: TaskHashHook = () => {
   return [{ taskHash, loading, error }, submitRawReads];
 };
 
-const MyCovid19Result = () => {
+const MyCovid19Result: React.FC = () => {
   const [uploadError, setUploadError] = useState<string | undefined>(undefined);
   const [{ data: me, loading, error: authError }] = usePangeaAxios<
     CurrentUserResult

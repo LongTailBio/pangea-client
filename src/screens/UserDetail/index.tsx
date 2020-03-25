@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Switch, Route } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -77,31 +77,26 @@ class UserDetailScreen extends React.Component<
           <Route
             exact={true}
             path="/users/:uuid"
-            render={props => {
-              return (
-                <Row>
-                  <Col lg={12}>
-                    {false &&
-                      [].map((org_uuid, i) => {
-                        return (
-                          <ul className="analysis-group-list">
-                            <li className="analysis-group-list-item">
-                              <Link to={`/organizations/${org_uuid}`}>
-                                {[][i]}
-                              </Link>
-                            </li>
-                          </ul>
-                        );
-                      })}
-                    {true && (
-                      <Well className="text-center">
-                        <h4>This user is not in any organizations.</h4>
-                      </Well>
-                    )}
-                  </Col>
-                </Row>
-              );
-            }}
+            render={_props => (
+              <Row>
+                <Col lg={12}>
+                  {false && (
+                    <ul className="analysis-group-list">
+                      {[].map((org_uuid, i) => (
+                        <li key={org_uuid} className="analysis-group-list-item">
+                          <Link to={`/organizations/${org_uuid}`}>{[][i]}</Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {true && (
+                    <Well className="text-center">
+                      <h4>This user is not in any organizations.</h4>
+                    </Well>
+                  )}
+                </Col>
+              </Row>
+            )}
           />
         </Switch>
       </div>

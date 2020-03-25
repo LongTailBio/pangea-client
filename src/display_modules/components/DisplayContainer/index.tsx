@@ -77,7 +77,7 @@ export class DisplayContainer<D, P = {}> extends React.Component<
   }
 
   /** Fetch the data required to render this display module. */
-  fetchData(sourceToken: CancelTokenSource): Promise<QueryResultWrapper<D>> {
+  fetchData(_sourceToken: CancelTokenSource): Promise<QueryResultWrapper<D>> {
     throw new Error('Subclass should override!');
   }
 
@@ -85,7 +85,7 @@ export class DisplayContainer<D, P = {}> extends React.Component<
    * Create PlotContainer element based on successfully fetched data.
    * @param data - Successfully fetched data for this display container.
    */
-  plotContainer(data: D): JSX.Element {
+  plotContainer(_data: D): JSX.Element {
     throw new Error('Subclass should override!');
   }
 
@@ -187,7 +187,7 @@ export class DisplayContainer<D, P = {}> extends React.Component<
               title={this.title || ''}
               description={this.description}
               downloadPng={this.saveSvg}
-              downloadCsv={() => {}} // tslint:disable-line:no-empty
+              downloadCsv={() => {}} // eslint-disable-line @typescript-eslint/no-empty-function
             />
           </Col>
         </Row>

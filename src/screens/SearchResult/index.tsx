@@ -91,91 +91,85 @@ class SearchResultScreen extends React.Component<
           <Route
             exact={true}
             path="/search/:query"
-            render={props => {
-              return (
-                <Row>
-                  <Col lg={12}>
-                    {this.state.sample_groups &&
-                      this.state.sample_groups.map((sample_grp, i) => {
-                        const name = sample_grp['name'];
-                        const uuid = sample_grp['uuid'];
+            render={_props => (
+              <Row>
+                <Col lg={12}>
+                  {this.state.sample_groups && (
+                    <ul className="analysis-group-list">
+                      {this.state.sample_groups.map((sample_grp, _i) => {
+                        const { uuid, name } = sample_grp;
                         return (
-                          <ul className="analysis-group-list">
-                            <li className="analysis-group-list-item">
-                              <Link to={`/sample-groups/${uuid}`}>{name}</Link>
-                            </li>
-                          </ul>
+                          <li key={uuid} className="analysis-group-list-item">
+                            <Link to={`/sample-groups/${uuid}`}>{name}</Link>
+                          </li>
                         );
                       })}
-                    {!this.state.sample_groups && (
-                      <Well className="text-center">
-                        <h4>This search did not find any sample groups.</h4>
-                      </Well>
-                    )}
-                  </Col>
-                </Row>
-              );
-            }}
+                    </ul>
+                  )}
+                  {!this.state.sample_groups && (
+                    <Well className="text-center">
+                      <h4>This search did not find any sample groups.</h4>
+                    </Well>
+                  )}
+                </Col>
+              </Row>
+            )}
           />
 
           <Route
             exact={true}
             path="/search/:query/samples"
-            render={props => {
-              return (
-                <Row>
-                  <Col lg={12}>
-                    {this.state.samples &&
-                      this.state.samples.map((sample, i) => {
-                        const name = sample['name'];
-                        const uuid = sample['uuid'];
+            render={_props => (
+              <Row>
+                <Col lg={12}>
+                  {this.state.samples && (
+                    <ul className="analysis-group-list">
+                      {this.state.samples.map((sample, _i) => {
+                        const { name, uuid } = sample;
                         return (
-                          <ul className="analysis-group-list">
-                            <li className="analysis-group-list-item">
-                              <Link to={`/samples/${uuid}`}>{name}</Link>
-                            </li>
-                          </ul>
+                          <li key={uuid} className="analysis-group-list-item">
+                            <Link to={`/samples/${uuid}`}>{name}</Link>
+                          </li>
                         );
                       })}
-                    {!this.state.samples && (
-                      <Well className="text-center">
-                        <h4>This search did not find any samples.</h4>
-                      </Well>
-                    )}
-                  </Col>
-                </Row>
-              );
-            }}
+                    </ul>
+                  )}
+                  {!this.state.samples && (
+                    <Well className="text-center">
+                      <h4>This search did not find any samples.</h4>
+                    </Well>
+                  )}
+                </Col>
+              </Row>
+            )}
           />
 
           <Route
             exact={true}
             path="/search/:query/orgs"
-            render={props => {
-              return (
-                <Row>
-                  <Col lg={12}>
-                    {this.state.organizations &&
-                      this.state.organizations.map((org, i) => {
-                        const name = org['name'];
-                        const uuid = org['uuid'];
+            render={_props => (
+              <Row>
+                <Col lg={12}>
+                  {this.state.organizations && (
+                    <ul className="analysis-group-list">
+                      {this.state.organizations.map((org, _i) => {
+                        const { name, uuid } = org;
                         return (
-                          <ul className="analysis-group-list">
-                            <li className="analysis-group-list-item">
-                              <Link to={`/organizations/${uuid}`}>{name}</Link>
-                            </li>
-                          </ul>
+                          <li key={uuid} className="analysis-group-list-item">
+                            <Link to={`/organizations/${uuid}`}>{name}</Link>
+                          </li>
                         );
                       })}
-                    {!this.state.organizations && (
-                      <Well className="text-center">
-                        <h4>This search did not find any organizations.</h4>
-                      </Well>
-                    )}
-                  </Col>
-                </Row>
-              );
-            }}
+                    </ul>
+                  )}
+                  {!this.state.organizations && (
+                    <Well className="text-center">
+                      <h4>This search did not find any organizations.</h4>
+                    </Well>
+                  )}
+                </Col>
+              </Row>
+            )}
           />
         </Switch>
       </div>

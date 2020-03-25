@@ -27,14 +27,6 @@ export const TaxaSearch = () => {
 
   const safeQuery = query || '';
 
-  // Clear timeout on unmount
-  useEffect(() => {
-    updateQuery(safeQuery);
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
-
   const updateQuery = (value: string) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setQuery(value);
@@ -54,6 +46,14 @@ export const TaxaSearch = () => {
       }, 350);
     }
   };
+
+  // Clear timeout on unmount
+  useEffect(() => {
+    updateQuery(safeQuery);
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const handleOnChangeQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;

@@ -13,8 +13,7 @@ declare global {
 }
 
 String.prototype.replaceAll = function(search: string, replacement: string) {
-  const target = this;
-  return target.split(search).join(replacement);
+  return this.split(search).join(replacement);
 };
 
 /// String.capitalize()

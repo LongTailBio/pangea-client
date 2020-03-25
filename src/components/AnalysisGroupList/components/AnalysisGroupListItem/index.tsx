@@ -8,7 +8,7 @@ interface Prop {
   groupUUID: string;
 }
 
-export const SampleGroupListItem = (props: Prop) => {
+export const SampleGroupListItem: React.FC<Prop> = props => {
   const [{ data }] = usePangeaAxios<SampleGroupType>(
     `/sample_groups/${props.groupUUID}`,
   );

@@ -165,7 +165,7 @@ export function createScatter(
         .style('left', `${eventX + 15}px`)
         .style('top', `${eventY - 40}px`);
     })
-    .on('mouseout', function(d: Entry) {
+    .on('mouseout', function(_d: Entry) {
       tooltip
         .transition()
         .duration(500)

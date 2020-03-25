@@ -166,7 +166,7 @@ export default class Sunburst {
           };
         })
         .selectAll<SVGPathElement, Node>('path')
-        .attrTween('d', (tweenNode: Node) => t => arc(tweenNode)!);
+        .attrTween('d', (tweenNode: Node) => _t => arc(tweenNode)!);
     }
 
     this.canvas

@@ -21,7 +21,7 @@ import Docs from './screens/Docs';
 import SearchResult from './screens/SearchResult';
 import ContribRouter from './contrib/router';
 
-export const App = () => {
+export const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [title] = useState('Pangea');
   const [theme] = useState(undefined);

@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import * as Highcharts from 'highcharts';
 
-const HighchartsMore = require('highcharts/highcharts-more'),
-  HighchartsExporting = require('highcharts/modules/exporting'),
-  HighchartsOfflineExporting = require('highcharts/modules/offline-exporting');
+import HighchartsMore from 'highcharts/highcharts-more';
+import HighchartsExporting from 'highcharts/modules/exporting';
+import HighchartsOfflineExporting from 'highcharts/modules/offline-exporting';
 HighchartsExporting(Highcharts);
 HighchartsOfflineExporting(Highcharts);
 HighchartsMore(Highcharts);

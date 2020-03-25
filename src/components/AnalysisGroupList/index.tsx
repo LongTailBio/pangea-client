@@ -8,7 +8,7 @@ interface Prop {
   groupUUIDs: Array<string>;
 }
 
-export const AnalysisGroupList = (props: Prop) => {
+export const AnalysisGroupList: React.FC<Prop> = props => {
   return (
     <ul className="analysis-group-list">
       {props.groupUUIDs.map(groupUUID => (

@@ -43,7 +43,7 @@ export class SearchBar extends React.Component<{}, SearchBarState> {
     this.setState({ formData });
   };
 
-  handleSubmitSearch = (event: React.FormEvent<HTMLFormElement>) =>
+  handleSubmitSearch = (_event: React.FormEvent<HTMLFormElement>) =>
     this.setState({ submitted: true });
 
   render() {

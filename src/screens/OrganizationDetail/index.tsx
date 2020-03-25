@@ -118,7 +118,7 @@ export const OrganizationDetail = (props: OrganizationsProps) => {
           <Route
             exact={true}
             path="/organizations/:uuid/people"
-            render={props => <PeopleList people={people.results} />}
+            render={_props => <PeopleList people={people.results} />}
           />
           <Route
             exact={true}

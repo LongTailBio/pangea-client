@@ -236,7 +236,7 @@ export default class HeatMap {
           .style('left', `${eventX + 15}px`)
           .style('top', `${eventY - 40}px`);
       })
-      .on('mouseout', function(d: HeatMapDatum) {
+      .on('mouseout', function(_d: HeatMapDatum) {
         safeTooltip
           .transition()
           .duration(500)
@@ -247,8 +247,8 @@ export default class HeatMap {
       .attr('y', (d: HeatMapDatum) => canvasHeight + d.y * gridSize)
       .attr('width', gridSize)
       .attr('height', gridSize)
-      .attr('rx', (d: HeatMapDatum) => Math.min(4, gridSize / 5))
-      .attr('ry', (d: HeatMapDatum) => Math.min(4, gridSize / 5))
+      .attr('rx', (_d: HeatMapDatum) => Math.min(4, gridSize / 5))
+      .attr('ry', (_d: HeatMapDatum) => Math.min(4, gridSize / 5))
       .style('fill', (d: HeatMapDatum) => {
         return colorScale(d.value);
       });

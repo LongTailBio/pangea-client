@@ -1,6 +1,6 @@
 export interface MicrobeRecord {
   // microbe_id: number,
-  [index: string]: any;
+  [index: string]: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 export interface MicrobeDatabaseShape {

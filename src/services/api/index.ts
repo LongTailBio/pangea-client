@@ -35,7 +35,7 @@ export const createAxios = () => {
   return client;
 };
 
-export const usePangeaAxios = <T = any>(
+export const usePangeaAxios = <T>(
   config: AxiosRequestConfig | string,
   options?: Options,
 ) => {

@@ -20,13 +20,13 @@ export default class HeatMapPlot extends React.Component<HeatMapProps, {}> {
     }
   }
 
-  componentWillReceiveProps(nextProps: HeatMapProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: HeatMapProps) {
     if (this.heatmap !== undefined) {
       this.heatmap.update(nextProps);
     }
   }
 
-  shouldComponentUpdate(nextProps: HeatMapProps) {
+  shouldComponentUpdate(_nextProps: HeatMapProps) {
     return false;
   }
 

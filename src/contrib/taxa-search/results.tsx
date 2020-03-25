@@ -20,7 +20,7 @@ interface SearchResultProps {
   error: string;
 }
 
-export const TaxaSearchResults = (props: SearchResultProps) => {
+export const TaxaSearchResults: React.FC<SearchResultProps> = props => {
   const { query, results, loading, error } = props;
 
   const hasQuery = query.length > 0;
@@ -34,9 +34,9 @@ export const TaxaSearchResults = (props: SearchResultProps) => {
   return (
     <>
       {Object.entries(results).map(([taxon, matches]) => (
-        <Row>
+        <Row key={taxon}>
           <Col>
-            <h3 key={taxon}>{taxon}</h3>
+            <h3>{taxon}</h3>
             <Table>
               <thead>
                 <tr>

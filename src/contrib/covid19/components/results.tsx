@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { usePangeaAxios } from '../../../services/api';
 import { AnalysisResultType } from '../../../services/api/models/analysisResult';
 
-const Covid19Results = () => {
+const Covid19Results: React.FC = () => {
   const [{ data, loading, error }] = usePangeaAxios<{
     results: AnalysisResultType[];
   }>('/sample_ars?module_name=covid19');

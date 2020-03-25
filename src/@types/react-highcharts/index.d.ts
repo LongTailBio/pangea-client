@@ -10,7 +10,7 @@ declare module 'react-highcharts' {
     domProps?: object;
   }
 
-  class ReactHighcharts extends React.Component<ReactHighchartsProps, any> {}
+  class ReactHighcharts<S> extends React.Component<ReactHighchartsProps, S> {}
 
   export default ReactHighcharts;
 

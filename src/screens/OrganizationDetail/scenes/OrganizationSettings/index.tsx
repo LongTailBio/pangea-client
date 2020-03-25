@@ -57,7 +57,7 @@ export default class OrganizationSettings extends React.Component<
             <Route
               exact={true}
               path="/organizations/:uuid/settings"
-              render={props => (
+              render={_props => (
                 <Redirect
                   to={`/organizations/${this.props.uuid}/settings/profile`}
                 />
@@ -66,12 +66,12 @@ export default class OrganizationSettings extends React.Component<
             <Route
               exact={true}
               path="/organizations/:uuid/settings/profile"
-              render={props => <Settings uuid={this.props.uuid} />}
+              render={_props => <Settings uuid={this.props.uuid} />}
             />
             <Route
               exact={true}
               path="/organizations/:uuid/settings/member_privileges"
-              render={props => (
+              render={_props => (
                 <div>
                   <h3>Member Privileges</h3>
                   <hr />
@@ -81,7 +81,7 @@ export default class OrganizationSettings extends React.Component<
             <Route
               exact={true}
               path="/organizations/:uuid/settings/projects"
-              render={props => (
+              render={_props => (
                 <div>
                   <h3>Projects</h3>
                   <hr />
@@ -91,7 +91,7 @@ export default class OrganizationSettings extends React.Component<
             <Route
               exact={true}
               path="/organizations/:uuid/settings/tokens"
-              render={props => (
+              render={_props => (
                 <div>
                   <h3>API Tokens</h3>
                   <hr />

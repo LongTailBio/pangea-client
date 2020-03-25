@@ -54,11 +54,11 @@ class Covid19Uploader extends React.Component<
     this.uppy.on('error', this.props.onUploadError);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.uppy.close();
   }
 
-  handleUppyComplete = (result: Uppy.UploadResult) => {
+  handleUppyComplete = (result: Uppy.UploadResult): void => {
     if (result.successful.length > 0) {
       const url = result.successful[0].uploadURL;
       console.log(`Successful S3 upload: ${url}`);
@@ -66,7 +66,7 @@ class Covid19Uploader extends React.Component<
     }
   };
 
-  render() {
+  render(): React.ReactElement | null {
     const { didComplete } = this.state;
 
     if (didComplete) {
