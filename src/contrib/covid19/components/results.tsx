@@ -8,7 +8,6 @@ const Covid19Results = () => {
   const [{ data, loading, error }] = usePangeaAxios<{
     results: AnalysisResultType[];
   }>("/sample_ars?module_name=covid19_kraken2");
-  console.log(data);
   return (
     <>
       <h2>Covid Results</h2>
