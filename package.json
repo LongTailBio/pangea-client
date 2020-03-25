@@ -14,7 +14,7 @@
     "url": "https://github.com/LongTailBio/metagenscope-client/issues"
   },
   "scripts": {
-    "start": "PORT=9000 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "lint:report": "eslint '*/**/*.{js,ts,tsx}'",
     "lint:fix": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
