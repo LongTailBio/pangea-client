@@ -22,6 +22,7 @@ module.exports = {
       version: 'detect',
     },
   },
+  ignorePatterns: ['node_modules/', 'typings/'],
   rules: {
     '@typescript-eslint/camelcase': 0,
     '@typescript-eslint/triple-slash-reference': 0,
