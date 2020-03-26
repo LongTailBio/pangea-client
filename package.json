@@ -1,17 +1,18 @@
 {
-  "name": "metagenscope-client",
-  "description": "> MetaGenScope client web application.",
+  "name": "pangea-client",
+  "description": "Pangea client web application.",
   "version": "0.1.0",
-  "private": true,
-  "author": "",
+  "private": false,
+  "author": "Longtail Biotech",
   "keywords": [],
   "license": "ISC",
+  "homepage": "https://github.com/LongTailBio/pangea-client",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LongTailBio/metagenscope-client.git"
+    "url": "git+https://github.com/LongTailBio/pangea-client.git"
   },
   "bugs": {
-    "url": "https://github.com/LongTailBio/metagenscope-client/issues"
+    "url": "https://github.com/LongTailBio/pangea-client/issues"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -20,6 +21,7 @@
     "lint:fix": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "commit": "git-cz",
     "commit:retry": "git-cz --retry",
+    "release": "standard-version",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -76,6 +78,7 @@
     "husky": "^4.2.3",
     "lint-staged": "^10.0.9",
     "prettier": "^1.19.1",
+    "standard-version": "^7.1.0",
     "typescript": "^3.7.5",
     "typings": "^2.1.1"
   },
