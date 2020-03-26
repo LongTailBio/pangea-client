@@ -1,27 +1,23 @@
 {
-  "name": "pangea-client",
-  "description": "Pangea client web application.",
+  "name": "metagenscope-client",
+  "description": "> MetaGenScope client web application.",
   "version": "0.1.0",
-  "private": false,
-  "author": "Longtail Biotech",
+  "private": true,
+  "author": "",
   "keywords": [],
   "license": "ISC",
-  "homepage": "https://github.com/LongTailBio/pangea-client",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LongTailBio/pangea-client.git"
+    "url": "git+https://github.com/LongTailBio/metagenscope-client.git"
   },
   "bugs": {
-    "url": "https://github.com/LongTailBio/pangea-client/issues"
+    "url": "https://github.com/LongTailBio/metagenscope-client/issues"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "lint:report": "eslint '*/**/*.{js,ts,tsx}'",
     "lint:fix": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "commit": "git-cz",
-    "commit:retry": "git-cz --retry",
-    "release": "standard-version",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -49,8 +45,6 @@
     "use-query-params": "^0.6.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^8.3.5",
-    "@commitlint/config-conventional": "^8.3.4",
     "@types/chroma-js": "^2.0.0",
     "@types/commonmark": "^0.27.0",
     "@types/d3": "^4.13.0",
@@ -69,16 +63,11 @@
     "@types/react-router-dom": "^5.1.3",
     "@typescript-eslint/eslint-plugin": "^2.19.2",
     "@typescript-eslint/parser": "^2.19.2",
-    "commitizen": "^4.0.3",
-    "commitlint-circle": "^1.0.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.3",
-    "husky": "^4.2.3",
-    "lint-staged": "^10.0.9",
     "prettier": "^1.19.1",
-    "standard-version": "^7.1.0",
     "typescript": "^3.7.5",
     "typings": "^2.1.1"
   },
@@ -92,25 +81,6 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
-    ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js}": [
-      "eslint --fix"
-    ],
-    "*.{css,json,md}": [
-      "prettier --write"
     ]
   }
 }

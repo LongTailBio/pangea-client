@@ -7,6 +7,7 @@ module.exports = {
     'plugin:prettier/recommended',
   ],
   parserOptions: {
+    project: 'tsconfig.json',
     ecmaVersion: 2018,
     sourceType: 'module',
     ecmaFeatures: {
@@ -22,7 +23,6 @@ module.exports = {
       version: 'detect',
     },
   },
-  ignorePatterns: ['node_modules/', 'typings/'],
   rules: {
     '@typescript-eslint/camelcase': 0,
     '@typescript-eslint/triple-slash-reference': 0,

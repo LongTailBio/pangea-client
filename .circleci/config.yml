@@ -1,10 +1,39 @@
 version: 2
 
+# Common steps for building client Docker image
+build_steps: &build_steps
+  docker:
+    - image: circleci/node:9.2.0
+
+  steps:
+    - checkout
+
+    - setup_remote_docker
+
+    - run:
+        name: Set COMMIT env var
+        command: echo 'export COMMIT=${CIRCLE_SHA1::8}' >> $BASH_ENV
+
+    - run:
+        name: Sign in to Docker Hub
+        command: docker login -u $DOCKER_ID -p $DOCKER_PASSWORD
+
+    - run:
+        name: Build and push web service
+        environment:
+          CLIENT_SERVICE: metagenscope-client
+          NODE_ENV: production
+        command: |
+          docker build . -t $CLIENT_SERVICE:$COMMIT
+          docker tag $CLIENT_SERVICE:$COMMIT $DOCKER_ORG/$CLIENT_SERVICE:$TAG
+          docker push $DOCKER_ORG/$CLIENT_SERVICE
+
+
 # CircleCI Jobs
 jobs:
-  lint:
+  run_tests:
     docker:
-      - image: circleci/node:12.16.1
+      - image: circleci/node:9.2.0
 
     working_directory: ~/repo
 
@@ -14,13 +43,13 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
 
       - run:
           name: Install node dependencies
-          command: yarn install --silent
+          command: npm install --silent
 
       - save_cache:
           paths:
@@ -32,17 +61,95 @@ jobs:
           command: ./node_modules/.bin/typings install
 
       - run:
-          name: Lint commits
-          command: yarn commitlint-circle
+          name: Lint client
+          command: npm run lint
+
+  test_build:
+    docker:
+      - image: circleci/node:9.2.0
+
+    environment:
+      TAG: test
+
+    steps:
+      - checkout
+
+      - setup_remote_docker
 
       - run:
-          name: Lint client
-          command: yarn lint:report
+          name: Set COMMIT env var
+          command: echo 'export COMMIT=${CIRCLE_SHA1::8}' >> $BASH_ENV
+
+      - run:
+          name: Build web service
+          environment:
+            CLIENT_SERVICE: metagenscope-client
+            NODE_ENV: production
+          command: |
+            docker build . -t $CLIENT_SERVICE:$COMMIT
+
+  build_staging:
+    <<: *build_steps
+    environment:
+      TAG: staging
+      DOCKER_ORG: metagenscope
+
+  deploy_staging:
+    docker:
+      - image: circleci/node:9.2.0
+
+    working_directory: ~/repo
+
+    steps:
+      - run:
+          name: Deploy to emptyfish.net
+          command: |
+            set -x
+            echo "$STAGING_MACHINE_IP $STAGING_MACHINE_HOST_KEY" > ~/tmp_auth_hosts
+            ssh -A -o "UserKnownHostsFile ~/tmp_auth_hosts" $STAGING_MACHINE_USER@$STAGING_MACHINE_IP "cd /home/metagenscope/metagenscope-app && sh deploy.sh"
+
+  build_master:
+    <<: *build_steps
+    environment:
+      TAG: latest
+      DOCKER_ORG: metagenscope
+
 
 # CircleCI Workflows
 workflows:
   version: 2
 
-  test:
+  test-and-deploy:
     jobs:
-      - lint
+      - run_tests:
+            context: metagenscope-staging
+      - test_build:
+          context: metagenscope-staging
+          filters:
+            branches:
+              ignore:
+                - develop
+                - master
+          requires:
+            - run_tests
+      - build_staging:
+          context: metagenscope-staging
+          filters:
+            branches:
+              only: develop
+          requires:
+            - run_tests
+      - deploy_staging:
+          context: metagenscope-staging
+          filters:
+            branches:
+              only: develop
+          requires:
+            - build_staging
+      - build_master:
+          context: metagenscope-staging
+          filters:
+            branches:
+              only: master
+          requires:
+            - run_tests
