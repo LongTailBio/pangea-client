@@ -1,7 +1,6 @@
 
-import { SampleType } from "./sample";
-import { SampleGroupType } from "./sampleGroup";
-
+import { SampleType } from './sample';
+import { SampleGroupType } from './sampleGroup';
 
 export interface AnalysisResultType {
   uuid: string;

@@ -1,6 +1,5 @@
 
-import { AnalysisResultType } from "./analysisResult";
-
+import { AnalysisResultType } from './analysisResult';
 
 export interface AnalysisResultFieldType {
   uuid: string;

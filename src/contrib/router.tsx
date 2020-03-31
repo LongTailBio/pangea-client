@@ -4,7 +4,6 @@ import { Switch, Route, RouteComponentProps } from 'react-router-dom';
 import TaxaSearch from './taxa-search';
 import Covid19 from './covid19';
 
-
 export const ContribRouter = (props: RouteComponentProps) => {
   const { path } = props.match;
   return (

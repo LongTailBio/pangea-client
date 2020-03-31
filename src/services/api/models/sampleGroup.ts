@@ -1,6 +1,4 @@
-
-import { OrganizationType } from "./organization";
-
+import { OrganizationType } from './organization';
 
 export interface SampleGroupType {
   uuid: string;

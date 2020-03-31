@@ -1,6 +1,5 @@
 
-import { SampleGroupType } from "./sampleGroup";
-
+import { SampleGroupType } from './sampleGroup';
 
 export interface SampleType {
   uuid: string;
