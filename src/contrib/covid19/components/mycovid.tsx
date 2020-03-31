@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-
 import { usePangeaAxios } from '../../../services/api';
-
 import Covid19Uploader from './uploader';
 
 interface CurrentUserResult {
