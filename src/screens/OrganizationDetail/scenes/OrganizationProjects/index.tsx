@@ -1,9 +1,9 @@
-import React from "react";
-import { LinkContainer } from "react-router-bootstrap";
-import { Row, Col, Well, Button } from "react-bootstrap";
+import React from 'react';
+import { LinkContainer } from 'react-router-bootstrap';
+import { Row, Col, Well, Button } from 'react-bootstrap';
 
-import { SampleGroupType } from "../../../../services/api/models/analysisGroup";
-import AnalysisGroupList from "../../../../components/AnalysisGroupList";
+import { SampleGroupType } from '../../../../services/api/models/analysisGroup';
+import AnalysisGroupList from '../../../../components/AnalysisGroupList';
 
 interface OrganizationProjectsProps {
   sampleGroups: SampleGroupType[];

@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { usePangeaAxios } from '../../../services/api';
+import Covid19Uploader from './uploader';
 
-import { usePangeaAxios } from "../../../services/api";
-
-import Covid19Uploader from "./uploader";
 
 interface CurrentUserResult {
   id: number;
@@ -12,33 +11,34 @@ interface CurrentUserResult {
 interface TaskHashHook {
   (): [
     { taskHash: string; loading?: boolean; error?: Error },
-    (userId: number, rawReadsPath: string) => void
+    (userId: number, rawReadsPath: string) => void,
   ];
 }
 
 const useTaskHash: TaskHashHook = () => {
   const [{ data, loading, error }, execute] = usePangeaAxios<{
     task_hash: string;
-  }>({ url: "/contrib/covid19/", method: "POST" }, { manual: true });
+  }>({ url: '/contrib/covid19/', method: 'POST' }, { manual: true });
 
-  const taskHash = data ? data.task_hash : "";
+  const taskHash = data ? data.task_hash : '';
   const submitRawReads = (userId: number, rawReadsPath: string) => {
     execute({
       data: {
         user: userId,
-        raw_reads_path: rawReadsPath
-      }
+        raw_reads_path: rawReadsPath,
+      },
     });
   };
 
   return [{ taskHash, loading, error }, submitRawReads];
 };
 
-const MyCovid19Result = () => {
+
+const MyCovid19Result: React.FC = () => {
   const [uploadError, setUploadError] = useState<string | undefined>(undefined);
   const [{ data: me, loading, error: authError }] = usePangeaAxios<
     CurrentUserResult
-  >("/auth/users/me/");
+  >('/auth/users/me/');
 
   const [{ taskHash, error: submitError }, submitRawReads] = useTaskHash();
 

@@ -11,7 +11,7 @@ interface TeammateType {
   position: string;
   role: string;
   email: string;
- }
+}
 
 const team: Array<TeammateType> = [
   {
@@ -19,21 +19,21 @@ const team: Array<TeammateType> = [
     name: 'Christopher E. Mason, Ph.D.',
     position: 'Principal Investigator',
     role: 'Associate Professor',
-    email: 'chm2042@med.cornell.edu'
+    email: 'chm2042@med.cornell.edu',
   },
   {
     imageName: 'danko.jpg',
     name: 'David C. Danko',
     position: 'Lead Developer',
     role: 'Ph.D. Student',
-    email: 'dcd3001@med.cornell.edu'
+    email: 'dcd3001@med.cornell.edu',
   },
   {
     imageName: 'cem.jpg',
     name: 'Cem Meydan, Ph.D.',
     position: 'Developer',
     role: 'Post-Doctoral Researcher',
-    email: ''
+    email: '',
   },
 ];
 
@@ -52,7 +52,7 @@ class Teammate extends React.Component<TeammateTypeProp, {}> {
         <Col lg={4}>
           <img
             src={require(`./images/${this.teammate.imageName}`)}
-            style={{height: '200px', borderRadius: '50%'}}
+            style={{ height: '200px', borderRadius: '50%' }}
             alt={this.teammate.name}
           />
         </Col>
@@ -63,7 +63,7 @@ class Teammate extends React.Component<TeammateTypeProp, {}> {
           <h5>{this.teammate.email}</h5>
         </Col>
       </Row>
-      );
+    );
   }
 }
 
@@ -72,18 +72,14 @@ class Team extends React.Component {
     return (
       <div>
         <h1>The Team</h1>
-        {
-          team.map((teammate, index) => {
-            return (
-              <div key={index}>
-                {(index !== 0) &&
-                  <hr />
-                }
-                <Teammate teammate={teammate} />
-              </div>
-            );
-          })
-        }
+        {team.map((teammate, index) => {
+          return (
+            <div key={index}>
+              {index !== 0 && <hr />}
+              <Teammate teammate={teammate} />
+            </div>
+          );
+        })}
       </div>
     );
   }

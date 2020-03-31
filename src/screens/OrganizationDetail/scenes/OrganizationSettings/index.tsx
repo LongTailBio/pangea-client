@@ -9,7 +9,10 @@ interface OrganizationSettingsProps {
   uuid: string;
 }
 
-export default class OrganizationSettings extends React.Component<OrganizationSettingsProps, {}> {
+export default class OrganizationSettings extends React.Component<
+  OrganizationSettingsProps,
+  {}
+> {
   render() {
     return (
       <Row>
@@ -18,13 +21,19 @@ export default class OrganizationSettings extends React.Component<OrganizationSe
             <Panel.Heading>Organization Settings</Panel.Heading>
             <Panel.Body>
               <ListGroup fill={true}>
-              <LinkContainer to={`/organizations/${this.props.uuid}/settings/profile`}>
+                <LinkContainer
+                  to={`/organizations/${this.props.uuid}/settings/profile`}
+                >
                   <ListGroupItem>Profile</ListGroupItem>
                 </LinkContainer>
-                <LinkContainer to={`/organizations/${this.props.uuid}/settings/member_privileges`}>
+                <LinkContainer
+                  to={`/organizations/${this.props.uuid}/settings/member_privileges`}
+                >
                   <ListGroupItem>Member privileges</ListGroupItem>
                 </LinkContainer>
-                <LinkContainer to={`/organizations/${this.props.uuid}/settings/projects`}>
+                <LinkContainer
+                  to={`/organizations/${this.props.uuid}/settings/projects`}
+                >
                   <ListGroupItem>Projects</ListGroupItem>
                 </LinkContainer>
               </ListGroup>
@@ -34,7 +43,9 @@ export default class OrganizationSettings extends React.Component<OrganizationSe
             <Panel.Heading>Developer Settings</Panel.Heading>
             <Panel.Body>
               <ListGroup fill={true}>
-                <LinkContainer to={`/organizations/${this.props.uuid}/settings/tokens`}>
+                <LinkContainer
+                  to={`/organizations/${this.props.uuid}/settings/tokens`}
+                >
                   <ListGroupItem>API Tokens</ListGroupItem>
                 </LinkContainer>
               </ListGroup>
@@ -46,21 +57,21 @@ export default class OrganizationSettings extends React.Component<OrganizationSe
             <Route
               exact={true}
               path="/organizations/:uuid/settings"
-              render={(props) => (
-                <Redirect to={`/organizations/${this.props.uuid}/settings/profile`} />
+              render={_props => (
+                <Redirect
+                  to={`/organizations/${this.props.uuid}/settings/profile`}
+                />
               )}
             />
             <Route
               exact={true}
               path="/organizations/:uuid/settings/profile"
-              render={(props) => (
-                <Settings uuid={this.props.uuid} />
-              )}
+              render={_props => <Settings uuid={this.props.uuid} />}
             />
             <Route
               exact={true}
               path="/organizations/:uuid/settings/member_privileges"
-              render={(props) => (
+              render={_props => (
                 <div>
                   <h3>Member Privileges</h3>
                   <hr />
@@ -70,7 +81,7 @@ export default class OrganizationSettings extends React.Component<OrganizationSe
             <Route
               exact={true}
               path="/organizations/:uuid/settings/projects"
-              render={(props) => (
+              render={_props => (
                 <div>
                   <h3>Projects</h3>
                   <hr />
@@ -80,7 +91,7 @@ export default class OrganizationSettings extends React.Component<OrganizationSe
             <Route
               exact={true}
               path="/organizations/:uuid/settings/tokens"
-              render={(props) => (
+              render={_props => (
                 <div>
                   <h3>API Tokens</h3>
                   <hr />

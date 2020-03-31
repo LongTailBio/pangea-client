@@ -1,16 +1,16 @@
-import * as React from "react";
-import { Link } from "react-router-dom";
+import * as React from 'react';
+import { Link } from 'react-router-dom';
 
-import { usePangeaAxios } from "../../../../services/api";
-import { SampleGroupType } from "../../../../services/api/models/sampleGroup";
+import { usePangeaAxios } from '../../../../services/api';
+import { SampleGroupType } from '../../../../services/api/models/sampleGroup';
 
 interface Prop {
   groupUUID: string;
 }
 
-export const SampleGroupListItem = (props: Prop) => {
+export const SampleGroupListItem: React.FC<Prop> = props => {
   const [{ data }] = usePangeaAxios<SampleGroupType>(
-    `/sample_groups/${props.groupUUID}`
+    `/sample_groups/${props.groupUUID}`,
   );
 
   if (!data) return null;

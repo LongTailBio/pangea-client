@@ -43,6 +43,16 @@ This project uses JSDoc, see their [Getting Started](http://usejsdoc.org/about-g
 
 This project follows the Component Folder Pattern. A good overview of the pattern can be found [here](https://medium.com/@alexmngn/how-to-better-organize-your-react-applications-2fd3ea1920f1).
 
+### Releases
+
+`pangea-client` uses [`standard-version`](https://github.com/conventional-changelog/standard-version) to manage releases.
+
+```sh
+yarn release
+```
+
+For all options see [CLI Usage](https://github.com/conventional-changelog/standard-version#cli-usage)
+
 ## Contributing
 
 Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.

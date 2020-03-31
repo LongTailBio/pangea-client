@@ -1,7 +1,7 @@
-import * as React from "react";
-import { Switch, Route } from "react-router";
-import { Link } from "react-router-dom";
-import { LinkContainer } from "react-router-bootstrap";
+import * as React from 'react';
+import { Switch, Route } from 'react-router';
+import { Link } from 'react-router-dom';
+import { LinkContainer } from 'react-router-bootstrap';
 import {
   Row,
   Col,
@@ -9,21 +9,21 @@ import {
   Nav,
   NavItem,
   Glyphicon,
-  Badge
-} from "react-bootstrap";
-import { Helmet } from "react-helmet";
+  Badge,
+} from 'react-bootstrap';
+import { Helmet } from 'react-helmet';
 
-import { usePangeaAxios, PaginatedResult } from "../../services/api";
-import { SampleGroupType } from "../../services/api/models/sampleGroup";
-import { SampleType } from "../../services/api/models/sample";
-import { AnalysisResultType } from "../../services/api/models/analysisResult";
+import { usePangeaAxios, PaginatedResult } from '../../services/api';
+import { SampleGroupType } from '../../services/api/models/sampleGroup';
+import { SampleType } from '../../services/api/models/sample';
+import { AnalysisResultType } from '../../services/api/models/analysisResult';
 
 const useSampleGroup = (uuid: string) => {
   const [sampleGroupResult] = usePangeaAxios<SampleGroupType>(
-    `/sample_groups/${uuid}`
+    `/sample_groups/${uuid}`,
   );
   const [samplesResult] = usePangeaAxios<PaginatedResult<SampleType>>(
-    `/sample_groups/${uuid}/samples`
+    `/sample_groups/${uuid}/samples`,
   );
   const [analysisResultsResult] = usePangeaAxios<
     PaginatedResult<AnalysisResultType>
@@ -32,7 +32,7 @@ const useSampleGroup = (uuid: string) => {
   const data = {
     group: sampleGroupResult.data,
     samples: samplesResult.data,
-    analysisResults: analysisResultsResult.data
+    analysisResults: analysisResultsResult.data,
   };
   const loading =
     sampleGroupResult.loading ||
@@ -69,7 +69,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
 
   if (error) {
     const { status } = error.response || {};
-    const title = status === 404 ? "Not Found" : "Error";
+    const title = status === 404 ? 'Not Found' : 'Error';
     return (
       <>
         <Helmet>
@@ -94,7 +94,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
       <Row>
         <h1>{group.name}</h1>
         <h2>Sample Group</h2>
-        <p>{group.is_public ? "Public" : "Private"}</p>
+        <p>{group.is_public ? 'Public' : 'Private'}</p>
         <p>{new Date(group.created_at).toLocaleString()}</p>
       </Row>
       <Row>
@@ -112,7 +112,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
           </LinkContainer>
           <LinkContainer to={`/sample-groups/${props.uuid}/analysis-results`}>
             <NavItem eventKey="2">
-              <Glyphicon glyph="folder-open" /> Analysis Results{" "}
+              <Glyphicon glyph="folder-open" /> Analysis Results{' '}
               <Badge>{analysisResults.count}</Badge>
             </NavItem>
           </LinkContainer>
@@ -162,7 +162,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
                         <Link
                           to={`/sample-groups/${props.uuid}/analysis-results/${analysisResult.uuid}`}
                         >
-                          {analysisResult.module_name} -{" "}
+                          {analysisResult.module_name} -{' '}
                           {analysisResult.replicate}
                         </Link>
                       </li>

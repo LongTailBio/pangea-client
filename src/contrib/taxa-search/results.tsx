@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Row, Col, Table } from "react-bootstrap";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Row, Col, Table } from 'react-bootstrap';
 
 interface TaxonResult {
   relative_abundance: number;
@@ -20,23 +20,23 @@ interface SearchResultProps {
   error: string;
 }
 
-export const TaxaSearchResults = (props: SearchResultProps) => {
+export const TaxaSearchResults: React.FC<SearchResultProps> = props => {
   const { query, results, loading, error } = props;
 
   const hasQuery = query.length > 0;
   const hasResults = Object.keys(results).length > 0;
 
   if (loading) return <p>Loading...</p>;
-  if (error.length > 0) return <p style={{ color: "red" }}>{error}</p>;
+  if (error.length > 0) return <p style={{ color: 'red' }}>{error}</p>;
   if (!hasResults && hasQuery) return <p>No results :(</p>;
   if (!hasResults && !hasQuery) return <p>Enter a query above</p>;
 
   return (
     <>
       {Object.entries(results).map(([taxon, matches]) => (
-        <Row>
+        <Row key={taxon}>
           <Col>
-            <h3 key={taxon}>{taxon}</h3>
+            <h3>{taxon}</h3>
             <Table>
               <thead>
                 <tr>

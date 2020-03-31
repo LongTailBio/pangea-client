@@ -1,13 +1,14 @@
-import React from "react";
-import Uppy from "@uppy/core";
-import AwsS3Multipart from "@uppy/aws-s3-multipart";
-import { DragDrop, StatusBar } from "@uppy/react";
+import React from 'react';
+import Uppy from '@uppy/core';
+import AwsS3Multipart from '@uppy/aws-s3-multipart';
+import { DragDrop, StatusBar } from '@uppy/react';
 
-import { getCompanionHost } from "../../../services/api/utils";
+import { getCompanionHost } from '../../../services/api/utils';
 
-import "@uppy/core/dist/style.css";
-import "@uppy/drag-drop/dist/style.css";
-import "@uppy/status-bar/dist/style.css";
+import '@uppy/core/dist/style.css';
+import '@uppy/drag-drop/dist/style.css';
+import '@uppy/status-bar/dist/style.css';
+
 
 interface Covid19UploaderProps {
   userId: number;
@@ -26,19 +27,19 @@ class Covid19Uploader extends React.Component<
   private uppy: Uppy.Uppy;
 
   state = {
-    didComplete: false
+    didComplete: false,
   };
 
   constructor(props: Covid19UploaderProps) {
     super(props);
 
     this.uppy = Uppy<Uppy.StrictTypes>({
-      meta: { contrib_module: "covid19" },
-      restrictions: { 
+      meta: { contrib_module: 'covid19' },
+      restrictions: {
         maxNumberOfFiles: 1,
-        allowedFileTypes: ['.gz']
+        allowedFileTypes: ['.gz'],
       },
-      autoProceed: true
+      autoProceed: true,
     });
 
     const { authToken } = window.localStorage;
@@ -46,19 +47,19 @@ class Covid19Uploader extends React.Component<
       limit: 4,
       companionUrl: getCompanionHost(),
       companionHeaders: {
-        "X-Pangea-Token": authToken
-      }
+        'X-Pangea-Token': authToken,
+      },
     });
 
-    this.uppy.on("complete", this.handleUppyComplete);
-    this.uppy.on("error", this.props.onUploadError);
+    this.uppy.on('complete', this.handleUppyComplete);
+    this.uppy.on('error', this.props.onUploadError);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.uppy.close();
   }
 
-  handleUppyComplete = (result: Uppy.UploadResult) => {
+  handleUppyComplete = (result: Uppy.UploadResult): void => {
     if (result.successful.length > 0) {
       const url = result.successful[0].uploadURL;
       console.log(`Successful S3 upload: ${url}`);
@@ -66,7 +67,7 @@ class Covid19Uploader extends React.Component<
     }
   };
 
-  render() {
+  render(): React.ReactElement | null {
     const { didComplete } = this.state;
 
     if (didComplete) {

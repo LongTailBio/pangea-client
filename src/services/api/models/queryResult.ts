@@ -1,4 +1,3 @@
-
 export enum QueryResultStatus {
   Error = 'E',
   Pending = 'P',

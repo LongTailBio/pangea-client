@@ -1,10 +1,10 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Row, Col, Well } from "react-bootstrap";
-import { Helmet } from "react-helmet";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Row, Col, Well } from 'react-bootstrap';
+import { Helmet } from 'react-helmet';
 
-import { usePangeaAxios } from "../../services/api/index";
-import { OrganizationType } from "../../services/api/models/organization";
+import { usePangeaAxios } from '../../services/api/index';
+import { OrganizationType } from '../../services/api/models/organization';
 
 type OrganizationResult = {
   count: number;
@@ -13,7 +13,7 @@ type OrganizationResult = {
 
 export const OrganizationList = () => {
   const [{ data, loading, error }] = usePangeaAxios<OrganizationResult>(
-    "/organizations"
+    '/organizations',
   );
 
   return (
