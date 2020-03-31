@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { usePangeaAxios } from '../../../services/api';
 import Covid19Uploader from './uploader';
 
-
 interface CurrentUserResult {
   id: number;
   email: string;
@@ -32,7 +31,6 @@ const useTaskHash: TaskHashHook = () => {
 
   return [{ taskHash, loading, error }, submitRawReads];
 };
-
 
 const MyCovid19Result: React.FC = () => {
   const [uploadError, setUploadError] = useState<string | undefined>(undefined);
