@@ -1,4 +1,3 @@
-
 import { SampleGroupType } from './sampleGroup';
 
 export interface SampleType {
@@ -8,5 +7,5 @@ export interface SampleType {
   metadata: any;
   created_at: string;
   updated_at: string;
-  library_obj: SampleGroupType,
+  library_obj: SampleGroupType;
 }

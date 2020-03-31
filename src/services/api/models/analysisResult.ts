@@ -1,4 +1,3 @@
-
 import { SampleType } from './sample';
 import { SampleGroupType } from './sampleGroup';
 
@@ -12,5 +11,4 @@ export interface AnalysisResultType {
   sample_group?: string;
   sample_obj?: SampleType;
   sample_group_obj?: SampleGroupType;
-
 }

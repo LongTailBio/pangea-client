@@ -1,4 +1,3 @@
-
 import { AnalysisResultType } from './analysisResult';
 
 export interface AnalysisResultFieldType {
