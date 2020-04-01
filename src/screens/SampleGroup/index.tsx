@@ -85,7 +85,10 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
   }
 
   const { group, samples, analysisResults } = data;
-
+  var metadata_count = 0;
+  samples.results.map(sample => (
+    metadata_count += Object.keys(sample.metadata).length
+  ))
   return (
     <>
       <Helmet>
@@ -119,7 +122,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
           <LinkContainer to={`/sample-groups/${props.uuid}/metadata`}>
             <NavItem eventKey="3">
               <Glyphicon glyph="th-list" /> Metadata{' '}
-              <Badge>{samples.count}</Badge>
+              <Badge>{metadata_count}</Badge>
             </NavItem>
           </LinkContainer>
         </Nav>
