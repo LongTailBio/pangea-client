@@ -104,7 +104,7 @@ export const SampleScreen = (props: SampleScreenProps) => {
           path="/samples/:uuid"
           render={() => (
             <Row>
-              <Col lg={12}>
+              <Col lg={6}>
                 {analysisResults.count > 0 &&
                   analysisResults.results.map(analysisResult => (
                     <ul
@@ -126,6 +126,26 @@ export const SampleScreen = (props: SampleScreenProps) => {
                     <h4>This sample has no analysis results.</h4>
                   </Well>
                 )}
+              </Col>
+              <Col lg={6}>
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Feature</th>
+                      <th scope="col">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      Object.keys(sample.metadata).map(key => (
+                        <tr>
+                          <th scope="row">{key}</th>
+                          <td>{sample.metadata[key]}</td>
+                        </tr>
+                      ))
+                    }
+                  </tbody>
+                </table>
               </Col>
             </Row>
           )}
