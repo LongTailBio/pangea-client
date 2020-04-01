@@ -136,14 +136,12 @@ export const SampleScreen = (props: SampleScreenProps) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {
-                      Object.keys(sample.metadata).map(key => (
-                        <tr>
-                          <th scope="row">{key}</th>
-                          <td>{sample.metadata[key]}</td>
-                        </tr>
-                      ))
-                    }
+                    {Object.keys(sample.metadata).map(key => (
+                      <tr key={key}>
+                        <th scope="row">{key}</th>
+                        <td>{sample.metadata[key]}</td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </Col>

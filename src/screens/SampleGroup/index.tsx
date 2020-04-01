@@ -85,10 +85,10 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
   }
 
   const { group, samples, analysisResults } = data;
-  var metadata_count = 0;
-  samples.results.map(sample => (
-    metadata_count += Object.keys(sample.metadata).length
-  ))
+  let metadata_count = 0;
+  samples.results.map(
+    sample => (metadata_count += Object.keys(sample.metadata).length),
+  );
   return (
     <>
       <Helmet>
@@ -192,8 +192,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
           render={() => (
             <Row>
               <Col lg={12}>
-
-                {samples.count > 0 &&
+                {samples.count > 0 && (
                   <table className="table">
                     <thead>
                       <tr>
@@ -203,17 +202,18 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {samples.results.map(sample => (
-                          Object.keys(sample.metadata).map(key => (
-                            <tr>
-                              <th scope="row">{sample.name}</th>
-                              <td>{key}</td>
-                              <td>{sample.metadata[key]}</td>
-                            </tr>
-                          ))
-                      ))}
+                      {samples.results.map(sample =>
+                        Object.keys(sample.metadata).map(key => (
+                          <tr key={sample.name + key}>
+                            <th scope="row">{sample.name}</th>
+                            <td>{key}</td>
+                            <td>{sample.metadata[key]}</td>
+                          </tr>
+                        )),
+                      )}
                     </tbody>
-                  </table>}
+                  </table>
+                )}
                 {samples.count === 0 && (
                   <Well className="text-center">
                     <h4>This sample group has no samples.</h4>

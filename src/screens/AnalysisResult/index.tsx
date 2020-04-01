@@ -44,7 +44,7 @@ const formatField = (field: AnalysisResultFieldType): ReactNode => {
       const endpoint = storedData['endpoint_url'];
       const path = storedData['uri'].slice(5);
       const s3Path = `${endpoint}/${path}`;
-      return <a href={s3Path}>{field.name}</a>;      
+      return <a href={s3Path}>{field.name}</a>;
     }
   } else {
     return `${field.name} ${JSON.stringify(storedData)}`;
