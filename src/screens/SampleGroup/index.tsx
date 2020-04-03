@@ -236,12 +236,12 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
               <Col lg={12}>
                 <ul key="get-manifest" className="analysis-group-list">
                   <li className="analysis-group-list-item">
-                    <Link
-                      to={`/api/sample_groups/${group.uuid}/manifest?format=json`}
+                    <a
+                      href={`/api/sample_groups/${group.uuid}/manifest?format=json`}
                     >
                       Data Manifest - A file describing this group and
                       everything in it
-                    </Link>
+                    </a>
                   </li>
                 </ul>
               </Col>

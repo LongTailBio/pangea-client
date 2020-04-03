@@ -161,12 +161,12 @@ export const SampleScreen = (props: SampleScreenProps) => {
               <Col lg={12}>
                 <ul key="get-manifest" className="analysis-group-list">
                   <li className="analysis-group-list-item">
-                    <Link
-                      to={`/api/samples/${sample.uuid}/manifest?format=json`}
+                    <a
+                      href={`/api/samples/${sample.uuid}/manifest?format=json`}
                     >
                       Data Manifest - A file describing this sample and
                       everything in it
-                    </Link>
+                    </a>
                   </li>
                 </ul>
               </Col>
