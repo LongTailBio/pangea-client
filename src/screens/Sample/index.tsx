@@ -93,6 +93,11 @@ export const SampleScreen = (props: SampleScreenProps) => {
               <Badge>{analysisResults.count}</Badge>
             </NavItem>
           </LinkContainer>
+          <LinkContainer to={`/samples/${sample.uuid}/resources`}>
+            <NavItem eventKey="2">
+              <Glyphicon glyph="tags" /> Resources{' '}
+            </NavItem>
+          </LinkContainer>
         </Nav>
       </Row>
 
@@ -144,6 +149,26 @@ export const SampleScreen = (props: SampleScreenProps) => {
                     ))}
                   </tbody>
                 </table>
+              </Col>
+            </Row>
+          )}
+        />
+        <Route
+          exact={true}
+          path="/samples/:uuid/resources"
+          render={() => (
+            <Row>
+              <Col lg={12}>
+                <ul key="get-manifest" className="analysis-group-list">
+                  <li className="analysis-group-list-item">
+                    <Link
+                      to={`/api/samples/${sample.uuid}/manifest?format=json`}
+                    >
+                      Data Manifest - A file describing this sample and
+                      everything in it
+                    </Link>
+                  </li>
+                </ul>
               </Col>
             </Row>
           )}

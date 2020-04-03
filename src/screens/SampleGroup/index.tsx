@@ -125,6 +125,11 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
               <Badge>{metadata_count}</Badge>
             </NavItem>
           </LinkContainer>
+          <LinkContainer to={`/sample-groups/${props.uuid}/resources`}>
+            <NavItem eventKey="4">
+              <Glyphicon glyph="tags" /> Resources{' '}
+            </NavItem>
+          </LinkContainer>
         </Nav>
       </Row>
 
@@ -219,6 +224,26 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
                     <h4>This sample group has no samples.</h4>
                   </Well>
                 )}
+              </Col>
+            </Row>
+          )}
+        />
+        <Route
+          exact={true}
+          path="/sample-groups/:uuid/resources"
+          render={() => (
+            <Row>
+              <Col lg={12}>
+                <ul key="get-manifest" className="analysis-group-list">
+                  <li className="analysis-group-list-item">
+                    <Link
+                      to={`/api/sample_groups/${group.uuid}/manifest?format=json`}
+                    >
+                      Data Manifest - A file describing this group and
+                      everything in it
+                    </Link>
+                  </li>
+                </ul>
               </Col>
             </Row>
           )}
