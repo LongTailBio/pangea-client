@@ -85,7 +85,10 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
   }
 
   const { group, samples, analysisResults } = data;
-
+  let metadata_count = 0;
+  samples.results.map(
+    sample => (metadata_count += Object.keys(sample.metadata).length),
+  );
   return (
     <>
       <Helmet>
@@ -114,6 +117,12 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
             <NavItem eventKey="2">
               <Glyphicon glyph="folder-open" /> Analysis Results{' '}
               <Badge>{analysisResults.count}</Badge>
+            </NavItem>
+          </LinkContainer>
+          <LinkContainer to={`/sample-groups/${props.uuid}/metadata`}>
+            <NavItem eventKey="3">
+              <Glyphicon glyph="th-list" /> Metadata{' '}
+              <Badge>{metadata_count}</Badge>
             </NavItem>
           </LinkContainer>
         </Nav>
@@ -171,6 +180,43 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
                 {analysisResults.count === 0 && (
                   <Well className="text-center">
                     <h4>This sample group has no analysis results.</h4>
+                  </Well>
+                )}
+              </Col>
+            </Row>
+          )}
+        />
+        <Route
+          exact={true}
+          path="/sample-groups/:uuid/metadata"
+          render={() => (
+            <Row>
+              <Col lg={12}>
+                {samples.count > 0 && (
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Sample</th>
+                        <th scope="col">Feature</th>
+                        <th scope="col">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {samples.results.map(sample =>
+                        Object.keys(sample.metadata).map(key => (
+                          <tr key={sample.name + key}>
+                            <th scope="row">{sample.name}</th>
+                            <td>{key}</td>
+                            <td>{sample.metadata[key]}</td>
+                          </tr>
+                        )),
+                      )}
+                    </tbody>
+                  </table>
+                )}
+                {samples.count === 0 && (
+                  <Well className="text-center">
+                    <h4>This sample group has no samples.</h4>
                   </Well>
                 )}
               </Col>

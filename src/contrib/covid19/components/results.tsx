@@ -18,7 +18,8 @@ const Covid19Results = () => {
           {data.results.map(ar => (
             <li key={ar.uuid}>
               <Link to={`/samples/${ar.sample}/analysis-results/${ar.uuid}`}>
-                Sample {ar.sample_obj?.name}, Result {ar.module_name} {ar.replicate}
+                Sample {ar.sample_obj?.name}, Result {ar.module_name}{' '}
+                {ar.replicate}
               </Link>
             </li>
           ))}
