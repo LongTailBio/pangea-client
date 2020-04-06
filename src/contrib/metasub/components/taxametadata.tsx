@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { usePangeaAxios } from '../../services/api';
 
 function BinaryAnnotation(props){
   var displayVals = (
