@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Row, Col, } from 'react-bootstrap';
 import { usePangeaAxios } from '../../../services/api';
 
 interface WorldMapPanelProps {
@@ -37,23 +38,21 @@ const WorldMapPanel = (props: WorldMapPanelProps) => {
       // </div>
     )
     const mapBody = (
-      <div></div>
-      // <div class="card-body" style="padding-top:0px; padding-bottom:5px;">
-      //   <div class="chart-area" id="mapDiv"></div>
-      //   <div class='map-overlay' id='mapLegend'></div>
-      // </div>
+      <div className="card-body">
+        <div className="chart-area" id="mapDiv"></div>
+        <div className='map-overlay' id='mapLegend'></div>
+      </div>
     )
 
   return (
-    <div></div>
-    // <div class="row flex-grow-1" style="min-height: 600px;">
-    //   <div class="col-lg-12">
-    //     <div class="card card-chart" style="height: 97%;">
-    //       {mapHeader}
-    //       {mapBody}
-    //     </div>
-    //   </div>
-    // </div>
+    <Row>
+      <Col lg={12}>
+        <div className="card card-chart">
+          {mapHeader}
+          {mapBody}
+        </div>
+      </Col>
+    </Row>
   )
 }
 

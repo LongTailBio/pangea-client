@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import WorldMapPanel from './components/worldmap'
 import TaxaMetadataPanel from './components/taxametadata'
 import TaxaAbundancePanel from './components/taxonabundancepanel'
 import SampleMetadataPanel from './components/samplemetadata'
@@ -25,6 +26,7 @@ const MetasubMap = (props: MetasubMapProps) => {
                 <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css' />        
             </head>
             <div>
+                <WorldMapPanel taxonName="Escherichia coli" />
                 <TaxaAbundancePanel taxonName="Escherichia coli" />
                 <SampleMetadataPanel sampleUUID="bb81df30-50ab-442b-b799-3322e48bf740" />
                 <TaxaMetadataPanel taxonName="Escherichia coli" taxonAbundance={0.123} />

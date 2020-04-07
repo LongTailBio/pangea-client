@@ -26,11 +26,12 @@ const TaxaAbundancePanel = (props: TaxaAbundancePanelProps) => {
       </>
     );
   }
+
   const cityAbundances: {[key: string]: CityTaxonAbundance} = data['results'][props.taxonName];
   const plotData: Partial<Plotly.PlotData>[] = Object.keys(cityAbundances).map(
     function(cityName: string): Partial<Plotly.PlotData> {
       return {
-        y: [cityAbundances[cityName].mean_relative_abundance],
+        y: cityAbundances[cityName].all_relative_abundances,
         type: 'box',
         name: cityAbundances[cityName].city_name,
       }
