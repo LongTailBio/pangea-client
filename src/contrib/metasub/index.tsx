@@ -6,7 +6,7 @@ import SampleSunburstPanel from './components/samplesunburst'
 
 import './assets/css/web-css.css'
 import './assets/css/nucleo-icons.css'
-import './assets/css/black-dashboard.css';
+// import './assets/css/black-dashboard.css';
 
 import './assets/css/jquery-ui.css';
 import './assets/css/mapbox-gl.css';

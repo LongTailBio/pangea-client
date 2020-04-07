@@ -25,7 +25,7 @@ interface AnnotationProps {
 function BinaryAnnotation(props: AnnotationProps){
   var displayVals = (
     <>
-      <span style={binaryFirstStyles} className="taxa-legend-key highlighted">{props.keys[0]}</span>
+      <span style={binaryFirstStyles} className="highlighted taxa-legend-key">{props.keys[0]}</span>
       <span style={binarySecondStyles} className="taxa-legend-key">{props.keys[1]}</span>
     </>
   )
@@ -61,6 +61,7 @@ const ternaryThirdStyles: CSS.Properties = {
 }
 
 function TernaryAnnotation(props: AnnotationProps){
+  console.log(props)
   var displayVals = (
     <>
       <span style={ternaryFirstStyles} className="taxa-legend-key highlighted">{props.keys[0]}</span>
@@ -103,7 +104,7 @@ interface TaxaMetadataPanelProps {
 
 const TaxaMetadataPanel = (props: TaxaMetadataPanelProps) => {
   const url = '/contrib/treeoflife/annotate?format=json&query=' + props.taxonName
-  const [{ data, loading, error }] = usePangeaAxios<MicrobeAnnotation>(
+  const [{ data, loading, error }] = usePangeaAxios<{[key: string]: MicrobeAnnotation}>(
     { url: url, method: 'GET' }
   );
   if (loading) {
@@ -116,6 +117,8 @@ const TaxaMetadataPanel = (props: TaxaMetadataPanelProps) => {
       </>
     );
   }
+  const annotation = data[props.taxonName];
+  console.log(annotation);
   return (
     <Col className="card_scroll" lg={3}>
       <Row className="h-100">
@@ -132,22 +135,22 @@ const TaxaMetadataPanel = (props: TaxaMetadataPanelProps) => {
                     <tr className="sunburts_abundance_row"></tr>
                     <tr id="sunburst_taxon_gram_row" className="sunburts_taxon_row">
                       <td className="td_meta_key">Abundance{': '}{100 * props.taxonAbundance}</td>
-                      <BinaryAnnotation name="Gram-stain" keys="-+" value={data['gram_stain']} testVal='positive' />
+                      <BinaryAnnotation name="Gram-stain" keys="-+" value={annotation['gram_stain']} testVal='positive' />
                     </tr>
                     <tr id="sunburst_taxon_biofilm_row" className="sunburts_taxon_row">
-                      <BinaryAnnotation name="Biofilm forming" keys="NY" value={data['biofilm_forming']} testVal='yes' />
-                      <BinaryAnnotation name="Spore forming" keys="NY" value={data['spore_forming']} testVal='yes' />
+                      <BinaryAnnotation name="Biofilm forming" keys="NY" value={annotation['biofilm_forming']} testVal='yes' />
+                      <BinaryAnnotation name="Spore forming" keys="NY" value={annotation['spore_forming']} testVal='yes' />
                     </tr>
                     <tr id="sunburst_taxon_extremophile_row" className="sunburts_taxon_row">
-                      <BinaryAnnotation name="Extremophile" keys="NY" value={data['extreme_environment']} testVal='yes' />
-                      <BinaryAnnotation name="Anti-microbial susceptible" keys="NY" value={data['antimicrobial_susceptibility']} testVal='yes'/>
+                      <BinaryAnnotation name="Extremophile" keys="NY" value={annotation['extreme_environment']} testVal='yes' />
+                      <BinaryAnnotation name="Anti-microbial susceptible" keys="NY" value={annotation['antimicrobial_susceptibility']} testVal='yes'/>
                     </tr>
                     <tr id="sunburst_taxon_animal_pathogen_row" className="sunburts_taxon_row">
-                      <BinaryAnnotation name="Animal pathogen" keys="NY" value={data['animal_pathogen']} testVal='yes'/>
-                      <BinaryAnnotation name="Plant pathogen" keys="NY" value={data['plant_pathogen']} testVal='yes'/>
+                      <BinaryAnnotation name="Animal pathogen" keys="NY" value={annotation['animal_pathogen']} testVal='yes'/>
+                      <BinaryAnnotation name="Plant pathogen" keys="NY" value={annotation['plant_pathogen']} testVal='yes'/>
                     </tr>
                     <tr id="sunburst_taxon_pathogenicity_row" className="sunburts_taxon_row">
-                      <TernaryAnnotation name="Pathogenicity" keys="123" value={data['pathogenicity']} testVal='yes'/>
+                      <TernaryAnnotation name="Pathogenicity" keys="123" value={annotation['pathogenicity']} testVal='2.0' testVal2='3.0'/>
                     </tr>
                   </tbody>
                 </table>
