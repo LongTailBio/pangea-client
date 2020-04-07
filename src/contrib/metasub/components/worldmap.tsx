@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Row, Col, } from 'react-bootstrap';
 import { usePangeaAxios } from '../../../services/api';
+import Plot from 'react-plotly.js';
+import { OneTaxonResult, TaxaSearchResults } from '../services/api/models/taxaSearchResult'
 
 interface WorldMapPanelProps {
   taxonName: string;
@@ -8,51 +10,61 @@ interface WorldMapPanelProps {
 
 
 const WorldMapPanel = (props: WorldMapPanelProps) => {
-    const mapHeader = (
-      <div></div>
-      // <div class="card-header" style="padding-top: 10px;">
-      //   <div class="row">
-      //     <div class="col-sm-6 col-xs-6 text-left">
-      //       <h4 class="card-title" id="taxa_name_placeholder">Taxa</h4>
-      //     </div>
-      //     <div class="col-sm-6 col-xs-6 float-right">
-      //       <div class="btn-group btn-group-toggle float-right" data-toggle="buttons">
-      //         <label class="btn btn-sm btn-primary btn-simple active" id="colInferno">
-      //           <input type="radio" name="options" checked />
-      //           <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Inferno</span>
-      //           <span class="d-block d-sm-none">I</span>
-      //         </label>
-      //         <label class="btn btn-sm btn-primary btn-simple" id="colViridis">
-      //           <input type="radio" class="d-none d-sm-none" name="options" />
-      //           <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Viridis</span>
-      //           <span class="d-block d-sm-none">V</span>
-      //         </label>
-      //         <label class="btn btn-sm btn-primary btn-simple" id="colTurbo">
-      //           <input type="radio" class="d-none" name="options" />
-      //           <span class="d-none d-sm-block d-md-block d-lg-block d-xl-block">Turbo</span>
-      //           <span class="d-block d-sm-none">T</span>
-      //         </label>
-      //       </div>
-      //     </div>
-      //   </div>
-      // </div>
-    )
-    const mapBody = (
-      <div className="card-body">
-        <div className="chart-area" id="mapDiv"></div>
-        <div className='map-overlay' id='mapLegend'></div>
-      </div>
-    )
+  const url = '/contrib/metasub/search_samples?format=json&query=' + props.taxonName;
+  const [{ data, loading, error }] = usePangeaAxios<TaxaSearchResults>(
+    { url: url, method: 'GET' }
+  );
+  if (loading) {
+    return (
+      <>
+        <Row>
+          <h1>Loading...</h1>
+          <h2> MetaSUB Map</h2>
+        </Row>
+      </>
+    );
+  }
+
+  const lats: number[] = data['results'][props.taxonName].map((sample: OneTaxonResult) => (
+    sample.sample_metadata['city_latitude']
+  ))
+  const lons: number[] = data['results'][props.taxonName].map((sample: OneTaxonResult) => (
+    sample.sample_metadata['city_longitude']
+  ))
+  const sizes: number[] = data['results'][props.taxonName].map((sample: OneTaxonResult) => (
+    (10000 * sample.relative_abundance) ** (1 / 2)
+  ))
+  const labels: string[] = data['results'][props.taxonName].map((sample: OneTaxonResult) => (
+    sample.sample_name + ': ' + Math.round(1000 * 1000 * sample.relative_abundance).toLocaleString() + ' ppm'
+  ))  
+
+  const plotData: Partial<Plotly.PlotData>[] = [{
+      type: 'scattergeo',
+      mode: 'markers',
+      lon: lons,
+      lat: lats,
+      text: labels,
+      hoverinfo: 'text',
+      marker: {
+          size: sizes,
+      },
+  }];
+
+  const layout = {
+      title: '<i>' + props.taxonName + '</i>',
+      font: {
+          size: 6
+      },
+      titlefont: {
+          size: 16
+      },
+      geo: {
+          resolution: 50,
+      }
+  };
 
   return (
-    <Row>
-      <Col lg={12}>
-        <div className="card card-chart">
-          {mapHeader}
-          {mapBody}
-        </div>
-      </Col>
-    </Row>
+    <Plot data={plotData} layout={layout} onClick={(e) => console.log(e)}/>
   )
 }
 

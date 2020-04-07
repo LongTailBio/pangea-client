@@ -715,6 +715,8 @@ export interface PlotData {
 		size?: number; color?: Color
 	};
 	leaf: { opacity: number };
+	lat: number[];
+	lon: number[];
 }
 
 /**
