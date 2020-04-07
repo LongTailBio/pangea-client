@@ -35,8 +35,8 @@ const SampleSunburstPanel = (props: SampleSunburstPanelProps) => {
   }];
   const layout = {
     margin: {l: 0, r: 0, b: 0, t: 0},
-    width: 1500,
-    height: 1500
+    width: 750,
+    height: 750
   };
   return (
      <Plot data={plotData} layout={layout} />
