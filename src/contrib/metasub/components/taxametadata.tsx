@@ -1,96 +1,153 @@
 import * as React from 'react';
-import { usePangeaAxios } from '../../services/api';
+import CSS from 'csstype';
+import { Row, Col, } from 'react-bootstrap';
+import { usePangeaAxios } from '../../../services/api';
+import { MicrobeAnnotation } from '../../treeoflife/services/api/models/microbeAnnotation';
 
-function BinaryAnnotation(props){
+const binaryFirstStyles: CSS.Properties = {
+  backgroundColor: '#b39a7f',
+  color: 'black',
+}
+
+const binarySecondStyles: CSS.Properties = {
+  backgroundColor: '#7fb399',
+  color: 'black',
+}
+
+interface AnnotationProps {
+  keys: string;
+  name: string;
+  value: string | undefined;
+  testVal: string;
+  testVal2?: string;
+}
+
+function BinaryAnnotation(props: AnnotationProps){
   var displayVals = (
-    <span className="taxa-legend-key" style="background-color: #b39a7f; highlighted">{props.keys[0]}</span>
-    <span className="taxa-legend-key" style="background-color: #7fb399;">{props.keys[1]}</span>
+    <>
+      <span style={binaryFirstStyles} className="taxa-legend-key highlighted">{props.keys[0]}</span>
+      <span style={binarySecondStyles} className="taxa-legend-key">{props.keys[1]}</span>
+    </>
   )
-  if(props.value == 1){
+  if(props.value === props.testVal){
     displayVals = (
-      <span className="taxa-legend-key" style="background-color: #b39a7f;">{props.keys[0]}</span>
-      <span className="taxa-legend-key" style="background-color: #7fb399; highlighted">{props.keys[1]}</span>
+      <>
+        <span style={binaryFirstStyles}  className="taxa-legend-key">{props.keys[0]}</span>
+        <span style={binarySecondStyles} className="taxa-legend-key highlighted">{props.keys[1]}</span>
+      </>
     )
   }
   return (
-    <td class="td_meta_key">{props.name}</td><td class="td_meta_val">
-      {displayVals}
-    </td>
+    <>
+      <td className="td_meta_key">{props.name}</td>
+      <td className="td_meta_val">{displayVals}</td>
+    </>
   )
 }
 
-function TernaryAnnotation(props){
+const ternaryFirstStyles: CSS.Properties = {
+  backgroundColor: '#d9ef8b',
+  color: 'black',
+}
+
+const ternarySecondStyles: CSS.Properties = {
+  backgroundColor: '#fee08b',
+  color: 'black',
+}
+
+const ternaryThirdStyles: CSS.Properties = {
+  backgroundColor: '#f46d43',
+  color: 'black',
+}
+
+function TernaryAnnotation(props: AnnotationProps){
   var displayVals = (
-    <span className="taxa-legend-key" style="background-color: #d9ef8b;color:black; highlighted">{props.keys[0]}</span>
-    <span className="taxa-legend-key" style="background-color: #fee08b;color:black;">{props.keys[1]}</span>
-    <span className="taxa-legend-key" style="background-color: #f46d43;color:black;">{props.keys[2]}</span>
+    <>
+      <span style={ternaryFirstStyles} className="taxa-legend-key highlighted">{props.keys[0]}</span>
+      <span style={ternarySecondStyles} className="taxa-legend-key">{props.keys[1]}</span>
+      <span style={ternaryThirdStyles} className="taxa-legend-key">{props.keys[2]}</span>
+    </>
   )
-  if(props.value == 1){
+  if(props.value === props.testVal){
     displayVals = (
-      <span className="taxa-legend-key" style="background-color: #d9ef8b;color:black;">{props.keys[0]}</span>
-      <span className="taxa-legend-key" style="background-color: #fee08b;color:black; highlighted">{props.keys[1]}</span>
-      <span className="taxa-legend-key" style="background-color: #f46d43;color:black;">{props.keys[2]}</span>
+      <>
+        <span style={ternaryFirstStyles}  className="taxa-legend-key">{props.keys[0]}</span>
+        <span style={ternarySecondStyles} className="taxa-legend-key highlighted">{props.keys[1]}</span>
+        <span style={ternaryThirdStyles}  className="taxa-legend-key">{props.keys[2]}</span>
+      </>
     )
   }
-  if(props.value == 2){
+  if(props.value === props?.testVal2){
     displayVals = (
-      <span className="taxa-legend-key" style="background-color: #d9ef8b;color:black;">{props.keys[0]}</span>
-      <span className="taxa-legend-key" style="background-color: #fee08b;color:black;">{props.keys[1]}</span>
-      <span className="taxa-legend-key" style="background-color: #f46d43;color:black; highlighted">{props.keys[2]}</span>
+      <>
+        <span style={ternaryFirstStyles}  className="taxa-legend-key">{props.keys[0]}</span>
+        <span style={ternarySecondStyles} className="taxa-legend-key">{props.keys[1]}</span>
+        <span style={ternaryThirdStyles}  className="taxa-legend-key highlighted">{props.keys[2]}</span>
+      </>
     )
   }
   return (
-    <td class="td_meta_key">{props.name}</td><td colspan="3">
-      {displayVals}
-    </td>
+    <>
+      <td className="td_meta_key">{props.name}</td>
+      <td>{displayVals}</td>
+    </>
   )
 }
 
 
 interface TaxaMetadataPanelProps {
-  taxonName: str;
-  taxonAbundance: float;
+  taxonName: string;
+  taxonAbundance: number;
 }
 
 
-const TaxaMetadataPanel: React.FC = (props: TaxaMetadataPanelProps) => {
-
-  const [{ data, loading, error }, execute] = usePangeaAxios<{
-    task_hash: string;
-  }>({ url: '/contrib/treeoflife/annotation/' + props.taxonName, method: 'GET' }, { manual: true });
-
+const TaxaMetadataPanel = (props: TaxaMetadataPanelProps) => {
+  const url = '/contrib/treeoflife/annotate?format=json&query=' + props.taxonName
+  const [{ data, loading, error }] = usePangeaAxios<MicrobeAnnotation>(
+    { url: url, method: 'GET' }
+  );
+  if (loading) {
+    return (
+      <>
+        <Row>
+          <h1>Loading...</h1>
+          <h2> MetaSUB Map</h2>
+        </Row>
+      </>
+    );
+  }
   return (
-    <div class="col-lg-3 card_scroll" style="height:100%;">
-      <div class="row h-100">
-        <div class="card card-chart">
-          <div class="card-header">
-            <h5 class="card-category">Taxa Metadata{' '}{props.taxonName}</h5>
+    <Col className="card_scroll" lg={3}>
+      <Row className="h-100">
+        <div className="card card-chart">
+          <div className="card-header">
+            <h5 className="card-category">Taxa Metadata{' '}{props.taxonName}</h5>
           </div>
-          <div class="card-body" style="padding-top:1px;">
-            <div class="" id="taxaMetadata">
-              <h5 id="sunburst_taxon_name_header" style="padding-left:10px; margin-bottom:1px;">&nbsp;</h5>
-              <div class="table-responsive ps" id="sunburst_taxa_metadata_div" style="display:block;">
-                <table class="table" id="sunburst_taxa_metadata_table" style="font-size:x-small; width:100%;">
+          <div className="card-body">
+            <div className="" id="taxaMetadata">
+              <h5 id="sunburst_taxon_name_header">&nbsp;</h5>
+              <div className="table-responsive ps" id="sunburst_taxa_metadata_div">
+                <table className="table" id="sunburst_taxa_metadata_table">
                   <tbody>
-                    <tr class="sunburts_abundance_row"></tr>
-                    <tr id="sunburst_taxon_gram_row" class="sunburts_taxon_row">
-                      <td class="td_meta_key">Abundance{': '}{100 * props.taxonAbundance}</td>
-                      <BinaryAnnotation name="Gram-stain" keys="-+" value={data['gram_stain']} />
+                    <tr className="sunburts_abundance_row"></tr>
+                    <tr id="sunburst_taxon_gram_row" className="sunburts_taxon_row">
+                      <td className="td_meta_key">Abundance{': '}{100 * props.taxonAbundance}</td>
+                      <BinaryAnnotation name="Gram-stain" keys="-+" value={data['gram_stain']} testVal='positive' />
                     </tr>
-                    <tr id="sunburst_taxon_biofilm_row" class="sunburts_taxon_row">
-                      <BinaryAnnotation name="Biofilm forming" keys="NY" value={data['biofilm_forming']} />
-                      <BinaryAnnotation name="Spore forming" keys="NY" value={data['spore_forming']} />
+                    <tr id="sunburst_taxon_biofilm_row" className="sunburts_taxon_row">
+                      <BinaryAnnotation name="Biofilm forming" keys="NY" value={data['biofilm_forming']} testVal='yes' />
+                      <BinaryAnnotation name="Spore forming" keys="NY" value={data['spore_forming']} testVal='yes' />
                     </tr>
-                    <tr id="sunburst_taxon_extremophile_row" class="sunburts_taxon_row">
-                      <BinaryAnnotation name="Extremophile" keys="NY" value={data['extreme_environment']} />
-                      <BinaryAnnotation name="Anti-microbial susceptible" keys="NY" value={data['antimicrobial_susceptibility']} />
+                    <tr id="sunburst_taxon_extremophile_row" className="sunburts_taxon_row">
+                      <BinaryAnnotation name="Extremophile" keys="NY" value={data['extreme_environment']} testVal='yes' />
+                      <BinaryAnnotation name="Anti-microbial susceptible" keys="NY" value={data['antimicrobial_susceptibility']} testVal='yes'/>
                     </tr>
-                    <tr id="sunburst_taxon_animal_pathogen_row" class="sunburts_taxon_row">
-                      <BinaryAnnotation name="Animal pathogen" keys="NY" value={data['animal_pathogen']} />
-                      <BinaryAnnotation name="Plant pathogen" keys="NY" value={data['plant_pathogen']} />
+                    <tr id="sunburst_taxon_animal_pathogen_row" className="sunburts_taxon_row">
+                      <BinaryAnnotation name="Animal pathogen" keys="NY" value={data['animal_pathogen']} testVal='yes'/>
+                      <BinaryAnnotation name="Plant pathogen" keys="NY" value={data['plant_pathogen']} testVal='yes'/>
                     </tr>
-                    <tr id="sunburst_taxon_pathogenicity_row" class="sunburts_taxon_row">
-                      <TernaryAnnotation name="Pathogenicity" keys="123" value={data['pathogenicity']} />
+                    <tr id="sunburst_taxon_pathogenicity_row" className="sunburts_taxon_row">
+                      <TernaryAnnotation name="Pathogenicity" keys="123" value={data['pathogenicity']} testVal='yes'/>
                     </tr>
                   </tbody>
                 </table>
@@ -98,8 +155,8 @@ const TaxaMetadataPanel: React.FC = (props: TaxaMetadataPanelProps) => {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </Row>
+    </Col>
   )
 };
 
