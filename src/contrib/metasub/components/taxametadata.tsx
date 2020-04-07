@@ -61,7 +61,6 @@ const ternaryThirdStyles: CSS.Properties = {
 }
 
 function TernaryAnnotation(props: AnnotationProps){
-  console.log(props)
   var displayVals = (
     <>
       <span style={ternaryFirstStyles} className="taxa-legend-key highlighted">{props.keys[0]}</span>
@@ -118,7 +117,6 @@ const TaxaMetadataPanel = (props: TaxaMetadataPanelProps) => {
     );
   }
   const annotation = data[props.taxonName];
-  console.log(annotation);
   return (
     <Col className="card_scroll" lg={3}>
       <Row className="h-100">

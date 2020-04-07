@@ -27,8 +27,6 @@ const TaxaAbundancePanel = (props: TaxaAbundancePanelProps) => {
     );
   }
   const cityAbundances: {[key: string]: CityTaxonAbundance} = data['results'][props.taxonName];
-  console.log(cityAbundances);
-  Object.keys(cityAbundances);
   const plotData: Partial<Plotly.PlotData>[] = Object.keys(cityAbundances).map(
     function(cityName: string): Partial<Plotly.PlotData> {
       return {
@@ -39,7 +37,7 @@ const TaxaAbundancePanel = (props: TaxaAbundancePanelProps) => {
     }
   )
   const layout = {
-      title: 'City Abundances'
+      title: '<i>' + props.taxonName + '</i> Abundance in Cities'
   };
   return (
      <Plot data={plotData} layout={layout} />
