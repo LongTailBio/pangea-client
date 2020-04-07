@@ -38,7 +38,10 @@ const TaxaAbundancePanel = (props: TaxaAbundancePanelProps) => {
     }
   )
   const layout = {
-      title: '<i>' + props.taxonName + '</i> Abundance in Cities'
+      title: '<i>' + props.taxonName + '</i> Abundance in Cities',
+    margin: {l: 0, r: 0, b: 0, t: 0},
+    width: 700,
+    height: 400
   };
   return (
      <Plot data={plotData} layout={layout} />

@@ -60,7 +60,10 @@ const WorldMapPanel = (props: WorldMapPanelProps) => {
       },
       geo: {
           resolution: 50,
-      }
+      },
+      margin: {l: 0, r: 0, b: 0, t: 0},
+      width: 700,
+      height: 400
   };
 
   return (

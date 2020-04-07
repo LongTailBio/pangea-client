@@ -4,6 +4,14 @@ import { Row, Col, } from 'react-bootstrap';
 import { usePangeaAxios } from '../../../services/api';
 import { MicrobeAnnotation } from '../../treeoflife/services/api/models/microbeAnnotation';
 
+import '../assets/css/web-css.css'
+import '../assets/css/nucleo-icons.css'
+// import './assets/css/black-dashboard.css';
+
+import '../assets/css/jquery-ui.css';
+import '../assets/css/mapbox-gl.css';
+import '../css/metasub.css';
+
 const binaryFirstStyles: CSS.Properties = {
   backgroundColor: '#b39a7f',
   color: 'black',
@@ -118,7 +126,7 @@ const TaxaMetadataPanel = (props: TaxaMetadataPanelProps) => {
   }
   const annotation = data[props.taxonName];
   return (
-    <Col className="card_scroll" lg={3}>
+    <Col className="card_scroll" lg={12}>
       <Row className="h-100">
         <div className="card card-chart">
           <div className="card-header">
