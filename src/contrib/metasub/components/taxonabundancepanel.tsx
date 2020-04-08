@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import { usePangeaAxios } from '../../../services/api';
-import { SampleType } from '../../../services/api/models/sample';
 import {
   CitiesTaxonResult,
   CityTaxonAbundance,

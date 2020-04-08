@@ -1,6 +1,6 @@
 import * as React from 'react';
 import CSS from 'csstype';
-import { Row, Col } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import { usePangeaAxios } from '../../../services/api';
 import { MicrobeAnnotation } from '../../treeoflife/services/api/models/microbeAnnotation';
 

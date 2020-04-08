@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Row, Col } from 'react-bootstrap';
-import Plot from 'react-plotly.js';
 
 interface TaxonEntryBarProps {
   onSubmitAction: (sampleUUID: string) => void;
@@ -17,7 +16,7 @@ class TaxonEntryBar extends React.Component<
   state = { searchBar: '' };
 
   handleFormChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const { name, value } = event.currentTarget;
+    const { value } = event.currentTarget;
     this.setState({ searchBar: value });
   };
 

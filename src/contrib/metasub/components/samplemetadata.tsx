@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import { usePangeaAxios } from '../../../services/api';
 import { SampleType } from '../../../services/api/models/sample';
 
@@ -17,6 +17,18 @@ const SampleMetadataPanel = (props: SampleMetadataPanelProps) => {
         <Row>
           <h1>Loading...</h1>
           <h2>Sample Metadata</h2>
+        </Row>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Row>
+          <h1>Error</h1>
+          <h2>Sample Metadata</h2>
+          <p>{error}</p>
         </Row>
       </>
     );

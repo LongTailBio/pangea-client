@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import { usePangeaAxios } from '../../../services/api';
-import { SampleType } from '../../../services/api/models/sample';
 import { SunburstTaxa } from '../services/api/models/sunburstTaxa';
 import Plot from 'react-plotly.js';
 
@@ -25,6 +24,17 @@ const SampleSunburstPanel = (props: SampleSunburstPanelProps) => {
         <Row>
           <h1>Loading...</h1>
           <h2>Sample Taxa</h2>
+        </Row>
+      </>
+    );
+  }
+  if (error) {
+    return (
+      <>
+        <Row>
+          <h1>Error</h1>
+          <h2>Sample Taxa</h2>
+          <p>{error}</p>
         </Row>
       </>
     );
