@@ -22,7 +22,6 @@ const TaxaAbundancePanel = (props: TaxaAbundancePanelProps) => {
   );
 
   React.useEffect(() => {
-    console.log('refetch B')
     refetch({ url: generateUrl(props.taxonName) });
   }, [props.taxonName]);
 

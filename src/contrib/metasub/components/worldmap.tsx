@@ -14,9 +14,7 @@ interface WorldMapPanelProps {
 
 const generateUrl = (taxonName: string): string => {
   const urlSafeName = encodeURIComponent(taxonName);
-  var url = `/contrib/metasub/search_samples?format=json&query=${urlSafeName}`;
-  console.log(url)
-  return url
+  return `/contrib/metasub/search_samples?format=json&query=${urlSafeName}`;
 };
 
 const WorldMapPanel = (props: WorldMapPanelProps) => {
@@ -26,7 +24,6 @@ const WorldMapPanel = (props: WorldMapPanelProps) => {
   );
 
   React.useEffect(() => {
-    console.log('refetch A')
     refetch({ url: generateUrl(props.taxonName) });
   }, [props.taxonName]);
 
@@ -62,7 +59,7 @@ const WorldMapPanel = (props: WorldMapPanelProps) => {
     sample => sample.sample_metadata['city_longitude'],
   );
   const sizes: number[] = currentData.map(
-    sample => (10000 * sample.relative_abundance) ** (1 / 2),
+    sample => (1000 * 1000 * sample.relative_abundance) ** (1/4),
   );
   const labels: string[] = currentData.map(sample => {
     const { sample_name, relative_abundance } = sample;
@@ -91,7 +88,7 @@ const WorldMapPanel = (props: WorldMapPanelProps) => {
   ];
 
   const layout = {
-    title: '<i>' + props.taxonName + '</i>',
+    // title: '<i>' + props.taxonName + '</i>',
     font: {
       size: 6,
     },
@@ -101,7 +98,7 @@ const WorldMapPanel = (props: WorldMapPanelProps) => {
     geo: {
       resolution: 50,
     },
-    margin: { l: 0, r: 0, b: 0, t: 30 },
+    margin: { l: 0, r: 0, b: 0, t: 0 },
     width: 700,
     height: 400,
   };

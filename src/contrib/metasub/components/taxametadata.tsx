@@ -26,8 +26,8 @@ interface AnnotationProps {
   keys: string;
   name: string;
   value: string | undefined;
-  testVal: string;
-  testVal2?: string;
+  testVal: string[];
+  testVal2?: string[];
 }
 
 function BinaryAnnotation(props: AnnotationProps){
@@ -37,7 +37,7 @@ function BinaryAnnotation(props: AnnotationProps){
       <span style={binarySecondStyles} className="taxa-legend-key">{props.keys[1]}</span>
     </>
   )
-  if(props.value === props.testVal){
+  if(props.value && props.testVal.includes(props.value.toLowerCase())){
     displayVals = (
       <>
         <span style={binaryFirstStyles}  className="taxa-legend-key">{props.keys[0]}</span>
@@ -76,7 +76,7 @@ function TernaryAnnotation(props: AnnotationProps){
       <span style={ternaryThirdStyles} className="taxa-legend-key">{props.keys[2]}</span>
     </>
   )
-  if(props.value === props.testVal){
+  if(props.value && props.testVal.includes(props.value.toLowerCase())){
     displayVals = (
       <>
         <span style={ternaryFirstStyles}  className="taxa-legend-key">{props.keys[0]}</span>
@@ -85,7 +85,7 @@ function TernaryAnnotation(props: AnnotationProps){
       </>
     )
   }
-  if(props.value === props?.testVal2){
+  if(props.value && props.testVal2 && props.testVal2.includes(props.value.toLowerCase())){
     displayVals = (
       <>
         <span style={ternaryFirstStyles}  className="taxa-legend-key">{props.keys[0]}</span>
@@ -150,37 +150,29 @@ const TaxaMetadataPanel = (props: TaxaMetadataPanelProps) => {
   }
   const annotation = currentData;
   return (
-    <Col className="card_scroll" lg={12}>
-      <Row className="h-100">
         <div className="card card-chart">
-          <div className="card-header">
-            <h5 className="card-category">Taxa Metadata{' '}{props.taxonName}</h5>
-          </div>
+
           <div className="card-body">
             <div className="" id="taxaMetadata">
-              <h5 id="sunburst_taxon_name_header">&nbsp;</h5>
               <div className="table-responsive ps" id="sunburst_taxa_metadata_div">
                 <table className="table" id="sunburst_taxa_metadata_table">
                   <tbody>
-                    <tr className="sunburts_abundance_row"></tr>
                     <tr id="sunburst_taxon_gram_row" className="sunburts_taxon_row">
-                      <td className="td_meta_key">Abundance{': '}{100 * props.taxonAbundance}</td>
-                      <BinaryAnnotation name="Gram-stain" keys="-+" value={annotation['gram_stain']} testVal='positive' />
+                      <BinaryAnnotation name="Gram-stain" keys="-+" value={annotation['gram_stain']} testVal={['positive']} />
+                      <BinaryAnnotation name="Anti-microbial susceptible" keys="NY" value={annotation['antimicrobial_susceptibility']} testVal={['yes', 'susceptible', 'maybe', 'always']}/>                     
                     </tr>
                     <tr id="sunburst_taxon_biofilm_row" className="sunburts_taxon_row">
-                      <BinaryAnnotation name="Biofilm forming" keys="NY" value={annotation['biofilm_forming']} testVal='yes' />
-                      <BinaryAnnotation name="Spore forming" keys="NY" value={annotation['spore_forming']} testVal='yes' />
+                      <BinaryAnnotation name="Biofilm forming" keys="NY" value={annotation['biofilm_forming']} testVal={['yes', 'forms_biofilms', 'maybe', 'always']} />
+                      <BinaryAnnotation name="Spore forming" keys="NY" value={annotation['spore_forming']} testVal={['yes', 'forms_spores', 'maybe', 'always']} />
                     </tr>
                     <tr id="sunburst_taxon_extremophile_row" className="sunburts_taxon_row">
-                      <BinaryAnnotation name="Extremophile" keys="NY" value={annotation['extreme_environment']} testVal='yes' />
-                      <BinaryAnnotation name="Anti-microbial susceptible" keys="NY" value={annotation['antimicrobial_susceptibility']} testVal='yes'/>
+                      <BinaryAnnotation name="Extremophile" keys="NY" value={annotation['extreme_environment']} testVal={['yes', 'extremophile', 'extremophiles']} />
+                      <BinaryAnnotation name="Plant pathogen" keys="NY" value={annotation['plant_pathogen']} testVal={['yes', 'maybe', 'always']}/>
+
                     </tr>
                     <tr id="sunburst_taxon_animal_pathogen_row" className="sunburts_taxon_row">
-                      <BinaryAnnotation name="Animal pathogen" keys="NY" value={annotation['animal_pathogen']} testVal='yes'/>
-                      <BinaryAnnotation name="Plant pathogen" keys="NY" value={annotation['plant_pathogen']} testVal='yes'/>
-                    </tr>
-                    <tr id="sunburst_taxon_pathogenicity_row" className="sunburts_taxon_row">
-                      <TernaryAnnotation name="Pathogenicity" keys="123" value={annotation['pathogenicity']} testVal='2.0' testVal2='3.0'/>
+                      <BinaryAnnotation name="Animal pathogen" keys="NY" value={annotation['animal_pathogen']} testVal={['yes', 'maybe', 'always']}/>
+                      <TernaryAnnotation name="Pathogenicity" keys="123" value={annotation['pathogenicity']} testVal={['2', '2.0']} testVal2={['3', '3.0']}/>
                     </tr>
                   </tbody>
                 </table>
@@ -188,8 +180,6 @@ const TaxaMetadataPanel = (props: TaxaMetadataPanelProps) => {
             </div>
           </div>
         </div>
-      </Row>
-    </Col>
   )
 };
 
