@@ -20,7 +20,7 @@ const SampleSunburstPanel = (props: SampleSunburstPanelProps) => {
       <>
         <Row>
           <h1>Loading...</h1>
-          <h2> MetaSUB Map</h2>
+          <h2>Sample Taxa</h2>
         </Row>
       </>
     );
@@ -40,11 +40,15 @@ const SampleSunburstPanel = (props: SampleSunburstPanelProps) => {
     height: 350
   };
   return (
-     <Plot data={plotData} layout={layout} onClick={(e) => (
-      props.onClickAction(e.points[0]?.value ? (
-          e.points[0]?.label ? e.points[0]?.label: ''
-        ) : '')
-    )}/>
+    <>
+      <Plot data={plotData} layout={layout} onClick={(e) => (
+        props.onClickAction(e.points[0]?.value ? (
+            e.points[0]?.label ? e.points[0]?.label: ''
+          ) : '')
+      )}/>
+      <h5>Click a sample on the map to see it here.</h5>
+      <h5>Click a species here to see it on the map.</h5>
+    </>
   )
 }
 

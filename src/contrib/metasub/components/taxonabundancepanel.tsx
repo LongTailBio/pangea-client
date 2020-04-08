@@ -32,7 +32,7 @@ const TaxaAbundancePanel = (props: TaxaAbundancePanelProps) => {
       <>
         <Row>
           <h1>Loading...</h1>
-          <h2> MetaSUB Map</h2>
+          <h2>Taxon Abundance</h2>
         </Row>
       </>
     );

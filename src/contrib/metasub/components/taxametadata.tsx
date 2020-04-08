@@ -131,7 +131,7 @@ const TaxaMetadataPanel = (props: TaxaMetadataPanelProps) => {
       <>
         <Row>
           <h1>Loading...</h1>
-          <h2> MetaSUB Map</h2>
+          <h2>Taxon Info</h2>
         </Row>
       </>
     );
