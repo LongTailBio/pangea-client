@@ -108,13 +108,25 @@ interface TaxaMetadataPanelProps {
   taxonAbundance: number;
 }
 
+const generateUrl = (taxonName: string): string => {
+  const urlSafeName = encodeURIComponent(taxonName);
+  return `/contrib/treeoflife/annotate?format=json&query=${urlSafeName}`;
+};
+
+
 
 const TaxaMetadataPanel = (props: TaxaMetadataPanelProps) => {
-  const url = '/contrib/treeoflife/annotate?format=json&query=' + props.taxonName
-  const [{ data, loading, error }] = usePangeaAxios<{[key: string]: MicrobeAnnotation}>(
-    { url: url, method: 'GET' }
+  const [{ data, loading, error }, refetch] = usePangeaAxios<{[key: string]: MicrobeAnnotation}>(
+    { url: '', method: 'GET' },
+    { manual: true }
   );
-  if (loading) {
+  React.useEffect(() => {
+    refetch({ url: generateUrl(props.taxonName) });
+  }, [props.taxonName]);
+
+  const currentData = (data || {})[props.taxonName];
+
+  if (loading || currentData === undefined) {
     return (
       <>
         <Row>
@@ -124,7 +136,19 @@ const TaxaMetadataPanel = (props: TaxaMetadataPanelProps) => {
       </>
     );
   }
-  const annotation = data[props.taxonName];
+
+  if (error) {
+    return (
+      <>
+        <Row>
+          <h1>Error</h1>
+          <h2> MetaSUB Map</h2>
+          <p>{error}</p>
+        </Row>
+      </>
+    );
+  }
+  const annotation = currentData;
   return (
     <Col className="card_scroll" lg={12}>
       <Row className="h-100">
