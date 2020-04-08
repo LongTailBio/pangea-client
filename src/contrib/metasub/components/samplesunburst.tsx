@@ -7,6 +7,7 @@ import Plot from 'react-plotly.js';
 
 interface SampleSunburstPanelProps {
   sampleUUID: string
+  onClickAction: (taxonName: string) => void;
 }
 
 const SampleSunburstPanel = (props: SampleSunburstPanelProps) => {
@@ -24,6 +25,8 @@ const SampleSunburstPanel = (props: SampleSunburstPanelProps) => {
       </>
     );
   }
+  console.log(props.sampleUUID)
+  console.log(data)
   const plotData: Partial<Plotly.PlotData>[] = [{
     type: "sunburst",
     labels: data.taxa,
@@ -39,7 +42,11 @@ const SampleSunburstPanel = (props: SampleSunburstPanelProps) => {
     height: 350
   };
   return (
-     <Plot data={plotData} layout={layout} />
+     <Plot data={plotData} layout={layout} onClick={(e) => (
+      props.onClickAction(e.points[0]?.value ? (
+          e.points[0]?.label ? e.points[0]?.label: ''
+        ) : '')
+    )}/>
   )
 }
 

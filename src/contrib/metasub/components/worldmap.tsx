@@ -6,10 +6,11 @@ import { OneTaxonResult, TaxaSearchResults } from '../services/api/models/taxaSe
 
 interface WorldMapPanelProps {
   taxonName: string;
+  onClickAction: (sampleName: string) => void;
 }
 
-
 const WorldMapPanel = (props: WorldMapPanelProps) => {
+  console.log(props)
   const url = '/contrib/metasub/search_samples?format=json&query=' + props.taxonName;
   const [{ data, loading, error }] = usePangeaAxios<TaxaSearchResults>(
     { url: url, method: 'GET' }
@@ -24,7 +25,6 @@ const WorldMapPanel = (props: WorldMapPanelProps) => {
       </>
     );
   }
-
   const lats: number[] = data['results'][props.taxonName].map((sample: OneTaxonResult) => (
     sample.sample_metadata['city_latitude']
   ))
@@ -35,8 +35,13 @@ const WorldMapPanel = (props: WorldMapPanelProps) => {
     (10000 * sample.relative_abundance) ** (1 / 2)
   ))
   const labels: string[] = data['results'][props.taxonName].map((sample: OneTaxonResult) => (
-    sample.sample_name + ': ' + Math.round(1000 * 1000 * sample.relative_abundance).toLocaleString() + ' ppm'
-  ))  
+    sample.sample_name + ': '
+    + Math.round(1000 * 1000 * sample.relative_abundance).toLocaleString() + ' ppm'
+  ))
+  const nameMap : {[key: string]: string} = {'': ''}
+  data['results'][props.taxonName].map((sample: OneTaxonResult) => (
+    nameMap[sample.sample_name] = sample.sample_uuid
+  ))
 
   const plotData: Partial<Plotly.PlotData>[] = [{
       type: 'scattergeo',
@@ -61,13 +66,19 @@ const WorldMapPanel = (props: WorldMapPanelProps) => {
       geo: {
           resolution: 50,
       },
-      margin: {l: 0, r: 0, b: 0, t: 0},
+      margin: {l: 0, r: 0, b: 0, t: 30},
       width: 700,
       height: 400
   };
 
   return (
-    <Plot data={plotData} layout={layout} onClick={(e) => console.log(e)}/>
+    <Plot data={plotData} layout={layout} onClick={
+      (e) => (
+        props.onClickAction(
+          nameMap[e.points[0]?.text ? e.points[0]?.text.split(':')[0] : '']
+        )
+      )
+    }/>
   )
 }
 

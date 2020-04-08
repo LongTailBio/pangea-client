@@ -54,6 +54,9 @@ export interface PlotDatum {
 	xaxis: LayoutAxis;
 	y: Datum;
 	yaxis: LayoutAxis;
+	text?: string;
+	value?: number;
+	label?: string;
 }
 
 export interface PlotMouseEvent {

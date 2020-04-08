@@ -19,6 +19,7 @@ const SampleMetadataPanel = (props: SampleMetadataPanelProps) => {
       </>
     );
   }
+
   const metadata = data.metadata;
 
   return (
