@@ -68,7 +68,7 @@ class MetasubMap extends React.Component<MetasubMapProps, MetasubMapState> {
                         />
                     </Row>
                     <Row>
-                        <TaxaAbundancePanel taxonName={this.state.taxonName} />
+                        <TaxaAbundancePanel taxonName={'Geodermatophilus obscurus'} />
                     </Row>
                 </Col>
                 <Col lg={4}>
@@ -77,7 +77,7 @@ class MetasubMap extends React.Component<MetasubMapProps, MetasubMapState> {
                         onClickAction={this.onSunburstClick}
                     />
                     <SampleMetadataPanel sampleUUID={this.state.sampleUUID} />
-                    <TaxaMetadataPanel taxonName={this.state.taxonName}  taxonAbundance={0.123} />
+                    <TaxaMetadataPanel taxonName={'Geodermatophilus obscurus'}  taxonAbundance={0.123} />
                 </Col>
             </Row>
           }    

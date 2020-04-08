@@ -13,7 +13,7 @@ const WorldMapPanel = (props: WorldMapPanelProps) => {
   console.log(props)
   const url = '/contrib/metasub/search_samples?format=json&query=' + props.taxonName;
   const [{ data, loading, error }] = usePangeaAxios<TaxaSearchResults>(
-    { url: url, method: 'GET' }
+    { url: url, method: 'GET' }, {useCache: false}
   );
   if (loading) {
     return (
