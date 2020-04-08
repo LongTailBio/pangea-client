@@ -1,27 +1,35 @@
 import * as React from 'react';
-import { Row, Col, } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import { usePangeaAxios } from '../../../services/api';
 import Plot from 'react-plotly.js';
-import { OneTaxonResult, TaxaSearchResults } from '../services/api/models/taxaSearchResult'
+import {
+  OneTaxonResult,
+  TaxaSearchResults,
+} from '../services/api/models/taxaSearchResult';
 
 interface WorldMapPanelProps {
   taxonName: string;
   onClickAction: (sampleName: string) => void;
 }
 
+const generateUrl = (taxonName: string): string => {
+  const urlSafeName = encodeURIComponent(taxonName);
+  return `/contrib/metasub/search_samples?format=json&query=${urlSafeName}`;
+};
+
 const WorldMapPanel = (props: WorldMapPanelProps) => {
-  console.log('starting worldmap')
-  console.log(props)
-  const initUrl = `/contrib/metasub/search_samples?format=json&query=${props.taxonName}`
   const [{ data, loading, error }, refetch] = usePangeaAxios<TaxaSearchResults>(
-    { url: initUrl, method: 'GET' }, {manual: true}
+    { url: '', method: 'GET' },
+    { manual: true },
   );
+
   React.useEffect(() => {
-    const newUrl = `/contrib/metasub/search_samples?format=json&query=${props.taxonName}`
-    refetch({ url: newUrl });
+    refetch({ url: generateUrl(props.taxonName) });
   }, [props.taxonName]);
-  console.log(error)
-  if (loading || !data) {
+
+  const currentData = ((data || {}).results || {})[props.taxonName];
+
+  if (loading || currentData === undefined) {
     return (
       <>
         <Row>
@@ -31,26 +39,42 @@ const WorldMapPanel = (props: WorldMapPanelProps) => {
       </>
     );
   }
-  console.log(data)
-  const lats: number[] = data['results'][props.taxonName].map((sample: OneTaxonResult) => (
-    sample.sample_metadata['city_latitude']
-  ))
-  const lons: number[] = data['results'][props.taxonName].map((sample: OneTaxonResult) => (
-    sample.sample_metadata['city_longitude']
-  ))
-  const sizes: number[] = data['results'][props.taxonName].map((sample: OneTaxonResult) => (
-    (10000 * sample.relative_abundance) ** (1 / 2)
-  ))
-  const labels: string[] = data['results'][props.taxonName].map((sample: OneTaxonResult) => (
-    sample.sample_name + ': '
-    + Math.round(1000 * 1000 * sample.relative_abundance).toLocaleString() + ' ppm'
-  ))
-  const nameMap : {[key: string]: string} = {'': ''}
-  data['results'][props.taxonName].map((sample: OneTaxonResult) => (
-    nameMap[sample.sample_name] = sample.sample_uuid
-  ))
 
-  const plotData: Partial<Plotly.PlotData>[] = [{
+  if (error) {
+    return (
+      <>
+        <Row>
+          <h1>Error</h1>
+          <h2> MetaSUB Map</h2>
+          <p>{error}</p>
+        </Row>
+      </>
+    );
+  }
+
+  const lats: number[] = currentData.map(
+    sample => sample.sample_metadata['city_latitude'],
+  );
+  const lons: number[] = currentData.map(
+    sample => sample.sample_metadata['city_longitude'],
+  );
+  const sizes: number[] = currentData.map(
+    sample => (10000 * sample.relative_abundance) ** (1 / 2),
+  );
+  const labels: string[] = currentData.map(sample => {
+    const { sample_name, relative_abundance } = sample;
+    const friendlyAbundance = Math.round(
+      1000 * 1000 * relative_abundance,
+    ).toLocaleString();
+    return `${sample_name}: ${friendlyAbundance} ppm`;
+  });
+  const nameMap: { [key: string]: string } = { '': '' };
+  currentData.forEach((sample: OneTaxonResult) => {
+    nameMap[sample.sample_name] = sample.sample_uuid;
+  });
+
+  const plotData: Partial<Plotly.PlotData>[] = [
+    {
       type: 'scattergeo',
       mode: 'markers',
       lon: lons,
@@ -58,60 +82,61 @@ const WorldMapPanel = (props: WorldMapPanelProps) => {
       text: labels,
       hoverinfo: 'text',
       marker: {
-          size: sizes,
+        size: sizes,
       },
-  }];
+    },
+  ];
 
   const layout = {
-      title: '<i>' + props.taxonName + '</i>',
-      font: {
-          size: 6
-      },
-      titlefont: {
-          size: 16
-      },
-      geo: {
-          resolution: 50,
-      },
-      margin: {l: 0, r: 0, b: 0, t: 30},
-      width: 700,
-      height: 400
+    title: '<i>' + props.taxonName + '</i>',
+    font: {
+      size: 6,
+    },
+    titlefont: {
+      size: 16,
+    },
+    geo: {
+      resolution: 50,
+    },
+    margin: { l: 0, r: 0, b: 0, t: 30 },
+    width: 700,
+    height: 400,
   };
 
   return (
-    <Plot data={plotData} layout={layout} onClick={
-      (e) => (
+    <Plot
+      data={plotData}
+      layout={layout}
+      onClick={e =>
         props.onClickAction(
-          nameMap[e.points[0]?.text ? e.points[0]?.text.split(':')[0] : '']
+          nameMap[e.points[0]?.text ? e.points[0]?.text.split(':')[0] : ''],
         )
-      )
-    }/>
-  )
-}
+      }
+    />
+  );
+};
 
 export default WorldMapPanel;
-
 
 // function PlotHeatmapTaxaMapbox(taxaData)
 // {
 //   $("#taxa_name_placeholder").text(taxaData.taxa_name);
-  
-  
-//   // need to remove layers before we can remove the source  
+
+//   // need to remove layers before we can remove the source
 //   removeMapboxLayer('taxaBySample-heat');
 //   removeMapboxLayer('taxaBySample-pointHeat');
 //   removeMapboxLayer('taxaBySample-point');
-  
+
 //   // remove the source
 //   removeMapboxSource('taxaBySample');
-  
+
 //   // Add a geojson source.
 //   map.addSource('taxaBySample', {
 //     'type': 'geojson',
 //     'generateId': true,
 //     'data': TaxaJsonToGeojson(taxaData.taxa_data)
 //   });
-  
+
 //   // log-scaling
 //   abVals = taxaData.taxa_data.map(x=> { return ConvertRelAb(x.relative_abundance); })
 
@@ -120,7 +145,7 @@ export default WorldMapPanel;
 
 //   // Add colors into legend
 //   mapLegend.innerHTML = "";
-//   for (i = 0; i < quantVals.length; i++) 
+//   for (i = 0; i < quantVals.length; i++)
 //   {
 //     var curVal = (ConvertRelAbInverse(quantVals[i]) * 100).toPrecision(3) + "%";
 //     var curColor = colorList[i];
@@ -144,20 +169,20 @@ export default WorldMapPanel;
 //         ['linear'],
 //         ['heatmap-density'],
 //         0.0, convertHex(colorList[0], 0.0),
-//         0.1, convertHex(colorList[1], 0.5), 
+//         0.1, convertHex(colorList[1], 0.5),
 //         0.2, convertHex(colorList[2], 1.0),
 //         0.4, convertHex(colorList[3], 1.0),
 //         0.6, convertHex(colorList[4], 1.0),
 //         0.8, convertHex(colorList[5], 1.0),
 //         1.0, convertHex(colorList[6], 1.0)
 //       ];
-        
+
 //   var circleColor = [
 //       'interpolate',
 //       ['linear'],
 //       ['get', 'ab'],
 //       quantVals[0], convertHex(colorList[0], 0.0),
-//       quantVals[1], convertHex(colorList[1], 0.8), 
+//       quantVals[1], convertHex(colorList[1], 0.8),
 //       quantVals[2], convertHex(colorList[2], 0.8),
 //       quantVals[3], convertHex(colorList[3], 0.8),
 //       quantVals[4], convertHex(colorList[4], 0.8),
@@ -165,9 +190,9 @@ export default WorldMapPanel;
 //       quantVals[6], convertHex(colorList[6], 0.8),
 //       quantVals[7], convertHex(colorList[6], 0.8),
 //       ];
-  
+
 //   // Heatmap layer
-//   // Note that heatmap is affected both by magnitude of the point relAbundance, but also frequency of points. 
+//   // Note that heatmap is affected both by magnitude of the point relAbundance, but also frequency of points.
 //   // So for now we'll use a 2-layer approach
 //   map.addLayer(
 //   {
@@ -222,7 +247,7 @@ export default WorldMapPanel;
 //     'id': 'taxaBySample-pointHeat',
 //     'type': 'circle',
 //     'source': 'taxaBySample',
-//     'paint': 
+//     'paint':
 //     {
 //       'circle-radius': [
 //       'interpolate',
@@ -248,7 +273,7 @@ export default WorldMapPanel;
 //       'circle-stroke-width': ['case',['boolean', ['feature-state', 'hover'], false], 3,  0],
 //     }
 //   });
-  
+
 //   // Show actual sample points on the map when zoomed in enough
 //   map.addLayer(
 //     {
@@ -282,38 +307,37 @@ export default WorldMapPanel;
 //     }
 //   );
 
-  
-//   map.on('click', 'taxaBySample-pointHeat', function(e) 
+//   map.on('click', 'taxaBySample-pointHeat', function(e)
 //   {
 //     map.flyTo({ center: e.features[0].geometry.coordinates, zoom: Math.max(map.getZoom(), 9) });
 //     ShowCityMetadata(e.features[0]);
-    
+
 //     var el = document.createElement('div');
 //     el.className = 'marker';
-    
+
 //     if(mapSampleMarker != null) mapSampleMarker.remove();
-    
-//     mapSampleMarker = new mapboxgl.Marker(el, 
+
+//     mapSampleMarker = new mapboxgl.Marker(el,
 //       {offset: [0, -25]})
 //       .setLngLat(e.features[0].geometry.coordinates)
 //       .addTo(map);
 //     mapSampleMarkerPresent = true;
 //     mapCurrentSampleGeojson = e.features[0];
 //   });
-   
-//   map.on('mouseenter', 'taxaBySample-pointHeat', function(e) 
+
+//   map.on('mouseenter', 'taxaBySample-pointHeat', function(e)
 //   {
-//     map.getCanvas().style.cursor = 'pointer';  
+//     map.getCanvas().style.cursor = 'pointer';
 //   });
-  
-//   map.on('mousemove', 'taxaBySample-pointHeat', function(e) 
+
+//   map.on('mousemove', 'taxaBySample-pointHeat', function(e)
 //   {
-//     if (e.features.length > 0) 
+//     if (e.features.length > 0)
 //     {
 //       // Show metadata
 //       ShowCityMetadata(e.features[0]);
-      
-//       if (hoveredStateId) 
+
+//       if (hoveredStateId)
 //       {
 //         map.setFeatureState(
 //           { source: 'taxaBySample', id: hoveredStateId },
@@ -327,25 +351,25 @@ export default WorldMapPanel;
 //       );
 //     }
 //   });
-  
-//   map.on('mouseleave', 'taxaBySample-pointHeat', function() 
+
+//   map.on('mouseleave', 'taxaBySample-pointHeat', function()
 //   {
 //     map.getCanvas().style.cursor = '';
-    
+
 //     if( mapCurrentSampleGeojson == null) // No sample are "clicked", revert the hover table for city metadata.
 //     {
 //       // TODO: is it better to keep showing metadata for the last sample?
-      
+
 //       //$('#city_name_header').text("");
 //       //$('#city_name_header_msg').css("display", "block");
 //       //$('#city_metadata_div').css("display", "none");
-//       //$('#taxon_relative_abundance').text("");      
+//       //$('#taxon_relative_abundance').text("");
 //     }else  // A sample is being shown. Revert to its metadata instead.
 //     {
 //       ShowCityMetadata(mapCurrentSampleGeojson);
 //     }
-    
-//     if (hoveredStateId) 
+
+//     if (hoveredStateId)
 //     {
 //       map.setFeatureState(
 //         { source: 'taxaBySample', id: hoveredStateId },
@@ -353,7 +377,7 @@ export default WorldMapPanel;
 //       );
 //     }
 //     hoveredStateId = null;
-    
+
 //   });
 //   map.resize();
 // }
