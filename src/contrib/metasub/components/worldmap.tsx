@@ -10,12 +10,18 @@ interface WorldMapPanelProps {
 }
 
 const WorldMapPanel = (props: WorldMapPanelProps) => {
+  console.log('starting worldmap')
   console.log(props)
-  const url = '/contrib/metasub/search_samples?format=json&query=' + props.taxonName;
-  const [{ data, loading, error }] = usePangeaAxios<TaxaSearchResults>(
-    { url: url, method: 'GET' }, {useCache: false}
+  const initUrl = `/contrib/metasub/search_samples?format=json&query=${props.taxonName}`
+  const [{ data, loading, error }, refetch] = usePangeaAxios<TaxaSearchResults>(
+    { url: initUrl, method: 'GET' }, {manual: true}
   );
-  if (loading) {
+  React.useEffect(() => {
+    const newUrl = `/contrib/metasub/search_samples?format=json&query=${props.taxonName}`
+    refetch({ url: newUrl });
+  }, [props.taxonName]);
+  console.log(error)
+  if (loading || !data) {
     return (
       <>
         <Row>
@@ -25,6 +31,7 @@ const WorldMapPanel = (props: WorldMapPanelProps) => {
       </>
     );
   }
+  console.log(data)
   const lats: number[] = data['results'][props.taxonName].map((sample: OneTaxonResult) => (
     sample.sample_metadata['city_latitude']
   ))

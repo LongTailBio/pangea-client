@@ -25,8 +25,6 @@ const SampleSunburstPanel = (props: SampleSunburstPanelProps) => {
       </>
     );
   }
-  console.log(props.sampleUUID)
-  console.log(data)
   const plotData: Partial<Plotly.PlotData>[] = [{
     type: "sunburst",
     labels: data.taxa,
