@@ -26,7 +26,6 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "@types/plotly.js": "^1.50.1",
     "@types/react-plotly.js": "^2.2.4",
     "@uppy/aws-s3-multipart": "^1.5.2",
     "@uppy/core": "^1.8.2",
