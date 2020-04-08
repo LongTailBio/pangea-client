@@ -42,7 +42,6 @@ class MetasubMap extends React.Component<MetasubMapProps, MetasubMapState> {
     }
   };
 
-
   // handleSubmitSearch = (_event: React.FormEvent<HTMLFormElement>) => {
   //   _event.preventDefault();
   //   var taxon = this.state.searchBar
@@ -63,7 +62,9 @@ class MetasubMap extends React.Component<MetasubMapProps, MetasubMapState> {
       <>
         <Row>
           <Col lg={8}>
-            <h3>Taxon <i>{taxonName}</i></h3>
+            <h3>
+              Taxon <i>{taxonName}</i>
+            </h3>
             <TaxonEntryBar onSubmitAction={this.onSunburstClick} />
             <Row>
               <WorldMapPanel
@@ -71,15 +72,12 @@ class MetasubMap extends React.Component<MetasubMapProps, MetasubMapState> {
                 onClickAction={this.onMapClick}
               />
             </Row>
-            <TaxaMetadataPanel
-              taxonName={taxonName}
-              taxonAbundance={0.123}
-            />
+            <TaxaMetadataPanel taxonName={taxonName} taxonAbundance={0.123} />
             <Row>
               <TaxaAbundancePanel taxonName={taxonName} />
             </Row>
           </Col>
-          
+
           <Col lg={4}>
             <Link to={`/samples/${sampleUUID}`}>
               <h3>Sample</h3>

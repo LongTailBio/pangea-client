@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { Row, Col, } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import { usePangeaAxios } from '../../../services/api';
 import { SampleType } from '../../../services/api/models/sample';
-import { CitiesTaxonResult, CityTaxonAbundance } from '../services/api/models/cityTaxonAbundance'
+import {
+  CitiesTaxonResult,
+  CityTaxonAbundance,
+} from '../services/api/models/cityTaxonAbundance';
 import Plot from 'react-plotly.js';
 
-
 interface TaxaAbundancePanelProps {
-    taxonName: string;
+  taxonName: string;
 }
 
 const generateUrl = (taxonName: string): string => {
@@ -16,10 +18,9 @@ const generateUrl = (taxonName: string): string => {
 };
 
 const TaxaAbundancePanel = (props: TaxaAbundancePanelProps) => {
-  const [{ data, loading, error }, refetch] = usePangeaAxios<{[key: string]: CitiesTaxonResult}>(
-    { url: '', method: 'GET' },
-    { manual: true },
-  );
+  const [{ data, loading, error }, refetch] = usePangeaAxios<{
+    [key: string]: CitiesTaxonResult;
+  }>({ url: '', method: 'GET' }, { manual: true });
 
   React.useEffect(() => {
     refetch({ url: generateUrl(props.taxonName) });
@@ -50,25 +51,23 @@ const TaxaAbundancePanel = (props: TaxaAbundancePanelProps) => {
     );
   }
 
-  const cityAbundances: {[key: string]: CityTaxonAbundance} = currentData; //['results'][props.taxonName];
+  const cityAbundances: { [key: string]: CityTaxonAbundance } = currentData; //['results'][props.taxonName];
   const plotData: Partial<Plotly.PlotData>[] = Object.keys(cityAbundances).map(
     function(cityName: string): Partial<Plotly.PlotData> {
       return {
         y: cityAbundances[cityName].all_relative_abundances,
         type: 'box',
         name: cityAbundances[cityName].city_name,
-      }
-    }
-  )
+      };
+    },
+  );
   const layout = {
-      title: '<i>' + props.taxonName + '</i> Abundance in Cities',
-    margin: {l: 20, r: 0, b: 0, t: 30},
+    title: '<i>' + props.taxonName + '</i> Abundance in Cities',
+    margin: { l: 20, r: 0, b: 0, t: 30 },
     width: 700,
-    height: 400
+    height: 400,
   };
-  return (
-     <Plot data={plotData} layout={layout} />
-  )
-}
+  return <Plot data={plotData} layout={layout} />;
+};
 
-export default TaxaAbundancePanel
+export default TaxaAbundancePanel;

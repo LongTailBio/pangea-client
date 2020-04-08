@@ -1,5 +1,5 @@
 export interface SunburstTaxa {
-    taxa: [string];
-    parents: [string];
-    abundances: [number];
+  taxa: [string];
+  parents: [string];
+  abundances: [number];
 }

@@ -59,7 +59,7 @@ const WorldMapPanel = (props: WorldMapPanelProps) => {
     sample => sample.sample_metadata['city_longitude'],
   );
   const sizes: number[] = currentData.map(
-    sample => (1000 * 1000 * sample.relative_abundance) ** (1/4),
+    sample => (1000 * 1000 * sample.relative_abundance) ** (1 / 4),
   );
   const labels: string[] = currentData.map(sample => {
     const { sample_name, relative_abundance } = sample;

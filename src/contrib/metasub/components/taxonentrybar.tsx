@@ -10,8 +10,10 @@ interface TaxonEntryBarState {
   searchBar: string;
 }
 
-
-class TaxonEntryBar extends React.Component<TaxonEntryBarProps, TaxonEntryBarState> {
+class TaxonEntryBar extends React.Component<
+  TaxonEntryBarProps,
+  TaxonEntryBarState
+> {
   state = { searchBar: '' };
 
   handleFormChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -21,12 +23,11 @@ class TaxonEntryBar extends React.Component<TaxonEntryBarProps, TaxonEntryBarSta
 
   handleSubmitSearch = (_event: React.FormEvent<HTMLFormElement>) => {
     _event.preventDefault();
-    var taxon = this.state.searchBar
-    taxon = taxon[0].toUpperCase() + taxon.substr(1).toLowerCase()
+    let taxon = this.state.searchBar;
+    taxon = taxon[0].toUpperCase() + taxon.substr(1).toLowerCase();
     this.props.onSubmitAction(taxon);
-    this.setState({ searchBar: ''});
-
-  }
+    this.setState({ searchBar: '' });
+  };
 
   render() {
     return (
@@ -54,7 +55,7 @@ class TaxonEntryBar extends React.Component<TaxonEntryBarProps, TaxonEntryBarSta
           </Col>
         </form>
       </Row>
-    )
+    );
   }
 }
 
