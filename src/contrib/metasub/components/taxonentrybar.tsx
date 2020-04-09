@@ -1,34 +1,160 @@
 import * as React from 'react';
+import CSS from 'csstype';
 import { Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+
+const highlighted: CSS.Properties = {
+  color: 'blue',
+}
 
 interface TaxonEntryBarProps {
   onSubmitAction: (sampleUUID: string) => void;
+  suggestions: string[];
 }
 
 interface TaxonEntryBarState {
-  searchBar: string;
+  activeSuggestion: number;
+  filteredSuggestions: string[];
+  showSuggestions: boolean;
+  userInput: string;
 }
 
 class TaxonEntryBar extends React.Component<
   TaxonEntryBarProps,
   TaxonEntryBarState
 > {
-  state = { searchBar: '' };
+  state = { 
+    userInput: '',
+    activeSuggestion: 0,
+    filteredSuggestions: [],
+    showSuggestions: false
+  };
 
   handleFormChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    this.setState({ searchBar: value });
+    const { suggestions } = this.props;
+    const userInput = event.currentTarget.value;
+
+    var filteredSuggestions: string[] = [];
+    if (userInput.length >= 3){
+      // Filter our suggestions that don't contain the user's input
+      filteredSuggestions = suggestions.filter(
+        suggestion =>
+          suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+      );
+    }
+
+    // Update the user input and filtered suggestions, reset the active
+    // suggestion and make sure the suggestions are shown
+    this.setState({
+      activeSuggestion: 0,
+      filteredSuggestions,
+      showSuggestions: true,
+      userInput: event.currentTarget.value
+    });
+  };
+
+  // Event fired when the user clicks on a suggestion
+  onClick = (event: React.MouseEvent<HTMLLIElement>) => {
+    // Update the user input and reset the rest of the state
+    this.setState({
+      activeSuggestion: 0,
+      filteredSuggestions: [],
+      showSuggestions: false,
+      userInput: event.currentTarget.innerText
+    });
+  };
+
+  // Event fired when the user presses a key down
+  onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log(e)
+    const { activeSuggestion, filteredSuggestions } = this.state;
+
+    // User pressed the enter key, update the input and close the
+    // suggestions
+    if (e?.keyCode && e.keyCode === 13) {
+      this.setState({
+        activeSuggestion: 0,
+        showSuggestions: false,
+        userInput: filteredSuggestions[activeSuggestion]
+      });
+    }
+    // User pressed the up arrow, decrement the index
+    else if (e.keyCode === 38) {
+      if (activeSuggestion === 0) {
+        return;
+      }
+
+      this.setState({ activeSuggestion: activeSuggestion - 1 });
+    }
+    // User pressed the down arrow, increment the index
+    else if (e.keyCode === 40) {
+      if (activeSuggestion - 1 === filteredSuggestions.length) {
+        return;
+      }
+
+      this.setState({ activeSuggestion: activeSuggestion + 1 });
+    }
   };
 
   handleSubmitSearch = (_event: React.FormEvent<HTMLFormElement>) => {
     _event.preventDefault();
-    let taxon = this.state.searchBar;
+    let taxon = this.state.userInput;
     taxon = taxon[0].toUpperCase() + taxon.substr(1).toLowerCase();
     this.props.onSubmitAction(taxon);
-    this.setState({ searchBar: '' });
+    this.setState({ userInput: '' });
   };
 
   render() {
+    const {
+      handleFormChange,
+      onClick,
+      onKeyDown,
+      state: {
+        activeSuggestion,
+        filteredSuggestions,
+        showSuggestions,
+        userInput
+      }
+    } = this;
+
+    let suggestionsListComponent;
+
+    if (showSuggestions && userInput) {
+      if (filteredSuggestions.length) {
+        suggestionsListComponent = (
+          <ul className="suggestions">
+            {filteredSuggestions.map((suggestion, index) => {
+              let className;
+              let style;
+
+              // Flag the active suggestion with a class
+              if (index === activeSuggestion) {
+                className = "suggestion-active";
+                style = highlighted;
+              }
+
+              return (
+                <li
+                  className={className}
+                  key={suggestion}
+                  onClick={onClick}
+                  style={style}
+                >
+                  {suggestion}
+                </li>
+              );
+            })}
+          </ul>
+        );
+      } else {
+        suggestionsListComponent = (
+          <div className="no-suggestions">
+            <em>No suggestions.</em>
+          </div>
+        );
+      }
+    }
+
     return (
       <Row>
         <form onSubmit={this.handleSubmitSearch}>
@@ -40,9 +166,12 @@ class TaxonEntryBar extends React.Component<
                 type="text"
                 placeholder="Search for a taxon..."
                 required={true}
-                value={this.state.searchBar}
+                value={this.state.userInput}
                 onChange={this.handleFormChange}
+                onKeyDown={this.onKeyDown}
+
               />
+              {suggestionsListComponent}
             </div>
           </Col>
           <Col lg={2}>

@@ -7,6 +7,7 @@ import TaxaAbundancePanel from './components/taxonabundancepanel';
 import SampleMetadataPanel from './components/samplemetadata';
 import SampleSunburstPanel from './components/samplesunburst';
 import TaxonEntryBar from './components/taxonentrybar';
+import { taxa_suggestions } from './assets/taxasuggestions'
 
 import './assets/css/web-css.css';
 import './assets/css/nucleo-icons.css';
@@ -42,14 +43,6 @@ class MetasubMap extends React.Component<MetasubMapProps, MetasubMapState> {
     }
   };
 
-  // handleSubmitSearch = (_event: React.FormEvent<HTMLFormElement>) => {
-  //   _event.preventDefault();
-  //   var taxon = this.state.searchBar
-  //   taxon = taxon[0].toUpperCase() + taxon.substr(1).toLowerCase()
-  //   this.setState({ searchBar: '', taxonName: taxon });
-
-  // }
-
   render() {
     const { sampleUUID, taxonName } = this.state;
 
@@ -65,7 +58,10 @@ class MetasubMap extends React.Component<MetasubMapProps, MetasubMapState> {
             <h3>
               Taxon <i>{taxonName}</i>
             </h3>
-            <TaxonEntryBar onSubmitAction={this.onSunburstClick} />
+            <TaxonEntryBar
+              onSubmitAction={this.onSunburstClick}
+              suggestions={taxa_suggestions}
+            />
             <Row>
               <WorldMapPanel
                 taxonName={taxonName}
