@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import WorldMapPanel from './components/worldmap';
 import TaxaMetadataPanel from './components/taxametadata';
 import TaxaAbundancePanel from './components/taxonabundancepanel';
+import TaxaMaterialAbundancePanel from './components/taxonabundancepanelmaterial';
 import SampleMetadataPanel from './components/samplemetadata';
 import SampleSunburstPanel from './components/samplesunburst';
 import TaxonEntryBar from './components/taxonentrybar';
@@ -71,6 +72,9 @@ class MetasubMap extends React.Component<MetasubMapProps, MetasubMapState> {
             <TaxaMetadataPanel taxonName={taxonName} taxonAbundance={0.123} />
             <Row>
               <TaxaAbundancePanel taxonName={taxonName} />
+            </Row>
+            <Row>
+              <TaxaMaterialAbundancePanel taxonName={taxonName} />
             </Row>
           </Col>
 
