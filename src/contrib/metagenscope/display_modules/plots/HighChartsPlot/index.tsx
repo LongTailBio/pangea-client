@@ -1,6 +1,7 @@
 import * as React from 'react';
-
+import { ChartRefProps } from '../../components/DisplayContainer/highcharts';
 import * as Highcharts from 'highcharts';
+
 
 const HighchartsMore = require('highcharts/highcharts-more'),
       HighchartsExporting = require('highcharts/modules/exporting'),
@@ -9,7 +10,6 @@ HighchartsExporting(Highcharts);
 HighchartsOfflineExporting(Highcharts);
 HighchartsMore(Highcharts);
 
-import { ChartRefProps } from '../../components/DisplayContainer/highcharts';
 
 export interface HighChartsPlotProps extends ChartRefProps {
   options: Highcharts.Options;

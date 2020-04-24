@@ -7,6 +7,7 @@ import { usePangeaAxios } from '../../../../../../services/api';
 import { SampleGroupType } from '../../../../../../services/api/models/sampleGroup';
 
 import { SampleSimilarityModule } from '../../../../display_modules/SampleSimilarity';
+import { TopTaxaModule } from '../../../../display_modules/TopTaxa';
 
 
 interface MGSSampleGroupScreenProps {
@@ -66,6 +67,7 @@ export const MGSSampleGroupScreen = (props: MGSSampleGroupScreenProps) => {
       <Row>
         <Col lg={12}>
           <SampleSimilarityModule orgID={data.organization} groupID={props.groupID} />
+          <TopTaxaModule orgID={data.organization} groupID={props.groupID} />
         </Col>
       </Row>
     </div>
