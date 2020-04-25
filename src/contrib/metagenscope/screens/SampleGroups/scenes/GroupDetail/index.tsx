@@ -8,7 +8,8 @@ import { SampleGroupType } from '../../../../../../services/api/models/sampleGro
 
 import { SampleSimilarityModule } from '../../../../display_modules/SampleSimilarity';
 import { TopTaxaModule } from '../../../../display_modules/TopTaxa';
-import { AGSModule } from '../../../../display_modules/AverageGenomeSize';
+import { AGSModule } from     '../../../../display_modules/AverageGenomeSize';
+import { AlphaDiversityModule } from     '../../../../display_modules/AlphaDiversity';
 
 interface MGSSampleGroupScreenProps {
   groupID: string;
@@ -68,6 +69,7 @@ export const MGSSampleGroupScreen = (props: MGSSampleGroupScreenProps) => {
         <Col lg={12}>
           <SampleSimilarityModule orgID={data.organization} groupID={props.groupID} />
           <TopTaxaModule orgID={data.organization} groupID={props.groupID} />
+          <AlphaDiversityModule orgID={data.organization} groupID={props.groupID} />
           <AGSModule orgID={data.organization} groupID={props.groupID} />
         </Col>
       </Row>
