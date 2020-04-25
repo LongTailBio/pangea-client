@@ -10,6 +10,7 @@ import { SampleSimilarityModule } from '../../../../display_modules/SampleSimila
 import { TopTaxaModule } from '../../../../display_modules/TopTaxa';
 import { AGSModule } from     '../../../../display_modules/AverageGenomeSize';
 import { AlphaDiversityModule } from     '../../../../display_modules/AlphaDiversity';
+import { MultiAxisModule } from     '../../../../display_modules/MultiAxis';
 
 interface MGSSampleGroupScreenProps {
   groupID: string;
@@ -70,6 +71,7 @@ export const MGSSampleGroupScreen = (props: MGSSampleGroupScreenProps) => {
           <SampleSimilarityModule orgID={data.organization} groupID={props.groupID} />
           <TopTaxaModule orgID={data.organization} groupID={props.groupID} />
           <AlphaDiversityModule orgID={data.organization} groupID={props.groupID} />
+          <MultiAxisModule orgID={data.organization} groupID={props.groupID} />
           <AGSModule orgID={data.organization} groupID={props.groupID} />
         </Col>
       </Row>
