@@ -12,6 +12,7 @@ import { AGSModule } from     '../../../../display_modules/AverageGenomeSize';
 import { AlphaDiversityModule } from     '../../../../display_modules/AlphaDiversity';
 import { MultiAxisModule } from     '../../../../display_modules/MultiAxis';
 import { VolcanoModule } from     '../../../../display_modules/Volcano';
+import { MicrobeDirectoryModule } from     '../../../../display_modules/MicrobeDirectory';
 
 interface MGSSampleGroupScreenProps {
   groupID: string;
@@ -74,6 +75,7 @@ export const MGSSampleGroupScreen = (props: MGSSampleGroupScreenProps) => {
           <TopTaxaModule orgID={data.organization} groupID={props.groupID} />
           <AlphaDiversityModule orgID={data.organization} groupID={props.groupID} />
           <MultiAxisModule orgID={data.organization} groupID={props.groupID} />
+          <MicrobeDirectoryModule orgID={data.organization} groupID={props.groupID} />
           <AGSModule orgID={data.organization} groupID={props.groupID} />
         </Col>
       </Row>
