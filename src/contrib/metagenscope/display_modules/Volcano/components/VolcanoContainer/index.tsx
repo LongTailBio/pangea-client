@@ -152,7 +152,7 @@ export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState
         pointFormat:
             '<b>{point.name}</b><br />' +
             'Log2 Fold Change (x): {point.x}<br />' +
-            'Log10 P-Value (y): {point.y}',
+            '-Log2 P-Value (y): {point.y}',
       },
       exporting: {
         enabled: false,
