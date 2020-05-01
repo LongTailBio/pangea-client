@@ -6,10 +6,12 @@ import { QueryResultWrapper, QueryResultStatus } from '../../../services/api/mod
 
 import { DisplayModuleState, StatusMonitor } from './components/StatusMonitor';
 import { PlotHeader } from './components/PlotHeader';
+import { getGroupAnalysisResult, getSampleAnalysisResult } from '../../../services/api';
 
 export interface DisplayContainerProps {
   orgID: string;
   groupID: string;
+  sampleID?: string; 
 }
 
 interface WrapperState<D> {
@@ -32,6 +34,8 @@ export class DisplayContainer<D, P = {}> extends React.Component<DisplayContaine
   protected intervalDuration: number;
   protected interval?: number;
   protected keepPolling: boolean;
+  protected moduleName: string;
+  protected fieldName: string;
 
   /**
    * Create a Result plot.
@@ -45,7 +49,8 @@ export class DisplayContainer<D, P = {}> extends React.Component<DisplayContaine
       status: DisplayModuleState.Loading,
       data: undefined,
     };
-
+    this.moduleName = '';
+    this.fieldName = '';
     // Default to 20 seconds
     this.intervalDuration = 20 * 1000;
     this.interval = undefined;
@@ -74,7 +79,26 @@ export class DisplayContainer<D, P = {}> extends React.Component<DisplayContaine
 
   /** Fetch the data required to render this display module. */
   fetchData(sourceToken: CancelTokenSource): Promise<QueryResultWrapper<D>> {
-    throw new Error('Subclass should override!');
+    if (this.props?.sampleID){
+      const sampleID = this.props.sampleID as unknown as string;
+      const out = getSampleAnalysisResult<D>(
+        this.props.orgID,
+        this.props.groupID,
+        sampleID,
+        this.moduleName,
+        this.fieldName,
+        sourceToken
+      );
+      return out
+    }
+    const out = getGroupAnalysisResult<D>(
+      this.props.orgID,
+      this.props.groupID,
+      this.moduleName,
+      this.fieldName,
+      sourceToken
+    );
+    return out   
   }
 
   /**

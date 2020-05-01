@@ -4,7 +4,6 @@ import { CancelTokenSource } from 'axios';
 import HighchartsDisplayContainer from '../components/DisplayContainer/highcharts';
 import { DisplayContainerProps } from '../components/DisplayContainer';
 import { MicrobeDirectoryType } from '../../services/api/models/queryResult';
-import { getAnalysisResult } from '../../services/api';
 
 import MicrobeDirectoryContainer from './components/MicrobeDirectoryContainer';
 
@@ -18,23 +17,13 @@ export class MicrobeDirectoryModule extends HighchartsDisplayContainer<MicrobeDi
     super(props);
 
     this.title = 'Microbe Directory';
+    this.moduleName = 'metagenscope::v0.1.0::microbe_directory';
+    this.fieldName = 'md1';
     this.description = (
       <p>This chart shows the proportion of different known microbiological {' '}
         features in each sample. Features are sourced from the {' '}
         <a href="https://microbe.directory/" target="_blank">Microbe Directory</a>.</p>
     );
-  }
-
-  /** @inheritdoc */
-  fetchData(sourceToken: CancelTokenSource) {
-    const out = getAnalysisResult<MicrobeDirectoryType>(
-      this.props.orgID,
-      this.props.groupID,
-      'metagenscope::v0.1.0::microbe_directory',
-      'md1',
-      sourceToken
-    );
-    return out
   }
 
   /** @inheritdoc */

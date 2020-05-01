@@ -4,7 +4,6 @@ import { CancelTokenSource } from 'axios';
 import HighchartsDisplayContainer from '../components/DisplayContainer/highcharts';
 import { DisplayContainerProps } from '../components/DisplayContainer';
 import { VolcanoType } from '../../services/api/models/queryResult';
-import { getAnalysisResult } from '../../services/api';
 
 import { VolcanoContainer } from './components/VolcanoContainer';
 
@@ -14,6 +13,8 @@ export class VolcanoModule extends HighchartsDisplayContainer<VolcanoType> {
     super(props);
 
     this.title = 'Volcano';
+    this.moduleName = 'metagenscope::v0.1.0::volcano';
+    this.fieldName = 'volcano';
     this.description = (
       <div>
         <p>This chart shows features that are both high abundance and consistently
@@ -28,18 +29,6 @@ export class VolcanoModule extends HighchartsDisplayContainer<VolcanoType> {
            underrepresented.</p>
       </div>
     );
-  }
-
-  /** @inheritdoc */
-  fetchData(sourceToken: CancelTokenSource) {
-    const out = getAnalysisResult<VolcanoType>(
-      this.props.orgID,
-      this.props.groupID,
-      'metagenscope::v0.1.0::volcano',
-      'volcano',
-      sourceToken
-    );
-    return out
   }
 
   /** @inheritdoc */

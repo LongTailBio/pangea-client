@@ -4,7 +4,6 @@ import { CancelTokenSource } from 'axios';
 import HighchartsDisplayContainer from '../components/DisplayContainer/highcharts';
 import { DisplayContainerProps } from '../components/DisplayContainer';
 import { AGSResultType } from '../../services/api/models/queryResult';
-import { getAnalysisResult } from '../../services/api';
 
 import AGSContainer from './components/AGSContainer';
 
@@ -15,6 +14,8 @@ export class AGSModule extends HighchartsDisplayContainer<AGSResultType> {
     super(props);
 
     this.title = 'Average Genome Size';
+    this.moduleName = 'metagenscope::v0.1.0::ave_genome_size';
+    this.fieldName = 'ags';
     this.description = (
       <div>
         <p>Generally a larger average genome size indicates a community   {' '}
@@ -24,18 +25,6 @@ export class AGSModule extends HighchartsDisplayContainer<AGSResultType> {
         <p>This estimate only applies to Bacterial species in each sample.</p>
       </div>
     );
-  }
-
-  /** @inheritdoc */
-  fetchData(sourceToken: CancelTokenSource) {
-    const out = getAnalysisResult<AGSResultType>(
-      this.props.orgID,
-      this.props.groupID,
-      'metagenscope::v0.1.0::ave_genome_size',
-      'ags',
-      sourceToken
-    );
-    return out
   }
 
   /** @inheritdoc */

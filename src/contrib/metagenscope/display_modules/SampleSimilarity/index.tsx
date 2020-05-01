@@ -4,7 +4,7 @@ import { CancelTokenSource } from 'axios';
 import D3DisplayContainer from '../components/DisplayContainer/d3';
 import { DisplayContainerProps } from '../components/DisplayContainer';
 import { SampleSimilarityResultType } from '../../services/api/models/queryResult';
-import { getAnalysisResult } from '../../services/api';
+
 import { SampleSimilarityContainer } from './components/SampleSimilarityContainer'
 
 
@@ -14,6 +14,8 @@ export class SampleSimilarityModule extends D3DisplayContainer<SampleSimilarityR
     super(props);
 
     this.title = 'Sample Similarity';
+    this.moduleName = 'metagenscope::v0.1.0::sample_similarity';
+    this.fieldName = 'dim_reduce';
     this.description = (
       <div>
         <p>This plot displays a dimensionality reduction of the data.</p>
@@ -23,18 +25,6 @@ export class SampleSimilarityModule extends D3DisplayContainer<SampleSimilarityR
           points can be adjust to reflect the analyses of different tools.</p>
       </div>
     );
-  }
-
-  /** @inheritdoc */
-  fetchData(sourceToken: CancelTokenSource) {
-    const out = getAnalysisResult<SampleSimilarityResultType>(
-      this.props.orgID,
-      this.props.groupID,
-      'metagenscope::v0.1.0::sample_similarity',
-      'dim_reduce',
-      sourceToken
-    );
-    return out
   }
 
   /** @inheritdoc */
