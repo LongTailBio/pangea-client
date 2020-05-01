@@ -13,8 +13,8 @@ export class TopTaxaModule extends HighchartsDisplayContainer<TopTaxaType> {
     super(props);
 
     this.title = 'Top Taxa';
-    this.moduleName = 'metagenscope::v0.1.0::microbe_directory';
-    this.fieldName = 'md1';
+    this.moduleName = 'metagenscope::v0.1.0::top_taxa';
+    this.fieldName = 'top_taxa';
     this.description = <p>This chart shows the average-abundance and prevalence for the top 100 taxa.</p>;
   }
 

@@ -8,6 +8,7 @@ import { usePangeaAxios } from '../../../../../../services/api';
 import { SampleType } from '../../../../../../services/api/models/sample';
 
 import { SampleTaxonomyModule } from     '../../../../display_modules/SampleTaxonomy';
+import { ReadsClassifiedModule } from     '../../../../display_modules/ReadsClassified';
 import { MicrobeDirectoryModule } from     '../../../../display_modules/MicrobeDirectory';
 
 
@@ -70,6 +71,7 @@ export const MGSSampleScreen = (props: MGSSampleScreenProps) => {
       <Row>
         <Col lg={12}>
           <SampleTaxonomyModule orgID={data.library_obj.organization} groupID={data.library} sampleID={props.sampleID} />
+          <ReadsClassifiedModule orgID={data.library_obj.organization} groupID={data.library} sampleID={props.sampleID} isSingleton={true} />      
           <MicrobeDirectoryModule orgID={data.library_obj.organization} groupID={data.library} sampleID={props.sampleID} isSingleton={true} />
         </Col>
       </Row>
