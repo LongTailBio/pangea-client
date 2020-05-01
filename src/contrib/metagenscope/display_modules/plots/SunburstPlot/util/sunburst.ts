@@ -70,10 +70,8 @@ export default class Sunburst {
 
     this.svg.attr('width', width).attr('height', height);
 
-    const x = d3.scaleLinear()
-        .range([0, 2 * Math.PI]);
-    const y = d3.scaleSqrt()
-        .range([0, radius]);
+    const x = d3.scaleLinear().range([0, 2 * Math.PI]);
+    const y = d3.scaleSqrt().range([0, radius]);
 
     const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -113,8 +111,7 @@ export default class Sunburst {
           .style('top', `${(eventY - 40)}px`);
 
       // Fade all the segments.
-      safeCanvas.selectAll('path')
-        .style('opacity', 0.2);
+      safeCanvas.selectAll('path').style('opacity', 0.2);
 
       // Then highlight only those that are an ancestor of the current segment.
       const ancestors = getAncestors(node);
@@ -166,7 +163,11 @@ export default class Sunburst {
 
     // Add a <g> element for each node in thd data, then append <path> elements and draw lines based on the arc
     // variable calculations. Last, color the lines and the slices.
+    console.log('!!!')
+    console.log(this.canvas)
+    this.canvas.append('circle')
     const nodeGroups = this.canvas.selectAll<SVGPathElement, Node>('.node').data(nodes);
+    console.log(nodeGroups)
     nodeGroups.enter().append('path')
         .attr('class', 'node')
         .on('mouseover', onMouseOver)
@@ -174,6 +175,7 @@ export default class Sunburst {
         .merge(nodeGroups)
             .attr('d', arc)
             .style('fill', function(d: Node) {
+              console.log(d)
               if (d.data.color !== undefined) {
                 return d.data.color;
               }
@@ -193,3 +195,7 @@ export default class Sunburst {
     this.canvas.remove();
   }
 }
+
+
+
+

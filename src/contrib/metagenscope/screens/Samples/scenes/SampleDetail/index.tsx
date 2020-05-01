@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 import { default as axios, CancelTokenSource } from 'axios';
@@ -6,6 +7,7 @@ import { default as axios, CancelTokenSource } from 'axios';
 import { usePangeaAxios } from '../../../../../../services/api';
 import { SampleType } from '../../../../../../services/api/models/sample';
 
+import { SampleTaxonomyModule } from     '../../../../display_modules/SampleTaxonomy';
 import { MicrobeDirectoryModule } from     '../../../../display_modules/MicrobeDirectory';
 
 
@@ -59,12 +61,16 @@ export const MGSSampleScreen = (props: MGSSampleScreenProps) => {
       <Row>
         <Col lg={12}>
           <h1>{data.name}</h1>
+          <Link to={`/samples/${props.sampleID}`}>
+            Sample Page
+          </Link>
         </Col>
       </Row>
       <hr />
       <Row>
         <Col lg={12}>
-          <MicrobeDirectoryModule orgID={data.library_obj.organization} groupID={data.library} sampleID={props.sampleID} isSingleton={true}/>
+          <SampleTaxonomyModule orgID={data.library_obj.organization} groupID={data.library} sampleID={props.sampleID} />
+          <MicrobeDirectoryModule orgID={data.library_obj.organization} groupID={data.library} sampleID={props.sampleID} isSingleton={true} />
         </Col>
       </Row>
     </div>

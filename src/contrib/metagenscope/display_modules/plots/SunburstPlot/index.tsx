@@ -17,6 +17,7 @@ export default class SunburstPlot extends React.Component<SunburstProps, {}> {
   componentDidMount() {
     if (!(this.rootDiv === null || this.sunburstSvg === null)) {
       this.sunburst = new Sunburst(this.rootDiv, this.sunburstSvg);
+      console.log(this.props)
       this.sunburst.update(this.props);
     }
   }
