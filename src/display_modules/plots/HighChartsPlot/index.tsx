@@ -21,7 +21,7 @@ export default class HighChartsPlot extends React.Component<
   HighChartsPlotProps,
   {}
 > {
-  protected chart: Highcharts.ChartObject | undefined;
+  protected chart: Highcharts.Chart | undefined;
 
   /** @inheritdoc */
   componentDidMount() {

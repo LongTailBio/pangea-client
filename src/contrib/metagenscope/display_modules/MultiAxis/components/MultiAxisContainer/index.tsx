@@ -44,7 +44,7 @@ export class MultiAxisContainer extends React.Component<MultiAxisProps, MultiAxi
           categoryValues = this.props.data.categories[selectedCategory];
 
     const sampleNames = Object.keys(axesData[xAxis].vals);
-    const data: Highcharts.DataPoint[] = sampleNames.map(sampleName => {
+    const dataPoints: Highcharts.PointOptionsObject[] = sampleNames.map(sampleName => {
       const datumColor = color(this.props.data.metadata[sampleName][selectedCategory]);
       return {
         x: axesData[xAxis].vals[sampleName],
@@ -52,6 +52,11 @@ export class MultiAxisContainer extends React.Component<MultiAxisProps, MultiAxi
         color: datumColor,
       };
     });
+
+    const series: Highcharts.SeriesScatterOptions[] = [{ 
+      data: dataPoints,
+      type: "scatter",
+    }];
 
     const chartOptions: Highcharts.Options = {
       chart: {
@@ -87,9 +92,6 @@ export class MultiAxisContainer extends React.Component<MultiAxisProps, MultiAxi
           },
           states: {
             hover: {
-              marker: {
-                enabled: false,
-              },
             },
           },
           tooltip: {
@@ -98,7 +100,7 @@ export class MultiAxisContainer extends React.Component<MultiAxisProps, MultiAxi
           },
         },
       },
-      series: [{ data }],
+      series,
       exporting: {
         enabled: false,
       },

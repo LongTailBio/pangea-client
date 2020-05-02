@@ -1,4 +1,5 @@
 import { SunburstDataType } from '../../../display_modules/plots/SunburstPlot/util/sunburst';
+import * as Highcharts from 'highcharts';
 
 export enum QueryResultStatus {
   Error = 'E',
@@ -127,7 +128,7 @@ export interface BetaDiversityType {
 }
 
 export interface SampleTaxonomyType {
-  [key: string]: SunburstDataType;
+  [key: string]: Highcharts.PointOptionsObject[];
 }
 
 export interface ReadStatsDataType {

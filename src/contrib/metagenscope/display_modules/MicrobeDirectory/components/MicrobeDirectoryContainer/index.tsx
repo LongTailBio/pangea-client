@@ -32,9 +32,6 @@ const baseOptions: Highcharts.Options = {
   chart: {
     type: 'column',
   },
-  title: {
-    text: null,
-  },
   yAxis: {
     title: {
       text: 'Microbe Directory Annotations',
@@ -69,7 +66,7 @@ const sampleOptions = (data: MicrobeDirectoryType): Highcharts.Options => {
   const sampleName = Object.keys(data.samples)[0],
         sample = data.samples[sampleName],
         columns = Object.keys(sample),
-        series: Highcharts.IndividualSeriesOptions[] = [];
+        series: Highcharts.SeriesBarOptions[] = [];
 
   columns.forEach((column, index) => {
     const columnData = sample[column],
@@ -84,6 +81,7 @@ const sampleOptions = (data: MicrobeDirectoryType): Highcharts.Options => {
       series.push({
         name: bucket.displayFormat(),
         data: seriesData,
+        type: "bar",
       });
     });
   });
@@ -106,15 +104,15 @@ const groupOptions = function(data: MicrobeDirectoryType, activeProperty: string
   const sampleNames = Object.keys(data.samples),
         propertyValues = Object.keys(data.samples[sampleNames[0]][activeProperty]);
 
-  const series = propertyValues.map(propertyValue => {
+  const series: Highcharts.SeriesBarOptions[] = propertyValues.map(propertyValue => {
     const seriesData = sampleNames.map(sampleName => {
       return data.samples[sampleName][activeProperty][propertyValue];
     });
-    const seriesItem: Highcharts.IndividualSeriesOptions = {
+    return {
       name: propertyValue.displayFormat(),
       data: seriesData,
+      type: "bar",
     };
-    return seriesItem;
   });
 
   const seriesOptions: Highcharts.Options = {

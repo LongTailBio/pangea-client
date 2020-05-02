@@ -101,7 +101,7 @@ export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState
 
   chartOptions(tool: string, category: string, categoryValue: string): Highcharts.Options {
     const data = this.props.data.tools[tool].tool_categories[category][categoryValue].scatter_plot;
-    const seriesData: Highcharts.DataPoint[] = data.map(datum => {
+    const seriesData: Highcharts.PointOptionsObject[] = data.map(datum => {
       return {
         x: datum.xval,
         y: datum.yval,
@@ -158,13 +158,13 @@ export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState
         enabled: false,
       },
       legend: { enabled: false},
-      series: [{ data: seriesData }],
+      series: [{ data: seriesData , type: "bubble"}],
     };
   }
 
   pvalueChartOptions(tool: string, category: string, categoryValue: string): Highcharts.Options {
     const data = this.props.data.tools[tool].tool_categories[category][categoryValue].pval_histogram;
-    const seriesData: Highcharts.DataPoint[] = data.map(datum => {
+    const seriesData: Highcharts.PointOptionsObject[] = data.map(datum => {
       return {
         x: datum.xval,
         y: datum.yval,
@@ -204,6 +204,7 @@ export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState
       series: [{
         name: 'P-Value',
         data: seriesData,
+        type: "bar",
       }]
     };
 

@@ -128,7 +128,7 @@ export default class AlphaDivContainer extends React.Component<AlphaDivProps, Al
   chartOptions(activeCategory: string, activeMetric: string, categoryData: CategoryDatum[]): Highcharts.Options {
     const categoryValues = this.props.data.categories[activeCategory].sort();
 
-    const dataPoints: Highcharts.DataPoint[] = categoryData.map((categoryDatum, index) => {
+    const dataPoints: Highcharts.PointOptionsObject[] = categoryData.map((categoryDatum, index) => {
       const datum = categoryDatum.by_metric[activeMetric];
       return {
         low: datum[0],
@@ -139,18 +139,16 @@ export default class AlphaDivContainer extends React.Component<AlphaDivProps, Al
         color: this.color(categoryValues[index]),
       };
     });
-    const categorySeries = {
+    const categorySeries: Highcharts.SeriesBoxplotOptions = {
       name: activeCategory,
       data: dataPoints,
       showInLegend: false,
+      type: "boxplot",
     };
 
     const chartOptions: Highcharts.Options = {
       chart: {
         type: 'boxplot',
-      },
-      title: {
-        text: null,
       },
       legend: {
         enabled: true,

@@ -50,7 +50,7 @@ export class HMPContainer extends React.Component<HMPProps, HMPState> {
     const data = this.props.data.distributions[activeCategory];
     const categoryValues = Object.keys(data).sort();
 
-    const dataPoints: Highcharts.DataPoint[] = categoryValues.map(categoryValue => {
+    const dataPoints: Highcharts.PointOptionsObject[] = categoryValues.map(categoryValue => {
       const datum = data[categoryValue];
       return {
         low: datum[0],
@@ -61,18 +61,16 @@ export class HMPContainer extends React.Component<HMPProps, HMPState> {
         color: this.color(categoryValue),
       };
     });
-    const categorySeries = {
+    const categorySeries: Highcharts.SeriesBoxplotOptions = {
       name: activeCategory,
       data: dataPoints,
       showInLegend: false,
+      type: "boxplot",
     };
 
     const chartOptions: Highcharts.Options = {
       chart: {
         type: 'boxplot',
-      },
-      title: {
-        text: null,
       },
       legend: {
         enabled: true,

@@ -2,12 +2,13 @@ import * as React from 'react';
 import { CancelTokenSource } from 'axios';
 
 import D3DisplayContainer from '../components/DisplayContainer/d3';
+import HighchartsDisplayContainer from '../components/DisplayContainer/highcharts';
 import { DisplayContainerProps } from '../components/DisplayContainer';
 import { SampleTaxonomyType } from '../../services/api/models/queryResult';
 
 import { SampleTaxonomyContainer } from './components/SampleTaxonomyContainer';
 
-export class SampleTaxonomyModule extends D3DisplayContainer<SampleTaxonomyType> {
+export class SampleTaxonomyModule extends HighchartsDisplayContainer<SampleTaxonomyType> {
 
   constructor(props: DisplayContainerProps) {
     super(props);
@@ -30,6 +31,6 @@ export class SampleTaxonomyModule extends D3DisplayContainer<SampleTaxonomyType>
 
   /** @inheritdoc */
   plotContainer(data: SampleTaxonomyType): JSX.Element {
-    return <SampleTaxonomyContainer data={data} svgRef={el => this.svgCanvas = el} />;
+    return <SampleTaxonomyContainer data={data} chartRef={el => this.chart = el} />;
   }
 }

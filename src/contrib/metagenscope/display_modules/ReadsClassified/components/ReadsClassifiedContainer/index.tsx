@@ -37,7 +37,7 @@ const sampleGroupOptions = function(data: ReadsClassifiedType): Highcharts.Optio
   });
 
   const seriesNames = Object.keys(seriesMap);
-  const series: Highcharts.IndividualSeriesOptions[] = seriesNames.map(seriesName => {
+  const series: Highcharts.SeriesBarOptions[] = seriesNames.map(seriesName => {
     const seriesData = seriesMap[seriesName];
     if (seriesName === 'host') {
       seriesName = 'human';  // TODO: this is a hack for Milken
@@ -47,15 +47,13 @@ const sampleGroupOptions = function(data: ReadsClassifiedType): Highcharts.Optio
     return {
       name: seriesName.displayFormat(),
       data: seriesData,
+      type: "bar",
     };
   });
 
   const chartOptions: Highcharts.Options = {
     chart: {
       type: 'column',
-    },
-    title: {
-      text: null,
     },
     xAxis: {
       categories: sampleNames,
@@ -100,14 +98,14 @@ const sampleOptions = function(data: ReadsClassifiedType): Highcharts.Options {
   const sample = data.samples[sampleName];
 
   const seriesNames = Object.keys(sample);
-  const seriesData: Highcharts.DataPoint[] = seriesNames.map(seriesName => {
+  const seriesData: Highcharts.PointOptionsObject[] = seriesNames.map(seriesName => {
     return {
       name: seriesName.displayFormat(),
       y: sample[seriesName],
     };
   });
 
-  const chartOptions = {
+  const chartOptions: Highcharts.Options = {
     chart: {
       type: 'pie',
     },
@@ -145,6 +143,7 @@ const sampleOptions = function(data: ReadsClassifiedType): Highcharts.Options {
       name: 'Fraction',
       colorByPoint: true,
       data: seriesData,
+      type: "pie",
     }],
 
     exporting: {
