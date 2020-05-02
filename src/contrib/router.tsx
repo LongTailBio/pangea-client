@@ -5,6 +5,7 @@ import TaxaSearch from './taxa-search';
 import Covid19 from './covid19';
 import MGSSampleGroupScreen from './metagenscope/screens/SampleGroups/scenes/GroupDetail';
 import MGSSampleScreen from './metagenscope/screens/Samples/scenes/SampleDetail';
+import MetasubMap from './metasub';
 
 export const ContribRouter = (props: RouteComponentProps) => {
   const { path } = props.match;
@@ -24,6 +25,7 @@ export const ContribRouter = (props: RouteComponentProps) => {
           <MGSSampleScreen sampleID={routeProps.match.params.sampleID} />
         )}
       />
+      <Route path={`${path}/metasub`} component={MetasubMap} />
     </Switch>
   );
 };
