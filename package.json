@@ -26,6 +26,7 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@types/react-plotly.js": "^2.2.4",
     "@uppy/aws-s3-multipart": "^1.5.2",
     "@uppy/core": "^1.8.2",
     "@uppy/react": "^1.4.6",
@@ -36,12 +37,15 @@
     "d3": "^4.13.0",
     "d3-sankey": "^0.12.3",
     "highcharts": "^6.0.7",
+    "plotly": "^1.0.6",
+    "plotly.js": "^1.53.0",
     "react": "^16.12.0",
     "react-bootstrap": "^0.33.1",
     "react-dom": "^16.12.0",
     "react-google-maps": "^9.4.5",
     "react-helmet": "^5.2.1",
     "react-highcharts": "^16.1.0",
+    "react-plotly.js": "^2.4.0",
     "react-router-bootstrap": "^0.25.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.0",

@@ -236,6 +236,14 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
               <Col lg={12}>
                 <ul key="get-manifest" className="analysis-group-list">
                   <li className="analysis-group-list-item">
+                    <li className="analysis-group-list-item">
+                      <a
+                        href={`/api/sample_groups/${group.uuid}/module_counts?format=json`}
+                      >
+                        Module Counts - the number of modules of each type
+                        attached to this group
+                      </a>
+                    </li>
                     <a
                       href={`/api/sample_groups/${group.uuid}/manifest?format=json`}
                     >
