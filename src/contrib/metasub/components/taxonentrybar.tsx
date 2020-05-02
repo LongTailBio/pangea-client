@@ -1,11 +1,10 @@
 import * as React from 'react';
 import CSS from 'csstype';
 import { Row, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
 const highlighted: CSS.Properties = {
   color: 'blue',
-}
+};
 
 interface TaxonEntryBarProps {
   onSubmitAction: (sampleUUID: string) => void;
@@ -23,23 +22,23 @@ class TaxonEntryBar extends React.Component<
   TaxonEntryBarProps,
   TaxonEntryBarState
 > {
-  state = { 
+  state = {
     userInput: '',
     activeSuggestion: 0,
     filteredSuggestions: [],
-    showSuggestions: false
+    showSuggestions: false,
   };
 
   handleFormChange = (event: React.FormEvent<HTMLInputElement>) => {
     const { suggestions } = this.props;
     const userInput = event.currentTarget.value;
 
-    var filteredSuggestions: string[] = [];
-    if (userInput.length >= 3){
+    let filteredSuggestions: string[] = [];
+    if (userInput.length >= 3) {
       // Filter our suggestions that don't contain the user's input
       filteredSuggestions = suggestions.filter(
         suggestion =>
-          suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+          suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1,
       );
     }
 
@@ -49,7 +48,7 @@ class TaxonEntryBar extends React.Component<
       activeSuggestion: 0,
       filteredSuggestions,
       showSuggestions: true,
-      userInput: event.currentTarget.value
+      userInput: event.currentTarget.value,
     });
   };
 
@@ -60,13 +59,13 @@ class TaxonEntryBar extends React.Component<
       activeSuggestion: 0,
       filteredSuggestions: [],
       showSuggestions: false,
-      userInput: event.currentTarget.innerText
+      userInput: event.currentTarget.innerText,
     });
   };
 
   // Event fired when the user presses a key down
   onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log(e)
+    console.log(e);
     const { activeSuggestion, filteredSuggestions } = this.state;
 
     // User pressed the enter key, update the input and close the
@@ -75,7 +74,7 @@ class TaxonEntryBar extends React.Component<
       this.setState({
         activeSuggestion: 0,
         showSuggestions: false,
-        userInput: filteredSuggestions[activeSuggestion]
+        userInput: filteredSuggestions[activeSuggestion],
       });
     }
     // User pressed the up arrow, decrement the index
@@ -105,31 +104,19 @@ class TaxonEntryBar extends React.Component<
   };
 
   render() {
-    const {
-      handleFormChange,
-      onClick,
-      onKeyDown,
-      state: {
-        activeSuggestion,
-        filteredSuggestions,
-        showSuggestions,
-        userInput
-      }
-    } = this;
-
     let suggestionsListComponent;
 
-    if (showSuggestions && userInput) {
-      if (filteredSuggestions.length) {
+    if (this.state.showSuggestions && this.state.userInput) {
+      if (this.state.filteredSuggestions.length) {
         suggestionsListComponent = (
           <ul className="suggestions">
-            {filteredSuggestions.map((suggestion, index) => {
+            {this.state.filteredSuggestions.map((suggestion, index) => {
               let className;
               let style;
 
               // Flag the active suggestion with a class
-              if (index === activeSuggestion) {
-                className = "suggestion-active";
+              if (index === this.state.activeSuggestion) {
+                className = 'suggestion-active';
                 style = highlighted;
               }
 
@@ -137,7 +124,7 @@ class TaxonEntryBar extends React.Component<
                 <li
                   className={className}
                   key={suggestion}
-                  onClick={onClick}
+                  onClick={this.onClick}
                   style={style}
                 >
                   {suggestion}
@@ -169,7 +156,6 @@ class TaxonEntryBar extends React.Component<
                 value={this.state.userInput}
                 onChange={this.handleFormChange}
                 onKeyDown={this.onKeyDown}
-
               />
               {suggestionsListComponent}
             </div>

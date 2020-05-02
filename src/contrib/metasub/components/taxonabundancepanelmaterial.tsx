@@ -50,22 +50,23 @@ const TaxaMaterialAbundancePanel = (props: TaxaMaterialAbundancePanelProps) => {
     );
   }
 
-  const surfaceAbundances: { [key: string]: SurfaceTaxonAbundance } = currentData; //['results'][props.taxonName];
-  const plotData: Partial<Plotly.PlotData>[] = Object.keys(surfaceAbundances).filter(
-      function(surfaceName: string): boolean {
-        return (surfaceName.length > 0) && (
-          surfaceAbundances[surfaceName].all_relative_abundances.length >= 10
-        )
-      },      
-    ).map(
-    function(surfaceName: string): Partial<Plotly.PlotData> {
+  const surfaceAbundances: {
+    [key: string]: SurfaceTaxonAbundance;
+  } = currentData; //['results'][props.taxonName];
+  const plotData: Partial<Plotly.PlotData>[] = Object.keys(surfaceAbundances)
+    .filter(function(surfaceName: string): boolean {
+      return (
+        surfaceName.length > 0 &&
+        surfaceAbundances[surfaceName].all_relative_abundances.length >= 10
+      );
+    })
+    .map(function(surfaceName: string): Partial<Plotly.PlotData> {
       return {
         y: surfaceAbundances[surfaceName].all_relative_abundances,
         type: 'box',
         name: surfaceAbundances[surfaceName].material_name,
-      }
-    },
-  );
+      };
+    });
   const layout = {
     title: '<i>' + props.taxonName + '</i> Abundance on Surfaces',
     margin: { l: 20, r: 0, b: 0, t: 30 },
