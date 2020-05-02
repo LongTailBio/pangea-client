@@ -36,7 +36,7 @@
     "commonmark": "^0.28.1",
     "d3": "^4.13.0",
     "d3-sankey": "^0.12.3",
-    "highcharts": "^6.0.7",
+    "highcharts": "^8.0.4",
     "plotly": "^1.0.6",
     "plotly.js": "^1.53.0",
     "react": "^16.12.0",

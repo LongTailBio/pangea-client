@@ -245,11 +245,26 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
                       </a>
                     </li>
                     <a
+                      href={`/api/sample_groups/${group.uuid}/module_counts?format=json`}
+                    >
+                      Module Counts - the number of modules of each type
+                      attached to this group
+                    </a>
+                  </li>
+                  <li className="analysis-group-list-item">
+                    <a
                       href={`/api/sample_groups/${group.uuid}/manifest?format=json`}
                     >
                       Data Manifest - A file describing this group and
                       everything in it
                     </a>
+                  </li>
+                  <li className="analysis-group-list-item">
+                    <Link
+                      to={`/contrib/metagenscope/sample-groups/${group.uuid}`}
+                    >
+                      MetaGenScope - Automated Data Visualization
+                    </Link>
                   </li>
                 </ul>
               </Col>

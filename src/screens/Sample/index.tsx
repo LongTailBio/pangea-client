@@ -168,6 +168,11 @@ export const SampleScreen = (props: SampleScreenProps) => {
                       everything in it
                     </a>
                   </li>
+                  <li className="analysis-group-list-item">
+                    <Link to={`/contrib/metagenscope/samples/${sample.uuid}`}>
+                      MetaGenScope - Automated Data Visualization
+                    </Link>
+                  </li>
                 </ul>
               </Col>
             </Row>
