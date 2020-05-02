@@ -17,7 +17,7 @@ export class MicrobeDirectoryModule extends HighchartsDisplayContainer<MicrobeDi
     super(props);
 
     this.title = 'Microbe Directory';
-    this.moduleName = 'metagenscope::v0.1.0::microbe_directory';
+    this.moduleName = 'metagenscope::v3.0.0::microbe_directory';
     this.fieldName = 'md1';
     this.description = (
       <p>This chart shows the proportion of different known microbiological {' '}

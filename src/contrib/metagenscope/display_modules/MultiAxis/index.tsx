@@ -13,7 +13,7 @@ export class MultiAxisModule extends HighchartsDisplayContainer<MultiAxisType> {
     super(props);
 
     this.title = 'Multi-Axis';
-    this.moduleName = 'metagenscope::v0.1.0::multi_axis';
+    this.moduleName = 'metagenscope::v3.0.0::multi_axis';
     this.fieldName = 'multi_axis';
     this.description = (
       <div>

@@ -14,7 +14,7 @@ export class SampleSimilarityModule extends D3DisplayContainer<SampleSimilarityR
     super(props);
 
     this.title = 'Sample Similarity';
-    this.moduleName = 'metagenscope::v0.1.0::sample_similarity';
+    this.moduleName = 'metagenscope::v3.0.0::sample_similarity';
     this.fieldName = 'dim_reduce';
     this.description = (
       <div>

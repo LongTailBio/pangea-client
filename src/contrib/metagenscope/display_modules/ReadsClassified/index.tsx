@@ -17,7 +17,7 @@ export class ReadsClassifiedModule extends HighchartsDisplayContainer<ReadsClass
     super(props);
 
     this.title = 'Reads Classified';
-    this.moduleName = 'metagenscope::v0.1.0::reads_classified';
+    this.moduleName = 'metagenscope::v3.0.0::reads_classified';
     this.fieldName = 'json';
     this.description = (
       <p>This chart shows the proportion of reads in each sample {' '}
