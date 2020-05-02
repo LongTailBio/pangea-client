@@ -23,6 +23,10 @@ export default class AGSControls extends React.Component<ControlsProps, {}> {
     );
   }
 
+  handleCategoryChange(_?: string) {
+    // no-op
+  }
+
   handleColorByCategoryChanged(name: string) {
     this.props.handleColorByCategoryChanged(name);
   }
@@ -43,7 +47,7 @@ export default class AGSControls extends React.Component<ControlsProps, {}> {
               categories={this.props.categories}
               selectedCategoryName={this.props.activeCategory}
               categoryValues={values}
-              activeCategoryChanged={() => {}} // eslint-disable-line
+              activeCategoryChanged={this.handleCategoryChange}
               colorByCategoryChanged={this.handleColorByCategoryChanged}
             />
           </Col>
