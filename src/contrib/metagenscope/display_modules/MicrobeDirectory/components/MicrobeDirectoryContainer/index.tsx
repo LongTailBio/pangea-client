@@ -32,6 +32,9 @@ const baseOptions: Highcharts.Options = {
   chart: {
     type: 'column',
   },
+  title: {
+    text: 'Microbe Directory Annotations',
+  },
   yAxis: {
     title: {
       text: 'Microbe Directory Annotations',
@@ -57,16 +60,13 @@ const baseOptions: Highcharts.Options = {
       },
     },
   },
-  exporting: {
-    enabled: false,
-  },
 };
 
 const sampleOptions = (data: MicrobeDirectoryType): Highcharts.Options => {
   const sampleName = Object.keys(data.samples)[0],
         sample = data.samples[sampleName],
         columns = Object.keys(sample),
-        series: Highcharts.SeriesBarOptions[] = [];
+        series: Highcharts.SeriesColumnOptions[] = [];
 
   columns.forEach((column, index) => {
     const columnData = sample[column],
@@ -81,7 +81,7 @@ const sampleOptions = (data: MicrobeDirectoryType): Highcharts.Options => {
       series.push({
         name: bucket.displayFormat(),
         data: seriesData,
-        type: "bar",
+        type: "column",
       });
     });
   });
@@ -104,14 +104,14 @@ const groupOptions = function(data: MicrobeDirectoryType, activeProperty: string
   const sampleNames = Object.keys(data.samples),
         propertyValues = Object.keys(data.samples[sampleNames[0]][activeProperty]);
 
-  const series: Highcharts.SeriesBarOptions[] = propertyValues.map(propertyValue => {
+  const series: Highcharts.SeriesColumnOptions[] = propertyValues.map(propertyValue => {
     const seriesData = sampleNames.map(sampleName => {
       return data.samples[sampleName][activeProperty][propertyValue];
     });
     return {
       name: propertyValue.displayFormat(),
       data: seriesData,
-      type: "bar",
+      type: "column",
     };
   });
 
@@ -194,12 +194,12 @@ export class MicrobeDirectoryContainer extends React.Component<MicrobeDirectoryP
           />
         </Col>
         <Col lg={3}>
-            <MicrobeDirectoryControls
-              properties={propertyNames}
-              activeProperty={activeProperty}
-              handlePropertyChange={this.handlePropertyChange}
-            />
-          </Col>
+          <MicrobeDirectoryControls
+            properties={propertyNames}
+            activeProperty={activeProperty}
+            handlePropertyChange={this.handlePropertyChange}
+          />
+        </Col>
       </Row>
     );
   }

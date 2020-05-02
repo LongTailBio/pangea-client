@@ -61,10 +61,8 @@ export const MGSSampleScreen = (props: MGSSampleScreenProps) => {
       </Helmet>
       <Row>
         <Col lg={12}>
-          <h1>{data.name}</h1>
-          <Link to={`/samples/${props.sampleID}`}>
-            Sample Page
-          </Link>
+          <h1><Link to={`/samples/${props.sampleID}`}>{data.name}</Link></h1>
+          <Link to={`/contrib/metagenscope/sample-groups/${data.library}`}>Library: {data.library_obj.name}</Link>
         </Col>
       </Row>
       <hr />

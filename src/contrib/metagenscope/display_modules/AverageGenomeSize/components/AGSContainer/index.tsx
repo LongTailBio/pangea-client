@@ -72,6 +72,9 @@ export class HMPContainer extends React.Component<HMPProps, HMPState> {
       chart: {
         type: 'boxplot',
       },
+      title: {
+        text: 'Estimated Average Genome Size',
+      },
       legend: {
         enabled: true,
       },
@@ -82,9 +85,6 @@ export class HMPContainer extends React.Component<HMPProps, HMPState> {
         title: {
           text: 'Base Pairs',
         },
-      },
-      exporting: {
-        enabled: false,
       },
       series: [categorySeries],
     };

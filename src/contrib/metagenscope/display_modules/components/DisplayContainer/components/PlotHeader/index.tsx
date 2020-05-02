@@ -33,18 +33,17 @@ export const PlotHeader: React.StatelessComponent<PlotHeaderProps> = (props) => 
 
   return (
     <h2 style={{marginTop: '50px'}}>
-      <div className="pull-right">
-        <DownloadButton actions={actions} />
-      </div>
       {props.title}
-      <OverlayTrigger
-        trigger="click"
-        rootClose={true}
-        placement="bottom"
-        overlay={popoverDescription(props.description)}
-      >
-        <Button bsStyle="link" bsSize="large"><Glyphicon glyph="info-sign" /> About</Button>
-      </OverlayTrigger>
+      <div className="pull-right">
+        <OverlayTrigger
+          trigger="click"
+          rootClose={true}
+          placement="bottom"
+          overlay={popoverDescription(props.description)}
+        >
+          <Button bsStyle="link" bsSize="large"><Glyphicon glyph="info-sign" /> About</Button>
+        </OverlayTrigger>
+      </div>
     </h2>
   );
 };

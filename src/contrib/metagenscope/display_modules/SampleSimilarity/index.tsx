@@ -19,8 +19,7 @@ export class SampleSimilarityModule extends D3DisplayContainer<SampleSimilarityR
     this.description = (
       <div>
         <p>This plot displays a dimensionality reduction of the data.</p>
-        <p>Samples are drawn near to similar samples in high dimensional space using a {' '}
-          machine learning algorithm: T-Stochastic Neighbours Embedding.</p>
+        <p>Samples are drawn near to similar samples in high dimensional space using UMAP.</p>
         <p>The plot can be colored by different sample metadata and the position of the {' '}
           points can be adjust to reflect the analyses of different tools.</p>
       </div>

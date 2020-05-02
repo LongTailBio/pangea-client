@@ -37,7 +37,7 @@ const sampleGroupOptions = function(data: ReadsClassifiedType): Highcharts.Optio
   });
 
   const seriesNames = Object.keys(seriesMap);
-  const series: Highcharts.SeriesBarOptions[] = seriesNames.map(seriesName => {
+  const series: Highcharts.SeriesColumnOptions[] = seriesNames.map(seriesName => {
     const seriesData = seriesMap[seriesName];
     if (seriesName === 'host') {
       seriesName = 'human';  // TODO: this is a hack for Milken
@@ -47,7 +47,7 @@ const sampleGroupOptions = function(data: ReadsClassifiedType): Highcharts.Optio
     return {
       name: seriesName.displayFormat(),
       data: seriesData,
-      type: "bar",
+      type: "column",
     };
   });
 
@@ -57,6 +57,9 @@ const sampleGroupOptions = function(data: ReadsClassifiedType): Highcharts.Optio
     },
     xAxis: {
       categories: sampleNames,
+    },
+    title: {
+      text: 'Fraction of Reads Classified to Different Groups',
     },
     yAxis: {
       min: 0, max: 1,
@@ -83,9 +86,6 @@ const sampleGroupOptions = function(data: ReadsClassifiedType): Highcharts.Optio
           color: 'white',
         },
       },
-    },
-    exporting: {
-      enabled: false,
     },
     series,
   };
@@ -145,10 +145,6 @@ const sampleOptions = function(data: ReadsClassifiedType): Highcharts.Options {
       data: seriesData,
       type: "pie",
     }],
-
-    exporting: {
-      enabled: false,
-    },
    };
 
   return chartOptions;

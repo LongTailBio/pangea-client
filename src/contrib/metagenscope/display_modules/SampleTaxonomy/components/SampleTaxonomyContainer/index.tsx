@@ -25,14 +25,12 @@ const baseOptions: Highcharts.Options = {
     },
 
     title: {
-        text: 'World population 2017'
-    },
-    subtitle: {
-        text: 'Source <href="https://en.wikipedia.org/wiki/List_of_countries_by_population_(United_Nations)">Wikipedia</a>'
+        text: 'Sample Taxonomy'
     },
     tooltip: {
         headerFormat: "",
-        pointFormat: 'The population of <b>{point.name}</b> is <b>{point.value}</b>'
+        pointFormat: 'The proportion of <b>{point.name}</b> is <b>{point.value}%</b>',
+        valueDecimals: 4,
     }
 }
 
@@ -93,11 +91,18 @@ export class SampleTaxonomyContainer extends React.Component<SampleTaxonomyProps
           chartOptions = Object.assign(baseOptions, seriesOptions);
     return (
       <Row>
-        <Col lg={12}>
+        <Col lg={9}>
           <HighChartsPlot
             chartId="sunburst-taxonomy"
             options={chartOptions}
             chartRef={this.props.chartRef}
+          />
+        </Col>
+        <Col lg={3}>
+          <SampleTaxonomyControls
+            sources={Object.keys(data)}
+            activeSource={activeTool}
+            handleSourceChange={this.handleSourceChange}
           />
         </Col>
       </Row>

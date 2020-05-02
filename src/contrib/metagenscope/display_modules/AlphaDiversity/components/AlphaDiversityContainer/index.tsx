@@ -150,6 +150,9 @@ export default class AlphaDivContainer extends React.Component<AlphaDivProps, Al
       chart: {
         type: 'boxplot',
       },
+      title: {
+        text: 'Alpha Diversity',
+      },
       legend: {
         enabled: true,
       },
@@ -160,9 +163,6 @@ export default class AlphaDivContainer extends React.Component<AlphaDivProps, Al
         title: {
           text: activeMetric,
         },
-      },
-      exporting: {
-        enabled: false,
       },
       series: [categorySeries],
     };

@@ -236,7 +236,6 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
               <Col lg={12}>
                 <ul key="get-manifest" className="analysis-group-list">
                   <li className="analysis-group-list-item">
-                  <li className="analysis-group-list-item">
                     <a
                       href={`/api/sample_groups/${group.uuid}/module_counts?format=json`}
                     >
@@ -244,6 +243,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
                       attached to this group
                     </a>
                   </li>
+                  <li className="analysis-group-list-item">
                     <a
                       href={`/api/sample_groups/${group.uuid}/manifest?format=json`}
                     >
@@ -251,6 +251,13 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
                       everything in it
                     </a>
                   </li>
+                  <li className="analysis-group-list-item">
+                    <Link
+                      to={`/contrib/metagenscope/sample-groups/${group.uuid}`}
+                    >
+                      MetaGenScope - Automated Data Visualization
+                    </Link>
+                  </li>                  
                 </ul>
               </Col>
             </Row>

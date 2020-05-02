@@ -135,11 +135,22 @@ export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState
           text: '-Log2 p-val'
         },
         plotLines: [{
-          value: 1.3,
+          value: 4.32,
           color: 'red',
           width: 1,
           label: {
             text: 'P = 0.05',
+            align: 'right',
+            style: {
+              color: 'grey',
+            },
+          },
+        }, {
+          value: 9.965,
+          color: 'red',
+          width: 1,
+          label: {
+            text: 'P = 0.001',
             align: 'right',
             style: {
               color: 'grey',
@@ -153,9 +164,6 @@ export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState
             '<b>{point.name}</b><br />' +
             'Log2 Fold Change (x): {point.x}<br />' +
             '-Log2 P-Value (y): {point.y}',
-      },
-      exporting: {
-        enabled: false,
       },
       legend: { enabled: false},
       series: [{ data: seriesData , type: "bubble"}],
@@ -196,9 +204,6 @@ export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState
           pointPadding: 0,
           borderWidth: 0,
         }
-      },
-      exporting: {
-        enabled: false,
       },
       legend: { enabled: false},
       series: [{

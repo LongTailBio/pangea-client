@@ -12,7 +12,7 @@ export class VolcanoModule extends HighchartsDisplayContainer<VolcanoType> {
   constructor(props: DisplayContainerProps) {
     super(props);
 
-    this.title = 'Volcano';
+    this.title = 'Differential Abundance';
     this.moduleName = 'metagenscope::v0.1.0::volcano';
     this.fieldName = 'volcano';
     this.description = (

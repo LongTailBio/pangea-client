@@ -101,9 +101,6 @@ export class MultiAxisContainer extends React.Component<MultiAxisProps, MultiAxi
         },
       },
       series,
-      exporting: {
-        enabled: false,
-      },
     };
 
     return (
