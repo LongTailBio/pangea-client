@@ -9,7 +9,7 @@ type ControlsProps = {
   handlePropertyChange(property: string): void;
 };
 
-const MicrobeDirectoryControls: React.SFC<ControlsProps> = (props) => {
+const MicrobeDirectoryControls: React.SFC<ControlsProps> = props => {
   return (
     <Well>
       <Row>

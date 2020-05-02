@@ -23,7 +23,9 @@ class SampleSimilarityControls extends React.Component<ControlsProps, {}> {
 
     this.handleSourceChange = this.handleSourceChange.bind(this);
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
-    this.handleColorByCategoryChanged = this.handleColorByCategoryChanged.bind(this);
+    this.handleColorByCategoryChanged = this.handleColorByCategoryChanged.bind(
+      this,
+    );
   }
 
   handleSourceChange(newSource: string) {

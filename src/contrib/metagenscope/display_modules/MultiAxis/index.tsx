@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { CancelTokenSource } from 'axios';
 
 import HighchartsDisplayContainer from '../components/DisplayContainer/highcharts';
 import { DisplayContainerProps } from '../components/DisplayContainer';
@@ -8,7 +7,6 @@ import { MultiAxisType } from '../../services/api/models/queryResult';
 import { MultiAxisContainer } from './components/MultiAxisContainer';
 
 export class MultiAxisModule extends HighchartsDisplayContainer<MultiAxisType> {
-
   constructor(props: DisplayContainerProps) {
     super(props);
 
@@ -17,13 +15,18 @@ export class MultiAxisModule extends HighchartsDisplayContainer<MultiAxisType> {
     this.fieldName = 'multi_axis';
     this.description = (
       <div>
-        <p>This plot allows comparison across multiple properties by selecting x and y axis.</p>
+        <p>
+          This plot allows comparison across multiple properties by selecting x
+          and y axis.
+        </p>
       </div>
     );
   }
 
   /** @inheritdoc */
   plotContainer(data: MultiAxisType): JSX.Element {
-    return <MultiAxisContainer data={data} chartRef={el => this.chart = el} />;
+    return (
+      <MultiAxisContainer data={data} chartRef={el => (this.chart = el)} />
+    );
   }
 }

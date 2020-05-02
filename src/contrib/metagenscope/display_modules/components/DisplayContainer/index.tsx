@@ -2,16 +2,22 @@ import * as React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { default as axios, CancelTokenSource } from 'axios';
 
-import { QueryResultWrapper, QueryResultStatus } from '../../../services/api/models/queryResult';
+import {
+  QueryResultWrapper,
+  QueryResultStatus,
+} from '../../../services/api/models/queryResult';
 
 import { DisplayModuleState, StatusMonitor } from './components/StatusMonitor';
 import { PlotHeader } from './components/PlotHeader';
-import { getGroupAnalysisResult, getSampleAnalysisResult } from '../../../services/api';
+import {
+  getGroupAnalysisResult,
+  getSampleAnalysisResult,
+} from '../../../services/api';
 
 export interface DisplayContainerProps {
   orgID: string;
   groupID: string;
-  sampleID?: string; 
+  sampleID?: string;
 }
 
 interface WrapperState<D> {
@@ -24,8 +30,10 @@ interface WrapperState<D> {
  *
  * Polling strategy based on https://github.com/cameronbourke/react-async-poll
  */
-export class DisplayContainer<D, P = {}> extends React.Component<DisplayContainerProps & P, WrapperState<D>> {
-
+export class DisplayContainer<D, P = {}> extends React.Component<
+  DisplayContainerProps & P,
+  WrapperState<D>
+> {
   protected title: string | undefined;
   protected description: React.ReactNode;
 
@@ -79,55 +87,56 @@ export class DisplayContainer<D, P = {}> extends React.Component<DisplayContaine
 
   /** Fetch the data required to render this display module. */
   fetchData(sourceToken: CancelTokenSource): Promise<QueryResultWrapper<D>> {
-    if (this.props?.sampleID){
-      const sampleID = this.props.sampleID as unknown as string;
+    if (this.props?.sampleID) {
+      const sampleID = (this.props.sampleID as unknown) as string;
       const out = getSampleAnalysisResult<D>(
         this.props.orgID,
         this.props.groupID,
         sampleID,
         this.moduleName,
         this.fieldName,
-        sourceToken
+        sourceToken,
       );
-      return out
+      return out;
     }
     const out = getGroupAnalysisResult<D>(
       this.props.orgID,
       this.props.groupID,
       this.moduleName,
       this.fieldName,
-      sourceToken
+      sourceToken,
     );
-    return out   
+    return out;
   }
 
   /**
    * Create PlotContainer element based on successfully fetched data.
    * @param data - Successfully fetched data for this display container.
    */
-  plotContainer(data: D): JSX.Element {
+  plotContainer(data: D): JSX.Element { // eslint-disable-line
     throw new Error('Subclass should override!');
   }
 
   /** Begin polling the server for display module results. */
-  startPolling () {
+  startPolling() {
     if (this.interval) {
       return;
     }
     this.keepPolling = true;
     this.asyncInterval(this.intervalDuration, () => {
       return this.fetchData(this.sourceToken)
-        .then((result) => {
+        .then(result => {
           this.updateStatusForQueryResultStatus(result.status);
           if (result) {
             try {
-              this.setState({data: result as unknown as D});
+              this.setState({ data: (result as unknown) as D });
             } catch (error) {
               this.setState({ status: DisplayModuleState.Error });
             }
             this.stopPolling();
           }
-        }).catch((error) => {
+        })
+        .catch(error => {
           if (!axios.isCancel(error)) {
             this.setState({ status: DisplayModuleState.Error });
           }
@@ -137,7 +146,7 @@ export class DisplayContainer<D, P = {}> extends React.Component<DisplayContaine
   }
 
   /** Stop polling the server for display module results. */
-  stopPolling () {
+  stopPolling() {
     this.keepPolling = false;
     if (this.interval) {
       clearTimeout(this.interval);
@@ -155,7 +164,8 @@ export class DisplayContainer<D, P = {}> extends React.Component<DisplayContaine
       this.asyncInterval(intervalDuration, fn);
     };
     // Use window explicitly here to prevent NodeJS's setTimeout being used
-    const asyncTimeout = () => window.setTimeout(asyncTimeoutBody, intervalDuration);
+    const asyncTimeout = () =>
+      window.setTimeout(asyncTimeoutBody, intervalDuration);
 
     const assignNextInterval = () => {
       if (!this.keepPolling) {
@@ -205,18 +215,14 @@ export class DisplayContainer<D, P = {}> extends React.Component<DisplayContaine
               title={this.title}
               description={this.description}
               downloadPng={this.saveSvg}
-              downloadCsv={() => {}}    // tslint:disable-line:no-empty
+              downloadCsv={() => {}} // eslint-disable-line
             />
           </Col>
         </Row>
         <Row>
           <Col lg={12}>
-            {this.state.data &&
-              this.plotContainer(this.state.data)
-            }
-            {!this.state.data &&
-              <StatusMonitor state={this.state.status} />
-            }
+            {this.state.data && this.plotContainer(this.state.data)}
+            {!this.state.data && <StatusMonitor state={this.state.status} />}
           </Col>
         </Row>
       </div>

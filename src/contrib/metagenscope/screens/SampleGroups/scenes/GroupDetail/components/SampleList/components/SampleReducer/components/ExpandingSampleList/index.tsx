@@ -14,19 +14,21 @@ interface ExpandingListState {
   showAll: boolean;
 }
 
-class ExpandingSampleList extends React.Component<ExpandingListProps, ExpandingListState> {
-
+class ExpandingSampleList extends React.Component<
+  ExpandingListProps,
+  ExpandingListState
+> {
   constructor(props: ExpandingListProps) {
     super(props);
 
-    this.state = {showAll: false};
+    this.state = { showAll: false };
 
     this.toggleShowAll = this.toggleShowAll.bind(this);
   }
 
   toggleShowAll() {
     const showAll = !this.state.showAll;
-    this.setState({showAll});
+    this.setState({ showAll });
   }
 
   render() {
@@ -47,11 +49,14 @@ class ExpandingSampleList extends React.Component<ExpandingListProps, ExpandingL
     }
     return (
       <ListGroup>
-        {this.state.showAll &&
-          <ListGroupItem style={{textAlign: 'center'}} onClick={this.toggleShowAll}>
+        {this.state.showAll && (
+          <ListGroupItem
+            style={{ textAlign: 'center' }}
+            onClick={this.toggleShowAll}
+          >
             Hide additional samples
           </ListGroupItem>
-        }
+        )}
         {displaySamples.map((sample, index) => {
           const url = `/contrib/metagenscope/samples/${sample.uuid}`;
           return (
@@ -60,16 +65,22 @@ class ExpandingSampleList extends React.Component<ExpandingListProps, ExpandingL
             </LinkContainer>
           );
         })}
-        {!this.state.showAll && moreCount > 0 &&
-          <ListGroupItem style={{textAlign: 'center'}} onClick={this.toggleShowAll}>
+        {!this.state.showAll && moreCount > 0 && (
+          <ListGroupItem
+            style={{ textAlign: 'center' }}
+            onClick={this.toggleShowAll}
+          >
             Show {moreCount} more
           </ListGroupItem>
-        }
-        {this.state.showAll &&
-          <ListGroupItem style={{textAlign: 'center'}} onClick={this.toggleShowAll}>
+        )}
+        {this.state.showAll && (
+          <ListGroupItem
+            style={{ textAlign: 'center' }}
+            onClick={this.toggleShowAll}
+          >
             Hide additional samples
           </ListGroupItem>
-        }
+        )}
       </ListGroup>
     );
   }

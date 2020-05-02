@@ -1,4 +1,3 @@
-import { SunburstDataType } from '../../../display_modules/plots/SunburstPlot/util/sunburst';
 import * as Highcharts from 'highcharts';
 
 export enum QueryResultStatus {
@@ -134,8 +133,8 @@ export interface SampleTaxonomyType {
 export interface ReadStatsDataType {
   gc_content: number;
   num_reads: number;
-  codons: {[key: string]: number};
-  tetramers: {[key: string]: number};
+  codons: { [key: string]: number };
+  tetramers: { [key: string]: number };
 }
 
 export interface ReadStatsResultType {
@@ -160,9 +159,9 @@ export interface GenericGeneType {
 export interface PathwaysType {
   samples: {
     [key: string]: {
-      [key: string]: {[key: string]: number};
-      pathway_abundances: {[key: string]: number};
-      pathway_coverages: {[key: string]: number};
+      [key: string]: { [key: string]: number };
+      pathway_abundances: { [key: string]: number };
+      pathway_coverages: { [key: string]: number };
     };
   };
 }
@@ -194,12 +193,12 @@ export interface VolcanoType {
         [key: string]: {
           // category value
           [key: string]: {
-            pval_histogram: XYZPoint[],
-            scatter_plot: XYZPoint[],
-          }
-        }
-      }
-    }
+            pval_histogram: XYZPoint[];
+            scatter_plot: XYZPoint[];
+          };
+        };
+      };
+    };
   };
 }
 
@@ -207,7 +206,7 @@ export interface AncestryType {
   samples: {
     [key: string]: {
       populations: {
-        [key: string]: number
+        [key: string]: number;
       };
     };
   };

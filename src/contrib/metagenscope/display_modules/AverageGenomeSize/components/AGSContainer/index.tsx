@@ -18,7 +18,6 @@ export interface HMPState {
 }
 
 export class HMPContainer extends React.Component<HMPProps, HMPState> {
-
   protected color: d3.ScaleOrdinal<string, string>;
 
   constructor(props: HMPProps) {
@@ -27,7 +26,9 @@ export class HMPContainer extends React.Component<HMPProps, HMPState> {
     this.color = d3.scaleOrdinal(d3.schemeCategory10);
 
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
-    this.handleColorByCategoryChanged = this.handleColorByCategoryChanged.bind(this);
+    this.handleColorByCategoryChanged = this.handleColorByCategoryChanged.bind(
+      this,
+    );
 
     this.state = {
       activeCategory: Object.keys(this.props.data.categories)[0],
@@ -50,22 +51,24 @@ export class HMPContainer extends React.Component<HMPProps, HMPState> {
     const data = this.props.data.distributions[activeCategory];
     const categoryValues = Object.keys(data).sort();
 
-    const dataPoints: Highcharts.PointOptionsObject[] = categoryValues.map(categoryValue => {
-      const datum = data[categoryValue];
-      return {
-        low: datum[0],
-        q1: datum[1],
-        median: datum[2],
-        q3: datum[3],
-        high: datum[4],
-        color: this.color(categoryValue),
-      };
-    });
+    const dataPoints: Highcharts.PointOptionsObject[] = categoryValues.map(
+      categoryValue => {
+        const datum = data[categoryValue];
+        return {
+          low: datum[0],
+          q1: datum[1],
+          median: datum[2],
+          q3: datum[3],
+          high: datum[4],
+          color: this.color(categoryValue),
+        };
+      },
+    );
     const categorySeries: Highcharts.SeriesBoxplotOptions = {
       name: activeCategory,
       data: dataPoints,
       showInLegend: false,
-      type: "boxplot",
+      type: 'boxplot',
     };
 
     const chartOptions: Highcharts.Options = {
@@ -94,7 +97,7 @@ export class HMPContainer extends React.Component<HMPProps, HMPState> {
 
   render() {
     const activeCategory = this.state.activeCategory,
-          activeCategoryValues = this.props.data.categories[activeCategory].sort();
+      activeCategoryValues = this.props.data.categories[activeCategory].sort();
     const chartOptions = this.chartOptions(activeCategory);
 
     return (
@@ -119,7 +122,6 @@ export class HMPContainer extends React.Component<HMPProps, HMPState> {
       </Row>
     );
   }
-
 }
 
 export default HMPContainer;

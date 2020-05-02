@@ -11,7 +11,10 @@ import { MicrobeDirectoryType } from '../../../../services/api/models/queryResul
 import MicrobeDirectoryControls from './components/MicrobeDirectoryControls';
 
 const toTitleCase = (str: string) => {
-  return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  return str.replace(
+    /\w\S*/g,
+    txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(),
+  );
 };
 
 const formatText = (text: string) => {
@@ -64,13 +67,13 @@ const baseOptions: Highcharts.Options = {
 
 const sampleOptions = (data: MicrobeDirectoryType): Highcharts.Options => {
   const sampleName = Object.keys(data.samples)[0],
-        sample = data.samples[sampleName],
-        columns = Object.keys(sample),
-        series: Highcharts.SeriesColumnOptions[] = [];
+    sample = data.samples[sampleName],
+    columns = Object.keys(sample),
+    series: Highcharts.SeriesColumnOptions[] = [];
 
   columns.forEach((column, index) => {
     const columnData = sample[column],
-          columnBuckets = Object.keys(columnData); // of which each "bucket" is a percentage
+      columnBuckets = Object.keys(columnData); // of which each "bucket" is a percentage
     columnBuckets.forEach(bucket => {
       const percentage = columnData[bucket];
 
@@ -81,7 +84,7 @@ const sampleOptions = (data: MicrobeDirectoryType): Highcharts.Options => {
       series.push({
         name: bucket.displayFormat(),
         data: seriesData,
-        type: "column",
+        type: 'column',
       });
     });
   });
@@ -100,20 +103,25 @@ const sampleOptions = (data: MicrobeDirectoryType): Highcharts.Options => {
   return seriesOptions;
 };
 
-const groupOptions = function(data: MicrobeDirectoryType, activeProperty: string): Highcharts.Options {
+const groupOptions = function(
+  data: MicrobeDirectoryType,
+  activeProperty: string,
+): Highcharts.Options {
   const sampleNames = Object.keys(data.samples),
-        propertyValues = Object.keys(data.samples[sampleNames[0]][activeProperty]);
+    propertyValues = Object.keys(data.samples[sampleNames[0]][activeProperty]);
 
-  const series: Highcharts.SeriesColumnOptions[] = propertyValues.map(propertyValue => {
-    const seriesData = sampleNames.map(sampleName => {
-      return data.samples[sampleName][activeProperty][propertyValue];
-    });
-    return {
-      name: propertyValue.displayFormat(),
-      data: seriesData,
-      type: "column",
-    };
-  });
+  const series: Highcharts.SeriesColumnOptions[] = propertyValues.map(
+    propertyValue => {
+      const seriesData = sampleNames.map(sampleName => {
+        return data.samples[sampleName][activeProperty][propertyValue];
+      });
+      return {
+        name: propertyValue.displayFormat(),
+        data: seriesData,
+        type: 'column',
+      };
+    },
+  );
 
   const seriesOptions: Highcharts.Options = {
     xAxis: {
@@ -135,8 +143,10 @@ export interface MicrobeDirectoryState {
   propertyValues: string[];
 }
 
-export class MicrobeDirectoryContainer extends React.Component<MicrobeDirectoryProps, MicrobeDirectoryState> {
-
+export class MicrobeDirectoryContainer extends React.Component<
+  MicrobeDirectoryProps,
+  MicrobeDirectoryState
+> {
   protected color: d3.ScaleOrdinal<string, string>;
 
   constructor(props: MicrobeDirectoryProps) {
@@ -162,10 +172,12 @@ export class MicrobeDirectoryContainer extends React.Component<MicrobeDirectoryP
 
   render() {
     const data = this.props.data,
-          isSingleton = this.props.isSingleton || false,
-          activeProperty = this.state.activeProperty,
-          seriesOptions = isSingleton ? sampleOptions(data) : groupOptions(data, activeProperty),
-          chartOptions = Object.assign(baseOptions, seriesOptions);
+      isSingleton = this.props.isSingleton || false,
+      activeProperty = this.state.activeProperty,
+      seriesOptions = isSingleton
+        ? sampleOptions(data)
+        : groupOptions(data, activeProperty),
+      chartOptions = Object.assign(baseOptions, seriesOptions);
 
     if (isSingleton) {
       return (
@@ -182,7 +194,7 @@ export class MicrobeDirectoryContainer extends React.Component<MicrobeDirectoryP
     }
 
     const sampleNames = Object.keys(data.samples),
-          propertyNames = Object.keys(data.samples[sampleNames[0]]);
+      propertyNames = Object.keys(data.samples[sampleNames[0]]);
 
     return (
       <Row>
@@ -203,7 +215,6 @@ export class MicrobeDirectoryContainer extends React.Component<MicrobeDirectoryP
       </Row>
     );
   }
-
 }
 
 export default MicrobeDirectoryContainer;

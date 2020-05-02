@@ -8,13 +8,12 @@ interface PersonRowProps {
   updateTheme?(theme?: string): void;
 }
 
-
-const SampleGroups: React.SFC<PersonRowProps> = (props) => {
+const SampleGroups: React.SFC<PersonRowProps> = props => {
   return (
     <Switch>
       <Route
         path="/sample-groups/:uuid"
-        render={(routeProps) => (
+        render={routeProps => (
           <AnalysisGroupDetail
             groupID={routeProps.match.params.uuid}
             updateTheme={props.updateTheme}

@@ -257,7 +257,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
                     >
                       MetaGenScope - Automated Data Visualization
                     </Link>
-                  </li>                  
+                  </li>
                 </ul>
               </Col>
             </Row>

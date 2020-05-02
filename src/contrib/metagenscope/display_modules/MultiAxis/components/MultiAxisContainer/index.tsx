@@ -20,13 +20,15 @@ interface MultiAxisState {
   selectedCategory: string;
 }
 
-export class MultiAxisContainer extends React.Component<MultiAxisProps, MultiAxisState> {
-
+export class MultiAxisContainer extends React.Component<
+  MultiAxisProps,
+  MultiAxisState
+> {
   constructor(props: MultiAxisProps) {
     super(props);
 
     const axes = Object.keys(props.data.axes),
-          categories = Object.keys(props.data.categories);
+      categories = Object.keys(props.data.categories);
     this.state = {
       xAxis: axes[0],
       yAxis: axes[1],
@@ -41,22 +43,28 @@ export class MultiAxisContainer extends React.Component<MultiAxisProps, MultiAxi
     const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     const categories = Object.keys(this.props.data.categories),
-          categoryValues = this.props.data.categories[selectedCategory];
+      categoryValues = this.props.data.categories[selectedCategory];
 
     const sampleNames = Object.keys(axesData[xAxis].vals);
-    const dataPoints: Highcharts.PointOptionsObject[] = sampleNames.map(sampleName => {
-      const datumColor = color(this.props.data.metadata[sampleName][selectedCategory]);
-      return {
-        x: axesData[xAxis].vals[sampleName],
-        y: axesData[yAxis].vals[sampleName],
-        color: datumColor,
-      };
-    });
+    const dataPoints: Highcharts.PointOptionsObject[] = sampleNames.map(
+      sampleName => {
+        const datumColor = color(
+          this.props.data.metadata[sampleName][selectedCategory],
+        );
+        return {
+          x: axesData[xAxis].vals[sampleName],
+          y: axesData[yAxis].vals[sampleName],
+          color: datumColor,
+        };
+      },
+    );
 
-    const series: Highcharts.SeriesScatterOptions[] = [{ 
-      data: dataPoints,
-      type: "scatter",
-    }];
+    const series: Highcharts.SeriesScatterOptions[] = [
+      {
+        data: dataPoints,
+        type: 'scatter',
+      },
+    ];
 
     const chartOptions: Highcharts.Options = {
       chart: {
@@ -91,8 +99,7 @@ export class MultiAxisContainer extends React.Component<MultiAxisProps, MultiAxi
             },
           },
           states: {
-            hover: {
-            },
+            hover: {},
           },
           tooltip: {
             headerFormat: '<b>{series.name}</b><br>',
@@ -123,7 +130,9 @@ export class MultiAxisContainer extends React.Component<MultiAxisProps, MultiAxi
             categoryValues={categoryValues}
             handleXAxisChange={newXAxis => this.setState({ xAxis: newXAxis })}
             handleYAxisChange={newYAxis => this.setState({ yAxis: newYAxis })}
-            handleCategoryChange={newValue => this.setState({ selectedCategory: newValue })}
+            handleCategoryChange={newValue =>
+              this.setState({ selectedCategory: newValue })
+            }
           />
         </Col>
       </Row>

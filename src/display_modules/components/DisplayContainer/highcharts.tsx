@@ -18,6 +18,6 @@ export default class HighchartsDisplayContainer<
       throw new Error("Missing chart! Did you forget to pass down 'chartRef'?");
     }
 
-    this.chart.exportChart({},{});
+    this.chart.exportChart({}, {});
   }
 }

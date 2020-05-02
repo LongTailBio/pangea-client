@@ -23,7 +23,7 @@ type CategoryValueProps = {
 
 type ControlsProps = ToolProps & CategoryProps & CategoryValueProps;
 
-const VolcanoControls: React.SFC<ControlsProps> = (props) => {
+const VolcanoControls: React.SFC<ControlsProps> = props => {
   return (
     <Well>
       <Row>

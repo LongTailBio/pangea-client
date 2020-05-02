@@ -59,7 +59,7 @@ class MultiAxisControls extends React.Component<ControlsProps, {}> {
               categories={this.props.categories}
               selectedCategoryName={this.props.selectedCategory}
               categoryValues={values}
-              activeCategoryChanged={() => {}}  // tslint:disable-line no-empty
+              activeCategoryChanged={() => {}} // eslint-disable-line
               colorByCategoryChanged={this.props.handleCategoryChange}
             />
           </Col>

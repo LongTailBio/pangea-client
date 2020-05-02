@@ -26,8 +26,10 @@ type CategoryDatum = {
   };
 };
 
-export default class AlphaDivContainer extends React.Component<AlphaDivProps, AlphaDivState> {
-
+export default class AlphaDivContainer extends React.Component<
+  AlphaDivProps,
+  AlphaDivState
+> {
   protected color: d3.ScaleOrdinal<string, string>;
 
   constructor(props: AlphaDivProps) {
@@ -38,16 +40,20 @@ export default class AlphaDivContainer extends React.Component<AlphaDivProps, Al
     this.handleToolChange = this.handleToolChange.bind(this);
     this.handleMetricChange = this.handleMetricChange.bind(this);
     this.handleTaxaRankChange = this.handleTaxaRankChange.bind(this);
-    this.handleColorByCategoryChanged = this.handleColorByCategoryChanged.bind(this);
+    this.handleColorByCategoryChanged = this.handleColorByCategoryChanged.bind(
+      this,
+    );
 
     const categories = Object.keys(this.props.data.categories).sort(),
-          activeCategory = categories[0],
-          tools = this.props.data.tool_names,
-          activeTool = tools[0],
-          activeTaxaRank = this.props.data.by_tool[activeTool].taxa_ranks[0],
-          rankData = this.props.data.by_tool[activeTool].by_taxa_rank[activeTaxaRank],
-          metrics = rankData.by_category_name[activeCategory][0].metrics,
-          activeMetric = metrics[0];
+      activeCategory = categories[0],
+      tools = this.props.data.tool_names,
+      activeTool = tools[0],
+      activeTaxaRank = this.props.data.by_tool[activeTool].taxa_ranks[0],
+      rankData = this.props.data.by_tool[activeTool].by_taxa_rank[
+        activeTaxaRank
+      ],
+      metrics = rankData.by_category_name[activeCategory][0].metrics,
+      activeMetric = metrics[0];
     this.state = {
       activeTool,
       activeTaxaRank,
@@ -79,8 +85,8 @@ export default class AlphaDivContainer extends React.Component<AlphaDivProps, Al
   }
 
   downstreamTaxaRank(upstreamState: AlphaDivState): AlphaDivState {
-    const {activeTool, activeTaxaRank} = upstreamState,
-          taxaRanks = this.props.data.by_tool[activeTool].taxa_ranks;
+    const { activeTool, activeTaxaRank } = upstreamState,
+      taxaRanks = this.props.data.by_tool[activeTool].taxa_ranks;
 
     if (taxaRanks.indexOf(activeTaxaRank) < 0) {
       upstreamState.activeTaxaRank = taxaRanks[0];
@@ -114,9 +120,16 @@ export default class AlphaDivContainer extends React.Component<AlphaDivProps, Al
   }
 
   downstreamMetrics(upstreamState: AlphaDivState): AlphaDivState {
-    const {activeTool, activeTaxaRank, activeMetric, activeCategory} = upstreamState,
-          rankData = this.props.data.by_tool[activeTool].by_taxa_rank[activeTaxaRank],
-          metrics = rankData.by_category_name[activeCategory][0].metrics;
+    const {
+        activeTool,
+        activeTaxaRank,
+        activeMetric,
+        activeCategory,
+      } = upstreamState,
+      rankData = this.props.data.by_tool[activeTool].by_taxa_rank[
+        activeTaxaRank
+      ],
+      metrics = rankData.by_category_name[activeCategory][0].metrics;
 
     if (metrics.indexOf(activeMetric) < 0) {
       upstreamState.activeMetric = metrics[0];
@@ -125,25 +138,31 @@ export default class AlphaDivContainer extends React.Component<AlphaDivProps, Al
     return upstreamState;
   }
 
-  chartOptions(activeCategory: string, activeMetric: string, categoryData: CategoryDatum[]): Highcharts.Options {
+  chartOptions(
+    activeCategory: string,
+    activeMetric: string,
+    categoryData: CategoryDatum[],
+  ): Highcharts.Options {
     const categoryValues = this.props.data.categories[activeCategory].sort();
 
-    const dataPoints: Highcharts.PointOptionsObject[] = categoryData.map((categoryDatum, index) => {
-      const datum = categoryDatum.by_metric[activeMetric];
-      return {
-        low: datum[0],
-        q1: datum[1],
-        median: datum[2],
-        q3: datum[3],
-        high: datum[4],
-        color: this.color(categoryValues[index]),
-      };
-    });
+    const dataPoints: Highcharts.PointOptionsObject[] = categoryData.map(
+      (categoryDatum, index) => {
+        const datum = categoryDatum.by_metric[activeMetric];
+        return {
+          low: datum[0],
+          q1: datum[1],
+          median: datum[2],
+          q3: datum[3],
+          high: datum[4],
+          color: this.color(categoryValues[index]),
+        };
+      },
+    );
     const categorySeries: Highcharts.SeriesBoxplotOptions = {
       name: activeCategory,
       data: dataPoints,
       showInLegend: false,
-      type: "boxplot",
+      type: 'boxplot',
     };
 
     const chartOptions: Highcharts.Options = {
@@ -171,14 +190,24 @@ export default class AlphaDivContainer extends React.Component<AlphaDivProps, Al
   }
 
   render() {
-    const {activeTool, activeTaxaRank, activeMetric, activeCategory} = this.state,
-          activeCategoryValues = this.props.data.categories[activeCategory],
-          toolData = this.props.data.by_tool[activeTool],
-          taxaRanks = toolData.taxa_ranks,
-          categoryData = toolData.by_taxa_rank[activeTaxaRank].by_category_name[activeCategory],
-          metrics = categoryData[0].metrics;
+    const {
+        activeTool,
+        activeTaxaRank,
+        activeMetric,
+        activeCategory,
+      } = this.state,
+      activeCategoryValues = this.props.data.categories[activeCategory],
+      toolData = this.props.data.by_tool[activeTool],
+      taxaRanks = toolData.taxa_ranks,
+      categoryData =
+        toolData.by_taxa_rank[activeTaxaRank].by_category_name[activeCategory],
+      metrics = categoryData[0].metrics;
 
-    const chartOptions = this.chartOptions(activeCategory, activeMetric, categoryData);
+    const chartOptions = this.chartOptions(
+      activeCategory,
+      activeMetric,
+      categoryData,
+    );
 
     return (
       <Row>
@@ -195,7 +224,7 @@ export default class AlphaDivContainer extends React.Component<AlphaDivProps, Al
             activeCategory={activeCategory}
             activeCategoryValues={activeCategoryValues}
             activeCategoryColor={this.color}
-            handleCategoryChange={() => {}}  // tslint:disable-line no-empty
+            handleCategoryChange={() => {}} // eslint-disable-line
             handleColorByCategoryChanged={this.handleColorByCategoryChanged}
             metrics={metrics}
             activeMetric={activeMetric}
@@ -211,5 +240,4 @@ export default class AlphaDivContainer extends React.Component<AlphaDivProps, Al
       </Row>
     );
   }
-
 }

@@ -22,7 +22,9 @@ class SelectCategory extends React.Component<CategoryProps, {}> {
 
     this.focusChanged = this.focusChanged.bind(this);
     this.focusLost = this.focusLost.bind(this);
-    this.handleColorByCategoryChange = this.handleColorByCategoryChange.bind(this);
+    this.handleColorByCategoryChange = this.handleColorByCategoryChange.bind(
+      this,
+    );
   }
 
   focusLost() {
@@ -48,7 +50,7 @@ class SelectCategory extends React.Component<CategoryProps, {}> {
       label = this.props.label;
     }
 
-    return(
+    return (
       <form>
         <FormGroup controlId="formControlsSelect">
           <ControlLabel>{label}</ControlLabel>
@@ -59,24 +61,26 @@ class SelectCategory extends React.Component<CategoryProps, {}> {
           >
             {this.props.categories.map((categoryName, index) => {
               return (
-                <option key={index} value={categoryName}>{categoryName.displayFormat()}</option>
+                <option key={index} value={categoryName}>
+                  {categoryName.displayFormat()}
+                </option>
               );
             })}
           </select>
         </FormGroup>
         <FormGroup>
-        <ul className="categories-control" onMouseLeave={this.focusLost}>
-          {this.props.categoryValues.map((categoryValue, index) => {
-            return (
-              <CategoryItem
-                key={index}
-                name={categoryValue.name}
-                color={categoryValue.color}
-                focusReceived={this.focusChanged}
-              />
-            );
-          })}
-        </ul>
+          <ul className="categories-control" onMouseLeave={this.focusLost}>
+            {this.props.categoryValues.map((categoryValue, index) => {
+              return (
+                <CategoryItem
+                  key={index}
+                  name={categoryValue.name}
+                  color={categoryValue.color}
+                  focusReceived={this.focusChanged}
+                />
+              );
+            })}
+          </ul>
         </FormGroup>
       </form>
     );

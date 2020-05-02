@@ -17,8 +17,10 @@ export interface VolcanoState {
   activeCategoryValue: string;
 }
 
-export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState> {
-
+export class VolcanoContainer extends React.Component<
+  VolcanoProps,
+  VolcanoState
+> {
   protected categoriesByTool: {
     [key: string]: {
       [key: string]: string[];
@@ -33,15 +35,21 @@ export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState
     this.handleCategoryValueChange = this.handleCategoryValueChange.bind(this);
 
     const tools = Object.keys(this.props.data.tools),
-          activeTool = tools[0];
+      activeTool = tools[0];
 
     this.categoriesByTool = {};
     tools.map(toolname => {
-      const catsInTool = Object.keys(this.props.data.tools[toolname].tool_categories);
+      const catsInTool = Object.keys(
+        this.props.data.tools[toolname].tool_categories,
+      );
       catsInTool.map(catname => {
-        const catValsInTool = Object.keys(this.props.data.tools[toolname].tool_categories[catname]);
+        const catValsInTool = Object.keys(
+          this.props.data.tools[toolname].tool_categories[catname],
+        );
         catValsInTool.map(catval => {
-          if (this.props.data.tools[toolname].tool_categories[catname][catval]) {
+          if (
+            this.props.data.tools[toolname].tool_categories[catname][catval]
+          ) {
             if (!(toolname in this.categoriesByTool)) {
               this.categoriesByTool[toolname] = {};
             }
@@ -55,8 +63,10 @@ export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState
     });
 
     const categories = Object.keys(this.categoriesByTool[activeTool]),
-          activeCategory = categories[0],
-          activeCategoryValue = this.categoriesByTool[activeTool][activeCategory][0];
+      activeCategory = categories[0],
+      activeCategoryValue = this.categoriesByTool[activeTool][
+        activeCategory
+      ][0];
 
     this.state = {
       activeTool,
@@ -67,7 +77,7 @@ export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState
 
   handleToolChange(tool: string) {
     this.setState({
-      activeTool: tool
+      activeTool: tool,
     });
   }
 
@@ -89,8 +99,8 @@ export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState
   }
 
   downstreamCategoryValue(upstreamState: VolcanoState): VolcanoState {
-    const {activeCategory, activeTool, activeCategoryValue} = upstreamState,
-          categoryValues = this.categoriesByTool[activeTool][activeCategory];
+    const { activeCategory, activeTool, activeCategoryValue } = upstreamState,
+      categoryValues = this.categoriesByTool[activeTool][activeCategory];
 
     if (categoryValues.indexOf(activeCategoryValue) < 0) {
       upstreamState.activeCategoryValue = categoryValues[0];
@@ -99,8 +109,14 @@ export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState
     return upstreamState;
   }
 
-  chartOptions(tool: string, category: string, categoryValue: string): Highcharts.Options {
-    const data = this.props.data.tools[tool].tool_categories[category][categoryValue].scatter_plot;
+  chartOptions(
+    tool: string,
+    category: string,
+    categoryValue: string,
+  ): Highcharts.Options {
+    const data = this.props.data.tools[tool].tool_categories[category][
+      categoryValue
+    ].scatter_plot;
     const seriesData: Highcharts.PointOptionsObject[] = data.map(datum => {
       return {
         x: datum.xval,
@@ -115,63 +131,72 @@ export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState
         zoomType: 'xy',
       },
       title: {
-        text: `${category } |  ${categoryValue}`,
+        text: `${category} |  ${categoryValue}`,
       },
       plotOptions: {
         series: {
-            color: 'rgba(36,135,255,0.001)'
-        }
+          color: 'rgba(36,135,255,0.001)',
+        },
       },
       xAxis: {
         title: {
-          text: 'Log2 Fold Change'
+          text: 'Log2 Fold Change',
         },
         startOnTick: true,
         endOnTick: true,
-        showLastLabel: true
+        showLastLabel: true,
       },
       yAxis: {
         title: {
-          text: '-Log2 p-val'
+          text: '-Log2 p-val',
         },
-        plotLines: [{
-          value: 4.32,
-          color: 'red',
-          width: 1,
-          label: {
-            text: 'P = 0.05',
-            align: 'right',
-            style: {
-              color: 'grey',
+        plotLines: [
+          {
+            value: 4.32,
+            color: 'red',
+            width: 1,
+            label: {
+              text: 'P = 0.05',
+              align: 'right',
+              style: {
+                color: 'grey',
+              },
             },
           },
-        }, {
-          value: 9.965,
-          color: 'red',
-          width: 1,
-          label: {
-            text: 'P = 0.001',
-            align: 'right',
-            style: {
-              color: 'grey',
+          {
+            value: 9.965,
+            color: 'red',
+            width: 1,
+            label: {
+              text: 'P = 0.001',
+              align: 'right',
+              style: {
+                color: 'grey',
+              },
             },
           },
-        }],
+        ],
       },
       tooltip: {
         headerFormat: '',
         pointFormat:
-            '<b>{point.name}</b><br />' +
-            'Log2 Fold Change (x): {point.x}<br />' +
-            '-Log2 P-Value (y): {point.y}',
+          '<b>{point.name}</b><br />' +
+          'Log2 Fold Change (x): {point.x}<br />' +
+          '-Log2 P-Value (y): {point.y}',
       },
-      legend: { enabled: false},
-      series: [{ data: seriesData , type: "bubble"}],
+      legend: { enabled: false },
+      series: [{ data: seriesData, type: 'bubble' }],
     };
   }
 
-  pvalueChartOptions(tool: string, category: string, categoryValue: string): Highcharts.Options {
-    const data = this.props.data.tools[tool].tool_categories[category][categoryValue].pval_histogram;
+  pvalueChartOptions(
+    tool: string,
+    category: string,
+    categoryValue: string,
+  ): Highcharts.Options {
+    const data = this.props.data.tools[tool].tool_categories[category][
+      categoryValue
+    ].pval_histogram;
     const seriesData: Highcharts.PointOptionsObject[] = data.map(datum => {
       return {
         x: datum.xval,
@@ -196,31 +221,41 @@ export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState
         min: 0,
         title: {
           text: '',
-        }
+        },
       },
       plotOptions: {
         column: {
           groupPadding: 0,
           pointPadding: 0,
           borderWidth: 0,
-        }
+        },
       },
-      legend: { enabled: false},
-      series: [{
-        name: 'P-Value',
-        data: seriesData,
-        type: "bar",
-      }]
+      legend: { enabled: false },
+      series: [
+        {
+          name: 'P-Value',
+          data: seriesData,
+          type: 'bar',
+        },
+      ],
     };
 
     return options;
   }
 
   render() {
-    const {activeTool, activeCategory, activeCategoryValue} = this.state,
-          activeCategoryValues = this.categoriesByTool[activeTool][activeCategory];
-    const chartOptions = this.chartOptions(activeTool, activeCategory, activeCategoryValue);
-    const pvalOptions = this.pvalueChartOptions(activeTool, activeCategory, activeCategoryValue);
+    const { activeTool, activeCategory, activeCategoryValue } = this.state,
+      activeCategoryValues = this.categoriesByTool[activeTool][activeCategory];
+    const chartOptions = this.chartOptions(
+      activeTool,
+      activeCategory,
+      activeCategoryValue,
+    );
+    const pvalOptions = this.pvalueChartOptions(
+      activeTool,
+      activeCategory,
+      activeCategoryValue,
+    );
 
     return (
       <Row>
@@ -235,7 +270,7 @@ export class VolcanoContainer extends React.Component<VolcanoProps, VolcanoState
           <HighChartsPlot
             chartId="volcano-pval"
             options={pvalOptions}
-            chartRef={() => {}} // tslint:disable-line no-empty
+            chartRef={() => {}} // eslint-disable-line
           />
         </Col>
         <Col lg={3}>

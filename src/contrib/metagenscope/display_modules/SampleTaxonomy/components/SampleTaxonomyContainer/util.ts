@@ -1,4 +1,4 @@
-export const displayTaxaName = function (rawName: string) {
+export const displayTaxaName = function(rawName: string) {
   const components = rawName.split('__');
   let level = components[0];
   const link = components[1];
@@ -6,21 +6,21 @@ export const displayTaxaName = function (rawName: string) {
   if (level === 'root') {
     return 'Root';
   } else if (level === 'd' || level === 'k') {
-      level = 'Domain';
+    level = 'Domain';
   } else if (level === 'p') {
-      level = 'Phylum';
-  } else if ( level === 'c') {
-      level = 'Class';
-  } else if ( level === 'o') {
-      level = 'Order';
+    level = 'Phylum';
+  } else if (level === 'c') {
+    level = 'Class';
+  } else if (level === 'o') {
+    level = 'Order';
   } else if (level === 'f') {
-      level = 'Family';
+    level = 'Family';
   } else if (level === 'g') {
-      level = 'Genus';
+    level = 'Genus';
   } else if (level === 's') {
-      level = 'Species';
+    level = 'Species';
   } else if (level === 't') {
-      level = 'Strain';
+    level = 'Strain';
   }
 
   return `${level} ${link}`;

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { CancelTokenSource } from 'axios';
 
 import HighchartsDisplayContainer from '../components/DisplayContainer/highcharts';
 import { DisplayContainerProps } from '../components/DisplayContainer';
@@ -11,8 +10,10 @@ interface MicrobeDirectoryProps extends DisplayContainerProps {
   isSingleton?: boolean;
 }
 
-export class MicrobeDirectoryModule extends HighchartsDisplayContainer<MicrobeDirectoryType, MicrobeDirectoryProps> {
-
+export class MicrobeDirectoryModule extends HighchartsDisplayContainer<
+  MicrobeDirectoryType,
+  MicrobeDirectoryProps
+> {
   constructor(props: MicrobeDirectoryProps) {
     super(props);
 
@@ -20,9 +21,11 @@ export class MicrobeDirectoryModule extends HighchartsDisplayContainer<MicrobeDi
     this.moduleName = 'metagenscope::v3.0.0::microbe_directory';
     this.fieldName = 'md1';
     this.description = (
-      <p>This chart shows the proportion of different known microbiological {' '}
-        features in each sample. Features are sourced from the {' '}
-        <a href="https://microbe.directory/" target="_blank">Microbe Directory</a>.</p>
+      <p>
+        This chart shows the proportion of different known microbiological{' '}
+        features in each sample. Features are sourced from the Microbe Directory
+        .
+      </p>
     );
   }
 
@@ -31,7 +34,7 @@ export class MicrobeDirectoryModule extends HighchartsDisplayContainer<MicrobeDi
     return (
       <MicrobeDirectoryContainer
         data={data}
-        chartRef={el => this.chart = el}
+        chartRef={el => (this.chart = el)}
         isSingleton={this.props.isSingleton}
       />
     );

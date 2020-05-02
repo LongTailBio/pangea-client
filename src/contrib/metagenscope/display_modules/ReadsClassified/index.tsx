@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { CancelTokenSource } from 'axios';
 
 import HighchartsDisplayContainer from '../components/DisplayContainer/highcharts';
 import { DisplayContainerProps } from '../components/DisplayContainer';
@@ -11,8 +10,10 @@ interface ReadsClassifiedProps extends DisplayContainerProps {
   isSingleton?: boolean;
 }
 
-export class ReadsClassifiedModule extends HighchartsDisplayContainer<ReadsClassifiedType, ReadsClassifiedProps> {
-
+export class ReadsClassifiedModule extends HighchartsDisplayContainer<
+  ReadsClassifiedType,
+  ReadsClassifiedProps
+> {
   constructor(props: ReadsClassifiedProps) {
     super(props);
 
@@ -20,15 +21,21 @@ export class ReadsClassifiedModule extends HighchartsDisplayContainer<ReadsClass
     this.moduleName = 'metagenscope::v3.0.0::reads_classified';
     this.fieldName = 'json';
     this.description = (
-      <p>This chart shows the proportion of reads in each sample {' '}
-        assigned to different groups.</p>
+      <p>
+        This chart shows the proportion of reads in each sample assigned to
+        different groups.
+      </p>
     );
   }
 
   /** @inheritdoc */
   plotContainer(data: ReadsClassifiedType): JSX.Element {
     return (
-      <ReadsClassifiedContainer data={data} chartRef={el => this.chart = el} isSingleton={this.props.isSingleton} />
+      <ReadsClassifiedContainer
+        data={data}
+        chartRef={el => (this.chart = el)}
+        isSingleton={this.props.isSingleton}
+      />
     );
   }
 }

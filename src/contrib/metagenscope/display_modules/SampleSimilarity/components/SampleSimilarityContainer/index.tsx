@@ -20,13 +20,18 @@ export interface SampleSimilarityState {
   focusedCategory?: string;
 }
 
-export class SampleSimilarityContainer extends React.Component<SampleSimilarityProps, SampleSimilarityState> {
+export class SampleSimilarityContainer extends React.Component<
+  SampleSimilarityProps,
+  SampleSimilarityState
+> {
   constructor(props: SampleSimilarityProps) {
     super(props);
 
     this.handleSourceChange = this.handleSourceChange.bind(this);
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
-    this.handleColorByCategoryChange = this.handleColorByCategoryChange.bind(this);
+    this.handleColorByCategoryChange = this.handleColorByCategoryChange.bind(
+      this,
+    );
 
     this.state = {
       activeTool: Object.keys(this.props.data.tools)[0],
@@ -53,8 +58,13 @@ export class SampleSimilarityContainer extends React.Component<SampleSimilarityP
   }
 
   parsedData(toolName: string, categoryName: string): ScatterPlotEntry[] {
-    return this.props.data.data_records.map((record) => {
-      const requiredKeys = [SAMPLE_ID_KEY, categoryName, `${toolName}_x`, `${toolName}_y`];
+    return this.props.data.data_records.map(record => {
+      const requiredKeys = [
+        SAMPLE_ID_KEY,
+        categoryName,
+        `${toolName}_x`,
+        `${toolName}_y`,
+      ];
       requiredKeys.forEach(key => {
         if (!(key in record)) {
           throw new Error(`Sample Similarity record missing ${key}`);
@@ -79,14 +89,17 @@ export class SampleSimilarityContainer extends React.Component<SampleSimilarityP
 
   render() {
     const activeCategory = this.state.activeCategory,
-          activeCategoryValues = this.props.data.categories[activeCategory].sort(),
-          color = d3.scaleOrdinal(d3.schemeCategory10);
+      activeCategoryValues = this.props.data.categories[activeCategory].sort(),
+      color = d3.scaleOrdinal(d3.schemeCategory10);
 
     return (
       <Row>
         <Col lg={9}>
           <ScatterPlot
-            data={this.parsedData(this.state.activeTool, this.state.activeCategory)}
+            data={this.parsedData(
+              this.state.activeTool,
+              this.state.activeCategory,
+            )}
             focusedCategory={this.state.focusedCategory}
             {...this.axisTitles(this.state.activeTool)}
             svgRef={this.props.svgRef}

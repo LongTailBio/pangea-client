@@ -2,26 +2,23 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
-import { default as axios, CancelTokenSource } from 'axios';
 
 import { usePangeaAxios } from '../../../../../../services/api';
 import { SampleType } from '../../../../../../services/api/models/sample';
 
-import { SampleTaxonomyModule } from     '../../../../display_modules/SampleTaxonomy';
-import { ReadsClassifiedModule } from     '../../../../display_modules/ReadsClassified';
-import { MicrobeDirectoryModule } from     '../../../../display_modules/MicrobeDirectory';
-
+import { SampleTaxonomyModule } from '../../../../display_modules/SampleTaxonomy';
+import { ReadsClassifiedModule } from '../../../../display_modules/ReadsClassified';
+import { MicrobeDirectoryModule } from '../../../../display_modules/MicrobeDirectory';
 
 interface MGSSampleScreenProps {
   sampleID: string;
   updateTheme?(theme?: string): void;
 }
 
-
 export const MGSSampleScreen = (props: MGSSampleScreenProps) => {
-    const [{ data, loading, error }] = usePangeaAxios<SampleType>(
-      `/samples/${props.sampleID}`,
-    );
+  const [{ data, loading, error }] = usePangeaAxios<SampleType>(
+    `/samples/${props.sampleID}`,
+  );
 
   if (loading) {
     return (
@@ -61,20 +58,38 @@ export const MGSSampleScreen = (props: MGSSampleScreenProps) => {
       </Helmet>
       <Row>
         <Col lg={12}>
-          <h1><Link to={`/samples/${props.sampleID}`}>{data.name}</Link></h1>
-          <Link to={`/contrib/metagenscope/sample-groups/${data.library}`}>Library: {data.library_obj.name}</Link>
+          <h1>
+            <Link to={`/samples/${props.sampleID}`}>{data.name}</Link>
+          </h1>
+          <Link to={`/contrib/metagenscope/sample-groups/${data.library}`}>
+            Library: {data.library_obj.name}
+          </Link>
         </Col>
       </Row>
       <hr />
       <Row>
         <Col lg={12}>
-          <SampleTaxonomyModule orgID={data.library_obj.organization} groupID={data.library} sampleID={props.sampleID} />
-          <ReadsClassifiedModule orgID={data.library_obj.organization} groupID={data.library} sampleID={props.sampleID} isSingleton={true} />      
-          <MicrobeDirectoryModule orgID={data.library_obj.organization} groupID={data.library} sampleID={props.sampleID} isSingleton={true} />
+          <SampleTaxonomyModule
+            orgID={data.library_obj.organization}
+            groupID={data.library}
+            sampleID={props.sampleID}
+          />
+          <ReadsClassifiedModule
+            orgID={data.library_obj.organization}
+            groupID={data.library}
+            sampleID={props.sampleID}
+            isSingleton={true}
+          />
+          <MicrobeDirectoryModule
+            orgID={data.library_obj.organization}
+            groupID={data.library}
+            sampleID={props.sampleID}
+            isSingleton={true}
+          />
         </Col>
       </Row>
     </div>
-  )
-}
+  );
+};
 
 export default MGSSampleScreen;

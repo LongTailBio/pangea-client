@@ -13,8 +13,10 @@ interface SampleReducerState {
   sampleSearchString: string;
 }
 
-class SampleReducer extends React.Component<SampleReducerProps, SampleReducerState> {
-
+class SampleReducer extends React.Component<
+  SampleReducerProps,
+  SampleReducerState
+> {
   constructor(props: SampleReducerProps) {
     super(props);
 
@@ -26,7 +28,7 @@ class SampleReducer extends React.Component<SampleReducerProps, SampleReducerSta
   }
 
   handleChange(event: React.FormEvent<HTMLInputElement>) {
-    this.setState({sampleSearchString: event.currentTarget.value});
+    this.setState({ sampleSearchString: event.currentTarget.value });
   }
 
   render() {

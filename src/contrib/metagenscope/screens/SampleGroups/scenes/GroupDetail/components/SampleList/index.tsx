@@ -10,11 +10,7 @@ interface SampleListProps {
   samples: SampleType[];
 }
 
-interface SampleListState {
-}
-
-class SampleList extends React.Component<SampleListProps, SampleListState> {
-
+class SampleList extends React.Component<SampleListProps, {}> {
   protected sourceToken: CancelTokenSource;
 
   constructor(props: SampleListProps) {
@@ -32,21 +28,21 @@ class SampleList extends React.Component<SampleListProps, SampleListState> {
     return (
       <Panel id="sample-list">
         <Panel.Heading>Samples</Panel.Heading>
-        {this.props.samples === undefined &&
+        {this.props.samples === undefined && (
           <Panel.Body>
             <h3>Loading...</h3>
           </Panel.Body>
-        }
-        {this.props.samples !== undefined &&
+        )}
+        {this.props.samples !== undefined && (
           <Panel.Body>
-            {this.props.samples.length > 0 &&
+            {this.props.samples.length > 0 && (
               <SampleReducer samples={this.props.samples} />
-            }
-            {this.props.samples.length <= 0 &&
+            )}
+            {this.props.samples.length <= 0 && (
               <p>No samples found for this Sample Group.</p>
-            }
+            )}
           </Panel.Body>
-        }
+        )}
       </Panel>
     );
   }

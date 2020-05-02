@@ -8,7 +8,10 @@ import { ChartRefProps } from '../../../components/DisplayContainer/highcharts';
 
 import TopTaxaControls from './components/TopTaxaControls';
 
-const chartOptions = function(data: TopTaxaType, state: TopTaxaState): Highcharts.Options {
+const chartOptions = function(
+  data: TopTaxaType,
+  state: TopTaxaState,
+): Highcharts.Options {
   const { category, categoryValue, tool, kingdom } = state;
   const chartData = data.categories[category][categoryValue][tool][kingdom];
 
@@ -20,49 +23,57 @@ const chartOptions = function(data: TopTaxaType, state: TopTaxaState): Highchart
     }
     return 0;
   });
-  const abundanceSeries = taxaNames.map(taxaName => chartData.abundance[taxaName]);
-  const prevalenceSeries = taxaNames.map(taxaName => chartData.prevalence[taxaName]);
+  const abundanceSeries = taxaNames.map(
+    taxaName => chartData.abundance[taxaName],
+  );
+  const prevalenceSeries = taxaNames.map(
+    taxaName => chartData.prevalence[taxaName],
+  );
 
   const colors = Highcharts.getOptions().colors!;
 
   const options: Highcharts.Options = {
     chart: {
-      zoomType: 'xy'
+      zoomType: 'xy',
     },
     title: {
       text: '',
     },
-    xAxis: [{
-      categories: taxaNames,
-      crosshair: true,
-    }],
+    xAxis: [
+      {
+        categories: taxaNames,
+        crosshair: true,
+      },
+    ],
     yAxis: [
-      { // Primary yAxis
+      {
+        // Primary yAxis
         title: {
           text: 'Abundance',
           style: {
             color: colors[0],
-          }
+          },
         },
         labels: {
           // format: '{value}°C',
           style: {
-            color: colors[0]
-          }
+            color: colors[0],
+          },
         },
       },
-      { // Secondary yAxis
+      {
+        // Secondary yAxis
         title: {
           text: 'Prevalence',
           style: {
-            color: colors[1]
-          }
+            color: colors[1],
+          },
         },
         labels: {
           // format: '{value} mm',
           style: {
-            color: colors[1]
-          }
+            color: colors[1],
+          },
         },
         opposite: true,
       },
@@ -111,9 +122,12 @@ export interface TopTaxaState {
   kingdom: string;
 }
 
-const expandSelectedValues = (data: TopTaxaType, selectedValues?: TopTaxaState) => {
+const expandSelectedValues = (
+  data: TopTaxaType,
+  selectedValues?: TopTaxaState,
+) => {
   const defaults = { category: '', categoryValue: '', tool: '', kingdom: '' };
-  let { category, categoryValue, tool, kingdom} = selectedValues || defaults;
+  let { category, categoryValue, tool, kingdom } = selectedValues || defaults;
 
   const categoryNames = Object.keys(data.categories);
   category = category || categoryNames[0];
@@ -130,14 +144,22 @@ const expandSelectedValues = (data: TopTaxaType, selectedValues?: TopTaxaState) 
   const kingdomNames = Object.keys(firstTool);
   kingdom = kingdom || kingdomNames[0];
 
-  return { categoryNames, category,
-           categoryValues, categoryValue,
-           toolNames, tool,
-           kingdomNames, kingdom };
+  return {
+    categoryNames,
+    category,
+    categoryValues,
+    categoryValue,
+    toolNames,
+    tool,
+    kingdomNames,
+    kingdom,
+  };
 };
 
-export class TopTaxaContainer extends React.Component<TopTaxaProps, TopTaxaState> {
-
+export class TopTaxaContainer extends React.Component<
+  TopTaxaProps,
+  TopTaxaState
+> {
   constructor(props: TopTaxaProps) {
     super(props);
 
@@ -154,10 +176,16 @@ export class TopTaxaContainer extends React.Component<TopTaxaProps, TopTaxaState
   render() {
     const options = chartOptions(this.props.data, this.state);
 
-    const { categoryNames, category,
-            categoryValues, categoryValue,
-            toolNames, tool,
-            kingdomNames, kingdom } = expandSelectedValues(this.props.data, this.state);
+    const {
+      categoryNames,
+      category,
+      categoryValues,
+      categoryValue,
+      toolNames,
+      tool,
+      kingdomNames,
+      kingdom,
+    } = expandSelectedValues(this.props.data, this.state);
 
     return (
       <Row>
@@ -179,9 +207,13 @@ export class TopTaxaContainer extends React.Component<TopTaxaProps, TopTaxaState
             kingdoms={kingdomNames}
             selectedKingdom={kingdom}
             handleCategoryChange={this.handleCategoryChange}
-            handleCategoryValueChange={newValue => this.setState({ categoryValue: newValue })}
+            handleCategoryValueChange={newValue =>
+              this.setState({ categoryValue: newValue })
+            }
             handleToolChange={newTool => this.setState({ tool: newTool })}
-            handleKingdomChange={newKingdom => this.setState({ kingdom: newKingdom })}
+            handleKingdomChange={newKingdom =>
+              this.setState({ kingdom: newKingdom })
+            }
           />
         </Col>
       </Row>

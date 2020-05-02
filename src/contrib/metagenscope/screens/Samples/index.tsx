@@ -8,12 +8,12 @@ interface SamplesProps {
   updateTheme?(theme?: string): void;
 }
 
-const Samples: React.SFC<SamplesProps> = (props) => {
+const Samples: React.SFC<SamplesProps> = props => {
   return (
     <Switch>
       <Route
         path="/samples/:uuid"
-        render={(routeProps) => (
+        render={routeProps => (
           <MGSSampleScreen
             sampleID={routeProps.match.params.uuid}
             updateTheme={props.updateTheme}

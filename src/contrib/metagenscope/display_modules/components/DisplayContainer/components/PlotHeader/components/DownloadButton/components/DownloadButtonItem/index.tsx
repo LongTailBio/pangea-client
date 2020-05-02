@@ -7,7 +7,5 @@ export interface DownloadButtonItemProps {
 }
 
 export const DownloadButtonItem = (props: DownloadButtonItemProps) => {
-  return  (
-    <MenuItem onClick={props.action}>{props.title}</MenuItem>
-  );
+  return <MenuItem onClick={props.action}>{props.title}</MenuItem>;
 };

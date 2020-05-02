@@ -34,7 +34,7 @@ type CategoryProps = {
 
 type ControlsProps = ToolProps & RankProps & MetricProps & CategoryProps;
 
-const AlphaDiversityControls: React.SFC<ControlsProps> = (props) => {
+const AlphaDiversityControls: React.SFC<ControlsProps> = props => {
   const values = props.activeCategoryValues.sort().map(category => {
     return {
       name: category,

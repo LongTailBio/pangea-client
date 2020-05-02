@@ -10,8 +10,10 @@ interface ReadsClassifiedProps extends ChartRefProps {
   data: ReadsClassifiedType;
 }
 
-const sampleGroupOptions = function(data: ReadsClassifiedType): Highcharts.Options {
-  const seriesMap: {[key: string]: number[]} = {
+const sampleGroupOptions = function(
+  data: ReadsClassifiedType,
+): Highcharts.Options {
+  const seriesMap: { [key: string]: number[] } = {
     viral: [],
     archaeal: [],
     bacterial: [],
@@ -22,8 +24,9 @@ const sampleGroupOptions = function(data: ReadsClassifiedType): Highcharts.Optio
     unknown: [],
   };
 
-  const sampleNames = Object.keys(data.samples)
-    .sort((n1, n2) => data.samples[n1].unknown - data.samples[n2].unknown);
+  const sampleNames = Object.keys(data.samples).sort(
+    (n1, n2) => data.samples[n1].unknown - data.samples[n2].unknown,
+  );
   sampleNames.map(sampleName => {
     const sample = data.samples[sampleName];
     seriesMap.viral.push(sample.viral);
@@ -37,19 +40,21 @@ const sampleGroupOptions = function(data: ReadsClassifiedType): Highcharts.Optio
   });
 
   const seriesNames = Object.keys(seriesMap);
-  const series: Highcharts.SeriesColumnOptions[] = seriesNames.map(seriesName => {
-    const seriesData = seriesMap[seriesName];
-    if (seriesName === 'host') {
-      seriesName = 'human';  // TODO: this is a hack for Milken
-    } else if (seriesName === 'nonhost_macrobial') {
-      seriesName = 'non-human_macrobial';  // TODO: this is a hack for Milken
-    }
-    return {
-      name: seriesName.displayFormat(),
-      data: seriesData,
-      type: "column",
-    };
-  });
+  const series: Highcharts.SeriesColumnOptions[] = seriesNames.map(
+    seriesName => {
+      const seriesData = seriesMap[seriesName];
+      if (seriesName === 'host') {
+        seriesName = 'human'; // TODO: this is a hack for Milken
+      } else if (seriesName === 'nonhost_macrobial') {
+        seriesName = 'non-human_macrobial'; // TODO: this is a hack for Milken
+      }
+      return {
+        name: seriesName.displayFormat(),
+        data: seriesData,
+        type: 'column',
+      };
+    },
+  );
 
   const chartOptions: Highcharts.Options = {
     chart: {
@@ -62,7 +67,8 @@ const sampleGroupOptions = function(data: ReadsClassifiedType): Highcharts.Optio
       text: 'Fraction of Reads Classified to Different Groups',
     },
     yAxis: {
-      min: 0, max: 1,
+      min: 0,
+      max: 1,
       title: {
         text: 'Proportion of Reads Classified',
       },
@@ -98,26 +104,28 @@ const sampleOptions = function(data: ReadsClassifiedType): Highcharts.Options {
   const sample = data.samples[sampleName];
 
   const seriesNames = Object.keys(sample);
-  const seriesData: Highcharts.PointOptionsObject[] = seriesNames.map(seriesName => {
-    return {
-      name: seriesName.displayFormat(),
-      y: sample[seriesName],
-    };
-  });
+  const seriesData: Highcharts.PointOptionsObject[] = seriesNames.map(
+    seriesName => {
+      return {
+        name: seriesName.displayFormat(),
+        y: sample[seriesName],
+      };
+    },
+  );
 
   const chartOptions: Highcharts.Options = {
     chart: {
       type: 'pie',
     },
     plotOptions: {
-        pie: {
-            allowPointSelect: true,
-            cursor: 'pointer',
-            dataLabels: {
-                enabled: true,
-                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-            }
-        }
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: true,
+          format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+        },
+      },
     },
     title: {
       text: 'Proportion of Reads Classified',
@@ -137,21 +145,22 @@ const sampleOptions = function(data: ReadsClassifiedType): Highcharts.Options {
       min: 0,
     },
 
-    legend: { enabled: false},
+    legend: { enabled: false },
 
-    series: [{
-      name: 'Fraction',
-      colorByPoint: true,
-      data: seriesData,
-      type: "pie",
-    }],
-   };
+    series: [
+      {
+        name: 'Fraction',
+        colorByPoint: true,
+        data: seriesData,
+        type: 'pie',
+      },
+    ],
+  };
 
   return chartOptions;
 };
 
-const ReadsClassifiedContainer: React.SFC<ReadsClassifiedProps> = (props) => {
-
+const ReadsClassifiedContainer: React.SFC<ReadsClassifiedProps> = props => {
   const isSingleton = props.isSingleton || false;
   const chartOptions = isSingleton
     ? sampleOptions(props.data)

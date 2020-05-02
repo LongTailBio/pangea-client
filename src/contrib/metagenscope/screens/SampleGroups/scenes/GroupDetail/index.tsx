@@ -2,21 +2,23 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
-import { default as axios, CancelTokenSource } from 'axios';
 
-import { usePangeaAxios, PaginatedResult } from '../../../../../../services/api';
+import {
+  usePangeaAxios,
+  PaginatedResult,
+} from '../../../../../../services/api';
 import { SampleGroupType } from '../../../../../../services/api/models/sampleGroup';
 import { SampleType } from '../../../../../../services/api/models/sample';
-import SampleList from     './components/SampleList';
+import SampleList from './components/SampleList';
 
 import { SampleSimilarityModule } from '../../../../display_modules/SampleSimilarity';
 import { TopTaxaModule } from '../../../../display_modules/TopTaxa';
-import { AGSModule } from     '../../../../display_modules/AverageGenomeSize';
-import { AlphaDiversityModule } from     '../../../../display_modules/AlphaDiversity';
-import { MultiAxisModule } from     '../../../../display_modules/MultiAxis';
-import { VolcanoModule } from     '../../../../display_modules/Volcano';
-import { ReadsClassifiedModule } from     '../../../../display_modules/ReadsClassified';
-import { MicrobeDirectoryModule } from     '../../../../display_modules/MicrobeDirectory';
+import { AGSModule } from '../../../../display_modules/AverageGenomeSize';
+import { AlphaDiversityModule } from '../../../../display_modules/AlphaDiversity';
+import { MultiAxisModule } from '../../../../display_modules/MultiAxis';
+import { VolcanoModule } from '../../../../display_modules/Volcano';
+import { ReadsClassifiedModule } from '../../../../display_modules/ReadsClassified';
+import { MicrobeDirectoryModule } from '../../../../display_modules/MicrobeDirectory';
 
 interface MGSSampleGroupScreenProps {
   groupID: string;
@@ -35,16 +37,10 @@ const useSampleGroup = (uuid: string) => {
     group: sampleGroupResult.data,
     samples: samplesResult.data,
   };
-  const loading =
-    sampleGroupResult.loading ||
-    samplesResult.loading;
-  const error =
-    sampleGroupResult.error ||
-    samplesResult.error ||
-    undefined;
+  const loading = sampleGroupResult.loading || samplesResult.loading;
+  const error = sampleGroupResult.error || samplesResult.error || undefined;
   return [{ data, loading, error }];
 };
-
 
 export const MGSSampleGroupScreen = (props: MGSSampleGroupScreenProps) => {
   const [{ data, loading, error }] = useSampleGroup(props.groupID);
@@ -90,20 +86,34 @@ export const MGSSampleGroupScreen = (props: MGSSampleGroupScreenProps) => {
       </Helmet>
       <Row>
         <Col lg={12}>
-          <h1><Link to={`/sample-groups/${props.groupID}`}>{grp.name}</Link></h1>
+          <h1>
+            <Link to={`/sample-groups/${props.groupID}`}>{grp.name}</Link>
+          </h1>
           <p>{grp.description}</p>
         </Col>
       </Row>
       <hr />
       <Row>
         <Col lg={12}>
-          <SampleSimilarityModule orgID={grp.organization} groupID={props.groupID} />
-          <ReadsClassifiedModule orgID={grp.organization} groupID={props.groupID} />      
+          <SampleSimilarityModule
+            orgID={grp.organization}
+            groupID={props.groupID}
+          />
+          <ReadsClassifiedModule
+            orgID={grp.organization}
+            groupID={props.groupID}
+          />
           <VolcanoModule orgID={grp.organization} groupID={props.groupID} />
           <TopTaxaModule orgID={grp.organization} groupID={props.groupID} />
-          <AlphaDiversityModule orgID={grp.organization} groupID={props.groupID} />
+          <AlphaDiversityModule
+            orgID={grp.organization}
+            groupID={props.groupID}
+          />
           <MultiAxisModule orgID={grp.organization} groupID={props.groupID} />
-          <MicrobeDirectoryModule orgID={grp.organization} groupID={props.groupID} />
+          <MicrobeDirectoryModule
+            orgID={grp.organization}
+            groupID={props.groupID}
+          />
           <AGSModule orgID={grp.organization} groupID={props.groupID} />
         </Col>
       </Row>
@@ -114,7 +124,7 @@ export const MGSSampleGroupScreen = (props: MGSSampleGroupScreenProps) => {
         </Col>
       </Row>
     </div>
-  )
-}
+  );
+};
 
 export default MGSSampleGroupScreen;

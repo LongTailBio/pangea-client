@@ -9,7 +9,7 @@ type ControlsProps = {
   handleSourceChange(newSource: string): void;
 };
 
-const SampleTaxonomyControls: React.SFC<ControlsProps> = (props) => {
+const SampleTaxonomyControls: React.SFC<ControlsProps> = props => {
   return (
     <Well>
       <Row>

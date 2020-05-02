@@ -40,15 +40,25 @@ export default class ScatterPlot extends React.Component<ScatterPlotProps, {}> {
 
     if (this.rootDiv !== null && this.scatterSVG !== null) {
       // TODO: hold onto D3 reference so we can later manipulate it when props update
-      createScatter(this.rootDiv, this.scatterSVG, props.data, plotOptions, props.color);
+      createScatter(
+        this.rootDiv,
+        this.scatterSVG,
+        props.data,
+        plotOptions,
+        props.color,
+      );
     }
   }
 
   render() {
     return (
-      <div ref={(elem) => { this.rootDiv = elem; }}>
+      <div
+        ref={elem => {
+          this.rootDiv = elem;
+        }}
+      >
         <svg
-          ref={(elem) => {
+          ref={elem => {
             this.scatterSVG = elem;
             this.props.svgRef(elem);
           }}
