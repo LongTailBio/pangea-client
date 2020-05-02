@@ -8,7 +8,7 @@ import TaxaMaterialAbundancePanel from './components/taxonabundancepanelmaterial
 import SampleMetadataPanel from './components/samplemetadata';
 import SampleSunburstPanel from './components/samplesunburst';
 import TaxonEntryBar from './components/taxonentrybar';
-import { taxa_suggestions } from './assets/taxasuggestions'
+import { taxa_suggestions } from './assets/taxasuggestions';
 
 import './assets/css/web-css.css';
 import './assets/css/nucleo-icons.css';
