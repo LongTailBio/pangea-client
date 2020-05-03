@@ -26,10 +26,10 @@ export const HomeScreen = () => (
         </p>
       </Col>
       <Col lg={3} md={6}>
-        <h4>Taxa Search</h4>
-        <p>Search samples by taxa</p>
+        <h4>MetaSUB</h4>
+        <p>See a map of microbes around the world</p>
         <p>
-          <Link to="/contrib/taxa-search" className="btn btn-primary">
+          <Link to="/contrib/metasub" className="btn btn-primary">
             Search
           </Link>
         </p>
