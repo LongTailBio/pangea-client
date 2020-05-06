@@ -1,4 +1,6 @@
 import * as d3 from 'd3';
+import * as d3selection from 'd3-selection';
+import 'd3-transition';
 
 export type Entry = {
   name: string;

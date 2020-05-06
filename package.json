@@ -34,7 +34,7 @@
     "axios-hooks": "^1.9.0",
     "chroma-js": "^2.1.0",
     "commonmark": "^0.28.1",
-    "d3": "^4.13.0",
+    "d3": "^5.16.0",
     "d3-sankey": "^0.12.3",
     "highcharts": "^8.0.4",
     "plotly": "^1.0.6",
