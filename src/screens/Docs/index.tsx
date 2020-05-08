@@ -12,6 +12,7 @@ const Docs: React.FC = () => (
   <Row>
     <Helmet>
       <title>Pangea :: Documenation</title>
+      <meta name="description" content="Pangea provides large scale storage for biological projects. This page documents how to use Pangea."/>
     </Helmet>
     <Col lg={10} lgOffset={1}>
       <h1>A Content Management System for the Life Sciences</h1>
@@ -32,14 +33,44 @@ const Docs: React.FC = () => (
         belong to organizations. More detail on this data model may be found
         below.
       </p>
+      <h2>Downloading Data</h2>
       <p>
-        In addition to its core functionalty Pangea supports a system of
-        extension modules. These extension modules may be used to support a wide
-        variety of additional use cases. Critically, extension modules can
-        support search and visualization of data.
+        Individual files may be downloaded from Pangea by clicking on the
+        provided links. To find a file search for the relevant Sample or Sample
+        Group, navigate to the result you want and click the name of the desired
+        result.
       </p>
-
-      <h3>The Data Model</h3>
+      <h3>Bulk Downloads</h3>
+      <p>
+        The best way to download a large number of files from Pangea is 
+        to use the Python API which may be found
+        <a href="https://github.com/LongTailBio/pangea-django/tree/master/api-client"> here.</a>
+      </p>
+      <h2>The API</h2>
+      <p>
+        Pangea supports a RESTful API for users to interact with. This API may be
+        used directly with tools like CURL or may be accessed through the officially
+        support python library.
+      </p>
+      <h3>Swagger Documentation</h3>
+      <p>
+        Swagger documentation for the API may be found
+        <a href="https://app.swaggerhub.com/apis/dcdanko/Pangea/beta"> here.</a>
+      </p>
+      <h3>Python Library</h3>
+      <p>
+        Source code and documentation for the Python library may be found
+        <a href="https://github.com/LongTailBio/pangea-django/tree/master/api-client"> here.</a>
+      </p>
+      <h2>Visualization and MetaGenScope</h2>
+      <p>
+        Pangea supports data visualization through extension modules (see below). 
+        MetaGenScope is a visualization module for Metagenomic data. To access 
+        MetaGenScope for a Sample or Sample Group navigate to the appropriate
+        page and click on the <i>Resources</i> tab. This tab contains a link
+        to MetaGenScope.
+      </p>
+      <h2>The Data Model</h2>
       <p>
         Pangea employs a simple data model that can support a variety of use
         cases. The core of this data model is a Sample. Samples represent a
@@ -81,6 +112,14 @@ const Docs: React.FC = () => (
         was derived from. This helps to ensure provenance of each result and
         reproducible research.
       </p>
+      <h2>Extension Modules</h2>
+      <p>
+        In addition to its core functionalty Pangea supports a system of
+        extension modules. These extension modules may be used to support a wide
+        variety of additional use cases. Critically, extension modules can
+        support search and visualization of data.
+      </p>
+
     </Col>
   </Row>
 );
