@@ -29,7 +29,7 @@ const Docs: React.FC = () => (
         <ul>
           <li>Organize Biological Data and Projects</li>
           <li>Low Cost Storage of Petabytes of Data</li>
-          <li>Search, Visualize and Compare Datasets</li>
+          <li>Search, Visualize, and Compare Datasets</li>
         </ul>
       </p>
       <p>

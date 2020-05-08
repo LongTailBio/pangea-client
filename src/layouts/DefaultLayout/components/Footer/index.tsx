@@ -27,10 +27,21 @@ class Footer extends React.Component<{}, FooterModelState> {
     return (
       <Grid>
         <Row>
-          <Col lg={10}>
+          <Col lg={2}>
+            <hr />
+            <a
+              href="https://www.longtailbio.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link"
+            >
+              Longtail Biotech
+            </a>
+          </Col>
+          <Col lg={8}>
             <hr />
             <Button bsStyle="link" onClick={this.open}>
-              About/Attributions/License
+              About Attributions License
             </Button>
           </Col>
           <Col lg={2}>
