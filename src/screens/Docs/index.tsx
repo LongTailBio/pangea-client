@@ -25,6 +25,14 @@ const Docs: React.FC = () => (
         across its full lifecycle.
       </p>
       <p>
+        <b>Pangea Key Features</b>
+        <ul>
+          <li>Organize Biological Data and Projects</li>
+          <li>Low Cost Storage of Petabytes of Data</li>
+          <li>Search, Visualize and Compare Datasets</li>
+        </ul>
+      </p>
+      <p>
         At its core Pangea employs a simple flexible data model which can
         support a wide variety of project types. Individual samples contain both
         raw data and analyses. Samples can be grouped together to form Sample
@@ -33,6 +41,7 @@ const Docs: React.FC = () => (
         belong to organizations. More detail on this data model may be found
         below.
       </p>
+      <hr/>
       <h2>Downloading Data</h2>
       <p>
         Individual files may be downloaded from Pangea by clicking on the
@@ -46,6 +55,7 @@ const Docs: React.FC = () => (
         to use the Python API which may be found
         <a href="https://github.com/LongTailBio/pangea-django/tree/master/api-client"> here.</a>
       </p>
+      <hr/>
       <h2>The API</h2>
       <p>
         Pangea supports a RESTful API for users to interact with. This API may be
@@ -54,14 +64,18 @@ const Docs: React.FC = () => (
       </p>
       <h3>Swagger Documentation</h3>
       <p>
-        Swagger documentation for the API may be found
+        Swagger documentation for the RESTful API may be found
         <a href="https://app.swaggerhub.com/apis/dcdanko/Pangea/beta"> here.</a>
       </p>
       <h3>Python Library</h3>
       <p>
+        Pangea includes an officially supported Python library to interact with the API.
+      </p>
+      <p>
         Source code and documentation for the Python library may be found
         <a href="https://github.com/LongTailBio/pangea-django/tree/master/api-client"> here.</a>
       </p>
+      <hr/>
       <h2>Visualization and MetaGenScope</h2>
       <p>
         Pangea supports data visualization through extension modules (see below). 
@@ -70,6 +84,7 @@ const Docs: React.FC = () => (
         page and click on the <i>Resources</i> tab. This tab contains a link
         to MetaGenScope.
       </p>
+      <hr/>
       <h2>The Data Model</h2>
       <p>
         Pangea employs a simple data model that can support a variety of use
@@ -112,6 +127,7 @@ const Docs: React.FC = () => (
         was derived from. This helps to ensure provenance of each result and
         reproducible research.
       </p>
+      <hr/>
       <h2>Extension Modules</h2>
       <p>
         In addition to its core functionalty Pangea supports a system of
