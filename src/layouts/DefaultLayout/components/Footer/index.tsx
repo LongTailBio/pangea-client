@@ -38,13 +38,13 @@ class Footer extends React.Component<{}, FooterModelState> {
               Longtail Biotech
             </a>
           </Col>
-          <Col lg={8}>
+          <Col lg={2}>
             <hr />
             <Button bsStyle="link" onClick={this.open}>
               About Attributions License
             </Button>
           </Col>
-          <Col lg={2}>
+          <Col lg={4}>
             <hr />
             <a
               href="https://github.com/longtailbio"
@@ -55,6 +55,17 @@ class Footer extends React.Component<{}, FooterModelState> {
               GitHub
             </a>
           </Col>
+          <Col lg={2}>
+            <hr />
+            <a
+              href="mailto:dev@longtailbio.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link"
+            >
+              Support
+            </a>
+          </Col>         
         </Row>
 
         <Modal show={this.state.showModal} onHide={this.close} bsSize="lg">

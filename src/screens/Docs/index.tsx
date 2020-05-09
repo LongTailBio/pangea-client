@@ -42,6 +42,11 @@ const Docs: React.FC = () => (
         below.
       </p>
       <hr/>
+      <h2>Support</h2>
+      <p>
+        Please feel free to email dev@longtailbio.com for questions and help.
+      </p>
+      <hr/>
       <h2>Downloading Data</h2>
       <p>
         Individual files may be downloaded from Pangea by clicking on the
