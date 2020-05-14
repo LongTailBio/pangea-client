@@ -19,6 +19,7 @@ import AnalysisResult from './screens/AnalysisResult';
 import Dashboard from './screens/Dashboard';
 import Docs from './screens/Docs';
 import SearchResult from './screens/SearchResult';
+import OmniSearchResult from './screens/OmniSearchResult';
 import ContribRouter from './contrib/router';
 
 export const App: React.FC = () => {
@@ -142,6 +143,12 @@ export const App: React.FC = () => {
           path="/search/:query"
           render={routeProps => (
             <SearchResult query={routeProps.match.params.query} />
+          )}
+        />
+        <Route
+          path="/omnisearch/:query"
+          render={routeProps => (
+            <OmniSearchResult query={routeProps.match.params.query} />
           )}
         />
         <Route

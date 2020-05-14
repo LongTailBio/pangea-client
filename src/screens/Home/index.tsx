@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 
-import { SearchBar } from '../../components/SearchBar';
+import { OmniSearchBar } from '../../components/OmniSearchBar';
 
 export const HomeScreen = () => (
   <>
@@ -12,7 +12,7 @@ export const HomeScreen = () => (
         <h1>Pangea</h1>
         <h3>A content management system for the Life Sciences</h3>
 
-        <SearchBar />
+        <OmniSearchBar />
 
         <hr />
         <h2>Built for Researchers</h2>

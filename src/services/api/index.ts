@@ -4,6 +4,7 @@ import { Options, makeUseAxios } from 'axios-hooks';
 import { history } from '../../history';
 import { API_BASE_URL, cancelableAxios } from './utils';
 import { UserType } from './models/user';
+import { OmniSearchResultType } from './models/omniSearchResult';
 
 export interface PaginatedResult<T> {
   count: number;
@@ -75,6 +76,8 @@ interface ObjectLink {
   uuid: string;
 }
 
+
+
 export interface SearchResultType {
   search_term: string;
   sample_groups: Array<ObjectLink>;
@@ -96,6 +99,17 @@ export const search = (query: string, source: CancelTokenSource) => {
       organizations: res.data.organizations,
     };
 
+    return search_result;
+  });
+};
+
+export const omnisearch = (query: string, source: CancelTokenSource) => {
+  const options: AxiosRequestConfig = {
+    url: `${API_BASE_URL}/contrib/omnisearch/search?query=${query}&format=json`,
+    method: 'get',
+  };
+  return cancelableAxios(options, source).then(res => {
+    const search_result: OmniSearchResultType = res.data.results;
     return search_result;
   });
 };
