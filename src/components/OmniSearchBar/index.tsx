@@ -90,12 +90,6 @@ export class OmniSearchBar extends React.Component<{}, OmniSearchBarState> {
             </div>
           </Col>
           <Col lg={2}>
-            <button
-              className="btn btn-secondary btn-lg btn-block"
-              onClick={this.handleRandomSearch}
-            >{'Random'}</button>
-          </Col>
-          <Col lg={2}>
             <input
               type="submit"
               className="btn btn-primary btn-lg btn-block"
@@ -103,6 +97,12 @@ export class OmniSearchBar extends React.Component<{}, OmniSearchBarState> {
             />
           </Col>
         </form>
+          <Col lg={2}>
+            <button
+              className="btn btn-secondary btn-lg btn-block"
+              onClick={this.handleRandomSearch}
+            >{'Random'}</button>
+          </Col>
       </Row>
     );
   }
