@@ -196,6 +196,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
           path="/sample-groups/:uuid/metadata"
           render={() => (
             <Row>
+              <p>See Resources tab to download metadata</p>
               <Col lg={12}>
                 {samples.count > 0 && (
                   <table className="table">
@@ -257,6 +258,13 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
                     >
                       MetaGenScope - Automated Data Visualization
                     </Link>
+                  </li>
+                  <li className="analysis-group-list-item">
+                    <a
+                      href={`/api/sample_groups/${group.uuid}/metadata?format=csv`}
+                    >
+                      Metadata - Download metadata for this group as a CSV
+                    </a>
                   </li>
                 </ul>
               </Col>
