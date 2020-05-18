@@ -52,6 +52,7 @@ interface SampleGroupScreenProps {
 
 export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
   const [{ data, loading, error }] = useSampleGroup(props.uuid);
+  const { authToken } = window.localStorage;
 
   if (loading) {
     return (
@@ -238,7 +239,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
                 <ul key="get-manifest" className="analysis-group-list">
                   <li className="analysis-group-list-item">
                     <a
-                      href={`/api/sample_groups/${group.uuid}/module_counts?format=json`}
+                      href={`/api/sample_groups/${group.uuid}/module_counts?format=json&token=${authToken}`}
                     >
                       Module Counts - the number of modules of each type
                       attached to this group
@@ -246,7 +247,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
                   </li>
                   <li className="analysis-group-list-item">
                     <a
-                      href={`/api/sample_groups/${group.uuid}/manifest?format=json`}
+                      href={`/api/sample_groups/${group.uuid}/manifest?format=json&token=${authToken}`}
                     >
                       Data Manifest - A file describing this group and
                       everything in it
@@ -261,7 +262,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
                   </li>
                   <li className="analysis-group-list-item">
                     <a
-                      href={`/api/sample_groups/${group.uuid}/metadata?format=csv`}
+                      href={`/api/sample_groups/${group.uuid}/metadata?kind=csv&token=${authToken}`}
                     >
                       Metadata - Download metadata for this group as a CSV
                     </a>
