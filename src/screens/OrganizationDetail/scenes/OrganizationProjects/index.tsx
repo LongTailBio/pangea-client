@@ -1,5 +1,6 @@
 import React from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
+import { Link } from 'react-router-dom';
 import { Row, Col, Well, Button } from 'react-bootstrap';
 
 import { SampleGroupType } from '../../../../services/api/models/analysisGroup';
@@ -26,6 +27,11 @@ const OrganizationProjects = (props: OrganizationProjectsProps) => {
             </LinkContainer>
           </Well>
         )}
+      </Col>
+      <Col lg={2} lgOffset={2}>
+        <Link to="/sample-groups/create" className="btn btn-primary">
+          New Sample Group
+        </Link>
       </Col>
     </Row>
   );

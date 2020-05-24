@@ -141,7 +141,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
           path="/sample-groups/:uuid"
           render={() => (
             <Row>
-              <Col lg={12}>
+              <Col lg={8}>
                 {samples.count > 0 &&
                   samples.results.map(sample => (
                     <ul key={sample.uuid} className="analysis-group-list">
@@ -157,6 +157,11 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
                     <h4>This sample group has no samples.</h4>
                   </Well>
                 )}
+              </Col>
+              <Col lg={2} lgOffset={2}>
+                <Link to="/samples/create" className="btn btn-primary">
+                  Add Sample
+                </Link>
               </Col>
             </Row>
           )}

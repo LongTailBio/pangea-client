@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Redirect } from 'react-router-dom';
 import { Row, Col, Button } from 'react-bootstrap';
 import { default as axios, CancelTokenSource } from 'axios';
+import { Link } from 'react-router-dom';
 
 interface SearchFormDataType {
   [field: string]: string;
@@ -74,36 +75,43 @@ export class OmniSearchBar extends React.Component<{}, OmniSearchBarState> {
       return <Redirect to={path} />;
     }
     return (
-      <Row>
-        <form onSubmit={this.handleSubmitSearch}>
-          <Col lg={8}>
-            <div className="form-group">
+      <>
+        <Row>
+          <form onSubmit={this.handleSubmitSearch}>
+            <Col lg={10}>
+              <div className="form-group">
+                <input
+                  name="query"
+                  className="form-control input-lg input-grp-btn"
+                  type="text"
+                  placeholder="Search..."
+                  required={true}
+                  value={this.state.formData.query}
+                  onChange={this.handleFormChange}
+                />
+              </div>
+            </Col>
+            <Col lg={2}>
               <input
-                name="query"
-                className="form-control input-lg"
-                type="text"
-                placeholder="Search..."
-                required={true}
-                value={this.state.formData.query}
-                onChange={this.handleFormChange}
+                type="submit"
+                className="btn btn-primary btn-lg btn-block"
+                value="Search"
               />
-            </div>
-          </Col>
-          <Col lg={2}>
-            <input
-              type="submit"
-              className="btn btn-primary btn-lg btn-block"
-              value="Search"
-            />
-          </Col>
-        </form>
-          <Col lg={2}>
-            <button
-              className="btn btn-secondary btn-lg btn-block"
-              onClick={this.handleRandomSearch}
-            >{'Random'}</button>
-          </Col>
-      </Row>
+            </Col>
+          </form>
+          </Row>
+          <Row>
+            <Col lg={2}>
+              <Link to="/comingsoon">Advanced Search</Link>
+            </Col>
+            <Col lg={2} lgOffset={8}>
+              <button
+                className="btn btn-secondary btn-sm btn-block"
+                onClick={this.handleRandomSearch}
+              >{'Random'}</button>
+            </Col>
+        </Row>
+      </>
     );
   }
 }

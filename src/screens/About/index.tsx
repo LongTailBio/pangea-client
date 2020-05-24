@@ -21,6 +21,16 @@ class About extends React.Component {
           <title>MetaGenScope :: About</title>
         </Helmet>
         <Col lg={10} lgOffset={1}>
+          <h2>Built for Researchers</h2>
+          <h3>
+            Pangea is a data platform designed for the way research happens. Modern biology comes with a deluge of data, Pangea can help you store, find, analyze, and share that data.
+          </h3>
+          <h3>Key Features of Pangea</h3>
+          <h4> - Store and Index Petabytes of Data</h4>
+          <h4> - Organize Research Projects and Streamline Analysis</h4>
+          <h4> - Search, Visualize, and Compare Hundreds of Datasets</h4>
+          <h4> - Open Source, Built with Academic Users in Mind</h4>    
+          <hr />    
           <h1>About</h1>
           <p>MetaGenScope automatically visualizes metagenomic data.</p>
           <p>{content}</p>

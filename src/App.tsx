@@ -11,9 +11,12 @@ import Logout from './screens/Auth/scenes/Logout';
 import Home from './screens/Home';
 import About from './screens/About';
 import OrganizationList from './screens/OrganizationList';
+import OrganizationCreate from './screens/OrganizationCreate';
 import OrganizationDetail from './screens/OrganizationDetail';
 import UserDetail from './screens/UserDetail';
 import SampleGroup from './screens/SampleGroup';
+import SampleGroupCreate from './screens/SampleGroupCreate';
+import SampleCreate from './screens/SampleCreate';
 import Sample from './screens/Sample';
 import AnalysisResult from './screens/AnalysisResult';
 import Dashboard from './screens/Dashboard';
@@ -21,6 +24,8 @@ import Docs from './screens/Docs';
 import SearchResult from './screens/SearchResult';
 import OmniSearchResult from './screens/OmniSearchResult';
 import ContribRouter from './contrib/router';
+import ToolsScreen from './screens/Tools';
+
 
 export const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -93,10 +98,25 @@ export const App: React.FC = () => {
           render={() => <Dashboard isAuthenticated={isAuthenticated} />}
         />
         <Route
+          path="/comingsoon"
+          render={() => (<h1>Coming Soon!</h1>)}
+        />
+        <Route
+          exact={true}
+          path="/tools"
+          render={() => <ToolsScreen />}
+        />        
+        <Route
           exact={true}
           path="/organizations"
           render={() => <OrganizationList />}
         />
+        <Route
+          path="/organizations/create"
+          render={routeProps => (
+            <OrganizationCreate isAuthenticated={isAuthenticated} />
+          )}
+        />        
         <Route
           path="/organizations/:uuid"
           render={routeProps => (
@@ -123,6 +143,12 @@ export const App: React.FC = () => {
           )}
         />
         <Route
+          path="/sample-groups/create"
+          render={routeProps => (
+            <SampleGroupCreate isAuthenticated={isAuthenticated} />
+          )}
+        />
+        <Route
           path="/sample-groups/:uuid"
           render={routeProps => (
             <SampleGroup uuid={routeProps.match.params.uuid} />
@@ -135,6 +161,10 @@ export const App: React.FC = () => {
             <AnalysisResult uuid={routeProps.match.params.uuid} kind="sample" />
           )}
         />
+        <Route
+          path="/samples/create"
+          render={routeProps => <SampleCreate isAuthenticated={isAuthenticated} />}
+        />        
         <Route
           path="/samples/:uuid"
           render={routeProps => <Sample uuid={routeProps.match.params.uuid} />}
