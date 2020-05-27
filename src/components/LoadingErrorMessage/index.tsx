@@ -8,6 +8,7 @@ import { AxiosError } from 'axios';
 interface LoadingErrorMessageProps {
   loading: boolean;
   error: AxiosError<any> | undefined;
+  name?: string; 
   message?: string;
 }
 
@@ -19,7 +20,8 @@ export const LoadingErrorMessage = (props: LoadingErrorMessageProps) => {
       <>
         <Row>
           <h1>Loading...</h1>
-          <h2>{props?.message}</h2>
+          <h2>{ props?.name }</h2>
+          <p style={{ color: 'blue' }}>{props?.message}</p>
         </Row>
       </>
     );
@@ -29,8 +31,8 @@ export const LoadingErrorMessage = (props: LoadingErrorMessageProps) => {
       <>
         <Row>
           <h1>Error</h1>
-          <h2>New Organization</h2>
-          <p>{props?.message}</p>
+          <h2>{ props?.name }</h2>
+          <p style={{ color: 'red' }}>{props?.message}</p>
         </Row>
       </>
     );

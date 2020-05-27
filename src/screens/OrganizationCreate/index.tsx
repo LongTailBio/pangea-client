@@ -3,7 +3,9 @@ import { Link, Redirect } from 'react-router-dom';
 import { Row, Col, Button } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 import { default as axios, CancelTokenSource, AxiosError } from 'axios';
-import { usePangeaAxios } from '../../services/api';
+import useAxios from 'axios-hooks'
+import { API_BASE_URL } from '../../services/api/utils';
+
 
 import { LoadingErrorMessage } from '../../components/LoadingErrorMessage'
 import { OrganizationType } from '../../services/api/models/organization';
@@ -24,41 +26,41 @@ export const CreateOrgForm = (props: CreateOrgProps) => {
   const [adminEmail, setAdminEmail] = useState('');
   const [name, setName] = useState('');
   const [orgUUID, setOrgUUID] = useState('');
+  const [isCreated, setCreated] = useState(false);
   const [createOrgErrors, setCreateOrgErrors] = useState<string[]>([]);
+  const { authToken } = window.localStorage;
+  const [
+    { data: putData, loading: putLoading, error: putError },
+    executePut
+  ] = useAxios(
+    {
+      url: `${API_BASE_URL}/organizations`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: authToken ? `Token ${authToken}` : undefined,
+      },
+    },
+    { manual: true }
+  )
 
-  if (!isAuthenticated) return <p>You must be logged in to view this. Click <Link to="/login">here</Link> to log back in.</p>;;
+  if (!isAuthenticated) return <p>You must be logged in to view this. Click <Link to="/login">here</Link> to log back in.</p>;
+  if (putError || putLoading) return <LoadingErrorMessage loading={putLoading} error={putError} name={'Organization'} message={putError?.message} />;
 
-  const handleCreateOrgError = (error: AxiosError) => {
-    let errorMessages = [error.message];
+  const handleUserFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setCreateOrgErrors([]);
 
-    if (error.response) {
-      const data = error.response.data as { [key: string]: string[] };
-      errorMessages = Object.keys(error.response.data).reduce(
-        (acc, key) => acc.concat(data[key]),
-        [error.message],
-      );
-    }
-  };
+    executePut({
+      data: { name, admin_email: adminEmail,}
+    })
+    setCreated(true);
+  }
 
-  const handleUserFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {}
-  //   event.preventDefault();
-  //   setCreateOrgErrors([]);
+  if (isCreated){
+    return (<Redirect to={`/organizations/${putData.uuid}`} />)
+  }
 
-  //   const payload = { name, admin_email: adminEmail,};
-
-  //   usePangeaAxios<OrganizationType>({
-  //     url: '/organizations',
-  //     method: 'POST',
-  //     data: {
-  //       name,
-  //       admin_email: adminEmail,
-  //     }
-  //   })
-  //    //  .then(res => {
-  //    //    setOrgUUID(res.data.uuid);
-  //    //  })
-  //    // .catch(handleCreateOrgError);
-  // };
   return (
     <Row>
       <Helmet>

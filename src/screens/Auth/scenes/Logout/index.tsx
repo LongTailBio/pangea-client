@@ -16,7 +16,7 @@ export const Logout = (props: LogoutProp) => {
   return (
     <div>
       <Helmet>
-        <title>MetaGenScope :: Logged Out</title>
+        <title>Pangea :: Logged Out</title>
       </Helmet>
       <p>
         You are now logged out. Click <Link to="/login">here</Link> to log back
