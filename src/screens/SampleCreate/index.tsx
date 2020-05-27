@@ -3,18 +3,16 @@ import { Link, Redirect } from 'react-router-dom';
 import { Row, Col, Button, Checkbox } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 import { default as axios, CancelTokenSource, AxiosError } from 'axios';
+import useAxios from 'axios-hooks'
 import { usePangeaAxios } from '../../services/api';
+import { API_BASE_URL } from '../../services/api/utils';
 
 import { LoadingErrorMessage } from '../../components/LoadingErrorMessage'
-import { OrganizationType } from '../../services/api/models/organization';
+import { SampleGroupType } from '../../services/api/models/sampleGroup';
 
-
-type FormDataType = {
-  name: string;
-  org: string;
-  library: boolean;
-  public: boolean;
-  description: string;
+type SampleGroupResult = {
+  count: number;
+  results: SampleGroupType[];
 };
 
 type CreateSampleProps = {
@@ -26,12 +24,59 @@ export const CreateSampleForm = (props: CreateSampleProps) => {
 
   const [name, setName] = useState('');
   const [createSampleErrors, setCreateSampleErrors] = useState<string[]>([]);
+  const [lib, setLib] = useState('');
+  const [isCreated, setCreated] = useState(false);
 
-  if (!isAuthenticated) return <p>You must be logged in to view this. Click <Link to="/login">here</Link> to log back in.</p>;;
+  const { authToken } = window.localStorage;
+  const [
+    { data: putData, loading: putLoading, error: putError },
+    executePut
+  ] = useAxios(
+    {
+      url: `${API_BASE_URL}/samples`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: authToken ? `Token ${authToken}` : undefined,
+      },
+    },
+    { manual: true }
+  )
 
-  const handleCreateSampleError = (error: AxiosError) => {};
+  const [{ data: grpData, loading: grpLoading, error: grpError }] = usePangeaAxios<SampleGroupResult>(
+    '/sample_groups',
+  );
 
-  const handleUserFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {}
+  const grps: {[key: string]: string} = {};
+  if (!grpLoading && ! grpError){
+    var el: any;
+    for (el in grpData.results) {
+      el = grpData.results[el]
+      if(el.is_library){
+        grps[el.name] = el.uuid
+      }
+    }
+  }
+
+  if (!isAuthenticated) return <p>You must be logged in to view this. Click <Link to="/login">here</Link> to log back in.</p>;
+  if (putError || putLoading) return <LoadingErrorMessage loading={putLoading} error={putError} name={'Organization'} message={putError?.message} />;
+
+  const handleUserFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setCreateSampleErrors([]);
+
+    executePut({
+      data: {
+        name,
+        library: lib,
+      }
+    })
+    setCreated(true);
+  }
+
+  if (isCreated){
+    return (<Redirect to={`/samples/${putData.uuid}`} />)
+  }
 
   return (
     <Row>
@@ -55,10 +100,14 @@ export const CreateSampleForm = (props: CreateSampleProps) => {
               value={name}
               onChange={event => setName(event.currentTarget.value)}
             />
-            <label htmlFor="inputOrg">Library</label>
-            <select id="inputOrg" className="form-control">
+            <label htmlFor="inputLib">Library</label>
+            <select
+              id="inputLib"
+              className="form-control"
+              onChange={event => setLib(grps[event.currentTarget.value])}
+            >
               <option selected>Library...</option>
-              {['MetaSUB'].map(libName => (<option>{libName}</option>))}
+              {Object.keys(grps).map(libName => (<option>{libName}</option>))}
             </select>
           </div> 
           <input
