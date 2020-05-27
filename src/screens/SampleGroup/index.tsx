@@ -126,9 +126,9 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
               <Badge>{metadata_count}</Badge>
             </NavItem>
           </LinkContainer>
-          <LinkContainer to={`/sample-groups/${props.uuid}/resources`}>
+          <LinkContainer to={`/sample-groups/${props.uuid}/viz`}>
             <NavItem eventKey="4">
-              <Glyphicon glyph="tags" /> Resources{' '}
+              <Glyphicon glyph="tags" /> Visualization{' '}
             </NavItem>
           </LinkContainer>
         </Nav>
@@ -202,7 +202,31 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
           path="/sample-groups/:uuid/metadata"
           render={() => (
             <Row>
-              <p>See Resources tab to download metadata</p>
+              <ul key="get-manifest" className="analysis-group-list">
+                <li className="analysis-group-list-item">
+                  <a
+                    href={`/api/sample_groups/${group.uuid}/module_counts?format=json&token=${authToken}`}
+                  >
+                    Module Counts - the number of modules of each type
+                    attached to this group
+                  </a>
+                </li>
+                <li className="analysis-group-list-item">
+                  <a
+                    href={`/api/sample_groups/${group.uuid}/manifest?format=json&token=${authToken}`}
+                  >
+                    Data Manifest - A file describing this group and
+                    everything in it
+                  </a>
+                </li>
+                <li className="analysis-group-list-item">
+                  <a
+                    href={`/api/sample_groups/${group.uuid}/metadata?kind=csv&token=${authToken}`}
+                  >
+                    Metadata - Download metadata for this group as a CSV
+                  </a>
+                </li>
+              </ul>
               <Col lg={12}>
                 {samples.count > 0 && (
                   <table className="table">
@@ -237,40 +261,18 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
         />
         <Route
           exact={true}
-          path="/sample-groups/:uuid/resources"
+          path="/sample-groups/:uuid/viz"
           render={() => (
             <Row>
               <Col lg={12}>
                 <ul key="get-manifest" className="analysis-group-list">
-                  <li className="analysis-group-list-item">
-                    <a
-                      href={`/api/sample_groups/${group.uuid}/module_counts?format=json&token=${authToken}`}
-                    >
-                      Module Counts - the number of modules of each type
-                      attached to this group
-                    </a>
-                  </li>
-                  <li className="analysis-group-list-item">
-                    <a
-                      href={`/api/sample_groups/${group.uuid}/manifest?format=json&token=${authToken}`}
-                    >
-                      Data Manifest - A file describing this group and
-                      everything in it
-                    </a>
-                  </li>
+
                   <li className="analysis-group-list-item">
                     <Link
                       to={`/contrib/metagenscope/sample-groups/${group.uuid}`}
                     >
                       MetaGenScope - Automated Data Visualization
                     </Link>
-                  </li>
-                  <li className="analysis-group-list-item">
-                    <a
-                      href={`/api/sample_groups/${group.uuid}/metadata?kind=csv&token=${authToken}`}
-                    >
-                      Metadata - Download metadata for this group as a CSV
-                    </a>
                   </li>
                 </ul>
               </Col>

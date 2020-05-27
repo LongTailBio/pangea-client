@@ -50,6 +50,9 @@ class Header extends React.Component<HeaderProps, {}> {
                     <LinkContainer to="/sample-groups/create">
                       <MenuItem>New Sample Group</MenuItem>
                     </LinkContainer>
+                    <LinkContainer to="/samples/create">
+                      <MenuItem>New Sample</MenuItem>
+                    </LinkContainer>                    
                   </NavDropdown>
                 )}
                 <NavDropdown title="Account" id="basic-nav-dropdown">

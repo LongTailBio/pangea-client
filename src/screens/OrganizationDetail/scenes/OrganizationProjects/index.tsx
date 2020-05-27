@@ -22,7 +22,7 @@ const OrganizationProjects = (props: OrganizationProjectsProps) => {
         {sampleGroups.length === 0 && (
           <Well className="text-center">
             <h4>This organization has no sample groups.</h4>
-            <LinkContainer to="#">
+            <LinkContainer to="/sample-groups/create">
               <Button bsStyle="success">New Sample Group</Button>
             </LinkContainer>
           </Well>
