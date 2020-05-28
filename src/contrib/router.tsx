@@ -6,6 +6,7 @@ import Covid19 from './covid19';
 import MGSSampleGroupScreen from './metagenscope/screens/SampleGroups/scenes/GroupDetail';
 import MGSSampleScreen from './metagenscope/screens/Samples/scenes/SampleDetail';
 import MetasubMap from './metasub';
+import TaxonScreen from './treeoflife/screens/Taxon';
 
 export const ContribRouter = (props: RouteComponentProps) => {
   const { path } = props.match;
@@ -26,6 +27,12 @@ export const ContribRouter = (props: RouteComponentProps) => {
         )}
       />
       <Route path={`${path}/metasub`} component={MetasubMap} />
+      <Route
+        path={`${path}/treeoflife/:taxon`}
+        render={routeProps => (
+          <TaxonScreen taxon={routeProps.match.params.taxon} />
+        )}
+      />
     </Switch>
   );
 };

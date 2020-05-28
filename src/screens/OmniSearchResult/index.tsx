@@ -207,7 +207,7 @@ class OmniSearchResultScreen extends React.Component<
                           const { canon_name } = taxon;
                           return (
                             <li key={canon_name} className="analysis-group-list-item">
-                              {canon_name}
+                              <Link to={`/contrib/treeoflife/${canon_name}`} >{canon_name}</Link>
                             </li>
                           );
                         })}
