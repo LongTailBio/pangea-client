@@ -61,6 +61,21 @@ const Docs: React.FC = () => (
         <a href="https://github.com/LongTailBio/pangea-django/tree/master/api-client"> here.</a>
       </p>
       <hr/>
+      <h2>Uploading Data</h2>
+      <p>
+       Currently uploading data requires some experience with the command line. To upload data
+       you should use the python API, found <a href="https://github.com/LongTailBio/pangea-django/tree/master/api-client"> here.</a>
+       If your data is large you will need to upload it to S3 or another cloud storage provider
+       before uploading to Pangea.
+      </p>
+      <hr/>
+      <h2>Search</h2>
+      <p>
+        Pangea includes a powerful set of search tools for biological data. Users can search by keyword,
+        DNA sequence, taxon name, and by metadata features. Use the "random" search button to see some
+        example searches.
+      </p>
+      <hr/>
       <h2>The API</h2>
       <p>
         Pangea supports a RESTful API for users to interact with. This API may be
