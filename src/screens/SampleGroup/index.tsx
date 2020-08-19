@@ -21,7 +21,7 @@ import MetaDataPanel from './components/MetaDataPanel';
 import VizPanel from './components/VizPanel';
 import AnalysisResultPanel from './components/AnalysisResultPanel';
 import SampleListPanel from './components/SampleListPanel';
-
+import DownloadPanel from './components/DownloadPanel';
 
 
 const useSampleGroup = (uuid: string) => {
@@ -137,6 +137,11 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
               <Glyphicon glyph="tags" /> Visualization{' '}
             </NavItem>
           </LinkContainer>
+          <LinkContainer to={`/sample-groups/${props.uuid}/downloads`}>
+            <NavItem eventKey="5">
+              <Glyphicon glyph="download" /> Download{' '}
+            </NavItem>
+          </LinkContainer>
         </Nav>
       </Row>
 
@@ -168,7 +173,13 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
           path="/sample-groups/:uuid/viz"
           render={() => (
             <VizPanel group={group} />
-
+          )}
+        />
+        <Route
+          exact={true}
+          path="/sample-groups/:uuid/downloads"
+          render={() => (
+            <DownloadPanel group={group} samples={samples.results} analysisResults={analysisResults.results} />
           )}
         />
       </Switch>

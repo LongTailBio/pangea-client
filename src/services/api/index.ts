@@ -103,6 +103,24 @@ export const search = (query: string, source: CancelTokenSource) => {
   });
 };
 
+export interface ModuleCountsType {
+  n_samples: number;
+  [key: string]: number;
+}
+
+export const getModuleCounts = (grpUUID: string, source: CancelTokenSource) => {
+  const options: AxiosRequestConfig = {
+    url: `${API_BASE_URL}/sample_groups/${grpUUID}/module_counts?format=json`,
+    method: 'get',
+  };
+
+  return cancelableAxios(options, source).then(res => {
+    const module_counts: ModuleCountsType = res.data.results;
+    console.log(module_counts)
+    return module_counts;
+  });
+};
+
 export const omnisearch = (query: string, source: CancelTokenSource) => {
   const options: AxiosRequestConfig = {
     url: `${API_BASE_URL}/contrib/omnisearch/search?query=${query}&format=json`,
