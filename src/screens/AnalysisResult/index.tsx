@@ -37,6 +37,7 @@ const useGroup = (kind: ARType, uuid: string) => {
 const formatField = (field: AnalysisResultFieldType): ReactNode => {
   const { stored_data: storedData } = field;
   const isStoredS3Field = storedData['__type__'] === 's3';
+  const isStoredSRAField = storedData['__type__'] === 'sra';
   if (isStoredS3Field) {
     if (storedData['presigned_url']) {
       return <a href={storedData['presigned_url']}>{field.name}</a>;
@@ -46,6 +47,8 @@ const formatField = (field: AnalysisResultFieldType): ReactNode => {
       const s3Path = `${endpoint}/${path}`;
       return <a href={s3Path}>{field.name}</a>;
     }
+  } else if (isStoredSRAField) {
+    return <a href={storedData['url']}>{field.name}</a>;
   } else {
     return `${field.name} ${JSON.stringify(storedData)}`;
   }
@@ -86,10 +89,13 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
       <Row>
         <h1>{analysisResult.module_name}</h1>
         <h2>Analysis Result</h2>
-        <p>{new Date(analysisResult.created_at).toLocaleString()}</p>
+        <p>{'Replicate: "'}{analysisResult.replicate}{'"'}</p>
+        <p>{'Created At: '}{new Date(analysisResult.created_at).toLocaleString()}</p>
+        <Link to={parentPath}>Parent</Link>
       </Row>
       <Row>
-        <Link to={parentPath}>Parent</Link>
+        <h2>Description</h2>
+        <p>{analysisResult.description}</p>        
       </Row>
       <Row>
         <Col lg={6}>
