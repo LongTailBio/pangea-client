@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { Row } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 
 import { usePangeaAxios, PaginatedResult } from '../../services/api';
 import { AnalysisResultType } from '../../services/api/models/analysisResult';
@@ -92,10 +92,30 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
         <Link to={parentPath}>Parent</Link>
       </Row>
       <Row>
-        <h2>Fields</h2>
-        {fields.results.map(field => (
-          <li key={field.uuid}>{formatField(field)}</li>
-        ))}
+        <Col lg={6}>
+          <h2>Fields</h2>
+          {fields.results.map(field => (
+            <li key={field.uuid}>{formatField(field)}</li>
+          ))}
+        </Col>
+        <Col lg={6}>
+          <table className="table">
+            <thead>
+              <tr>
+                <th scope="col">Feature</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.keys(analysisResult.metadata).map(key => (
+                <tr key={key}>
+                  <th scope="row">{key}</th>
+                  <td>{JSON.stringify(analysisResult.metadata[key])}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Col>
       </Row>
     </>
   );
