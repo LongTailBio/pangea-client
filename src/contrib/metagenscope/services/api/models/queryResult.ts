@@ -89,6 +89,31 @@ export interface AlphaDivResultType {
   };
 }
 
+export interface CovidResultType {
+  tool_names: string[];
+  categories: {
+    [key: string]: string[];
+  };
+  by_tool: {
+    [key: string]: {
+      taxa_ranks: string[];
+      by_taxa_rank: {
+        [key: string]: {
+          by_category_name: {
+            [key: string]: {
+              metrics: string[];
+              category_value: string;
+              by_metric: {
+                [key: string]: number[];
+              };
+            }[];
+          };
+        };
+      };
+    };
+  };
+}
+
 export interface ReadsClassifiedType {
   samples: {
     [key: string]: {

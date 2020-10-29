@@ -15,6 +15,7 @@ import { SampleSimilarityModule } from '../../../../display_modules/SampleSimila
 import { TopTaxaModule } from '../../../../display_modules/TopTaxa';
 import { AGSModule } from '../../../../display_modules/AverageGenomeSize';
 import { AlphaDiversityModule } from '../../../../display_modules/AlphaDiversity';
+import { CovidDisplayModule } from '../../../../display_modules/CovidDisplay';
 import { MultiAxisModule } from '../../../../display_modules/MultiAxis';
 import { VolcanoModule } from '../../../../display_modules/Volcano';
 import { ReadsClassifiedModule } from '../../../../display_modules/ReadsClassified';
@@ -96,6 +97,10 @@ export const MGSSampleGroupScreen = (props: MGSSampleGroupScreenProps) => {
       <Row>
         <Col lg={12}>
           <SampleSimilarityModule
+            orgID={grp.organization}
+            groupID={props.groupID}
+          />
+          <CovidDisplayModule
             orgID={grp.organization}
             groupID={props.groupID}
           />
