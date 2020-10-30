@@ -104,10 +104,6 @@ export const MGSSampleGroupScreen = (props: MGSSampleGroupScreenProps) => {
             orgID={grp.organization}
             groupID={props.groupID}
           />
-          <ReadsClassifiedModule
-            orgID={grp.organization}
-            groupID={props.groupID}
-          />
           <VolcanoModule orgID={grp.organization} groupID={props.groupID} />
           <TopTaxaModule orgID={grp.organization} groupID={props.groupID} />
           <AlphaDiversityModule
@@ -116,6 +112,10 @@ export const MGSSampleGroupScreen = (props: MGSSampleGroupScreenProps) => {
           />
           <MultiAxisModule orgID={grp.organization} groupID={props.groupID} />
           <MicrobeDirectoryModule
+            orgID={grp.organization}
+            groupID={props.groupID}
+          />
+          <ReadsClassifiedModule
             orgID={grp.organization}
             groupID={props.groupID}
           />
