@@ -17,6 +17,8 @@ import { usePangeaAxios, PaginatedResult } from '../../services/api';
 import { SampleType } from '../../services/api/models/sample';
 import { AnalysisResultType } from '../../services/api/models/analysisResult';
 
+import SampleMetadataPanel from './components/SampleMetadataPanel';
+
 const useGroup = (uuid: string) => {
   const [sampleResult] = usePangeaAxios<SampleType>(`/samples/${uuid}`);
   const [analysisResultsResult] = usePangeaAxios<
@@ -133,22 +135,7 @@ export const SampleScreen = (props: SampleScreenProps) => {
                 )}
               </Col>
               <Col lg={6}>
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">Feature</th>
-                      <th scope="col">Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Object.keys(sample.metadata).map(key => (
-                      <tr key={key}>
-                        <th scope="row">{key}</th>
-                        <td>{sample.metadata[key]}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <SampleMetadataPanel sample={sample} />
               </Col>
             </Row>
           )}
