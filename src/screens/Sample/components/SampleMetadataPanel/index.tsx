@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { default as axios, CancelTokenSource } from 'axios';
+
 import { Switch, Route } from 'react-router';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -16,6 +18,7 @@ import { Helmet } from 'react-helmet';
 
 import { usePangeaAxios, PaginatedResult } from '../../../../services/api';
 import { SampleType } from '../../../../services/api/models/sample';
+import { modifySampleMetadata } from '../../../../services/api/sampleApi'
 
 
 interface SampleMetadataPanelProps {
@@ -29,9 +32,11 @@ interface SampleMetadataPanelState {
 }
 
 export class SampleMetadataPanel extends React.Component<SampleMetadataPanelProps, SampleMetadataPanelState> {
+  protected sourceToken: CancelTokenSource;
 
   constructor(props: SampleMetadataPanelProps) {
     super(props);
+    this.sourceToken = axios.CancelToken.source();
     this.state = {
       editMode: false,
       editMetadata: {},
@@ -110,8 +115,17 @@ export class SampleMetadataPanel extends React.Component<SampleMetadataPanelProp
       this.state.editMetadata[key] = this.state.editMetadata[mangledKey];
       delete this.state.editMetadata[mangledKey]
     }
-    console.log(this.state.editMetadata)
-    event.preventDefault()
+    modifySampleMetadata(this.props.sample, this.state.editMetadata, this.sourceToken)
+      .then(sample => {
+        this.setState({
+          editMode: false,
+        });
+      })
+      .catch(error => {
+        if (!axios.isCancel(error)) {
+          console.log(error);
+        }
+      });
   }
 
   render(){
