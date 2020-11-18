@@ -31,6 +31,8 @@ const useSampleGroup = (uuid: string) => {
   const [samplesResult] = usePangeaAxios<PaginatedResult<SampleType>>(
     `/sample_groups/${uuid}/samples`,
   );
+  console.log('!!!')
+  console.log(samplesResult)
   const [analysisResultsResult] = usePangeaAxios<
     PaginatedResult<AnalysisResultType>
   >(`/sample_group_ars?sample_group_id=${uuid}`);
@@ -92,6 +94,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
   }
 
   const { group, samples, analysisResults } = data;
+  console.log(samples)
   let metadata_count = 0;
   samples.results.map(
     sample => (metadata_count += Object.keys(sample.metadata).length),
@@ -151,7 +154,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
           exact={true}
           path="/sample-groups/:uuid"
           render={() => (
-            <SampleListPanel samples={samples.results} />
+            <SampleListPanel samples={samples} />
           )}
         />
         <Route

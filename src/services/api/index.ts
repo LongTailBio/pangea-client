@@ -12,6 +12,8 @@ export { createAxios, usePangeaAxios };
 
 export interface PaginatedResult<T> {
   count: number;
+  next: string | undefined;
+  previous: string | undefined;
   results: T[];
 }
 
