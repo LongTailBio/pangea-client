@@ -22,6 +22,8 @@ import VizPanel from './components/VizPanel';
 import AnalysisResultPanel from './components/AnalysisResultPanel';
 import SampleListPanel from './components/SampleListPanel';
 import DownloadPanel from './components/DownloadPanel';
+import EditableDescription from './components/EditableDescription'
+import EditableLongDescription from './components/EditableLongDescription'
 
 
 const useSampleGroup = (uuid: string) => {
@@ -31,8 +33,6 @@ const useSampleGroup = (uuid: string) => {
   const [samplesResult] = usePangeaAxios<PaginatedResult<SampleType>>(
     `/sample_groups/${uuid}/samples`,
   );
-  console.log('!!!')
-  console.log(samplesResult)
   const [analysisResultsResult] = usePangeaAxios<
     PaginatedResult<AnalysisResultType>
   >(`/sample_group_ars?sample_group_id=${uuid}`);
@@ -94,7 +94,6 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
   }
 
   const { group, samples, analysisResults } = data;
-  console.log(samples)
   let metadata_count = 0;
   samples.results.map(
     sample => (metadata_count += Object.keys(sample.metadata).length),
@@ -109,12 +108,16 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
         <h2>Sample Group</h2>
         <p>{group.is_public ? 'Public' : 'Private'}</p>
         <p>{new Date(group.created_at).toLocaleString()}</p>
-      </Row>
-      <Row>
         <Link to={`/organizations/${group.organization}`}>
           Owner Organization
         </Link>
+        <EditableDescription group={group} />
       </Row>
+      <br/>
+      <Row>
+        <EditableLongDescription group={group} />
+      </Row>
+      <hr/>
 
       <Row>
         <Nav bsStyle="tabs" activeKey="1">
