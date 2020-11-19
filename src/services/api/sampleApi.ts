@@ -49,3 +49,21 @@ export const modifySampleMetadata = (sample: SampleType, metadata: any, source: 
     return sample;
   });
 }
+
+export const modifySampleDescription = (sample: SampleType, description: string, source: CancelTokenSource) => {
+  const url = `${API_BASE_URL}/samples/${sample.uuid}`
+  const data = { description: description };
+  const options: AxiosRequestConfig = {
+    url: url,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Token ${window.localStorage.authToken}`,
+    },
+    data: data,
+  };
+  return cancelableAxios(options, source).then(res => {
+    const sample: SampleType = res.data.results;
+    return sample;
+  });
+}

@@ -18,6 +18,8 @@ import { SampleType } from '../../services/api/models/sample';
 import { AnalysisResultType } from '../../services/api/models/analysisResult';
 
 import SampleMetadataPanel from './components/SampleMetadataPanel';
+import EditableDescription from './components/EditableDescription'
+
 
 const useGroup = (uuid: string) => {
   const [sampleResult] = usePangeaAxios<SampleType>(`/samples/${uuid}`);
@@ -82,11 +84,13 @@ export const SampleScreen = (props: SampleScreenProps) => {
       <Row>
         <h1>{sample.name}</h1>
         <h2>Sample</h2>
-      </Row>
-      <Row>
         <Link to={`/sample-groups/${sample.library}`}>Library</Link>
       </Row>
-
+      <br/>
+      <Row>
+        <EditableDescription sample={sample} />
+      </Row>
+      <hr/>
       <Row>
         <Nav bsStyle="tabs" activeKey="1">
           <LinkContainer to={`/samples/${sample.uuid}`}>
