@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { default as axios, CancelTokenSource } from 'axios';
-
+import ReactMarkdown from 'react-markdown'
 import { Switch, Route } from 'react-router';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -119,7 +119,7 @@ export class EditableLongDescriptionPanel extends React.Component<EditableLongDe
         </Row>
         <Row>
           <Col lg={8}>
-          <p>{this.state.editText}</p>
+            <ReactMarkdown>{this.state.editText}</ReactMarkdown>
           </Col>
         </Row>
       </>
