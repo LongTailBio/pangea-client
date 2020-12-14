@@ -41,7 +41,10 @@ class Header extends React.Component<HeaderProps, {}> {
                 </LinkContainer>
                 <LinkContainer to="/organizations">
                   <NavItem>Organizations</NavItem>
-                </LinkContainer>                
+                </LinkContainer>
+                <LinkContainer to="/tags">
+                  <NavItem>Tags</NavItem>
+                </LinkContainer>                                  
                 {this.props.isAuthenticated && (
                   <NavDropdown title="+" id="basic-nav-dropdown">
                     <LinkContainer to="/organizations/create">

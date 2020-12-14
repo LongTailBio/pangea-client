@@ -10,6 +10,8 @@ import UserStatus from './screens/UserStatus';
 import Logout from './screens/Auth/scenes/Logout';
 import Home from './screens/Home';
 import About from './screens/About';
+import TagList from './screens/TagList';
+import TagDetail from './screens/TagDetail';
 import OrganizationList from './screens/OrganizationList';
 import OrganizationCreate from './screens/OrganizationCreate';
 import OrganizationDetail from './screens/OrganizationDetail';
@@ -105,7 +107,19 @@ export const App: React.FC = () => {
           exact={true}
           path="/tools"
           render={() => <ToolsScreen />}
-        />        
+        />
+        <Route
+          exact={true}
+          path="/tags"
+          render={() => <TagList />}
+        />
+        <Route
+          exact={true}
+          path="/tags/:uuid"
+          render={routeProps => (
+            <TagDetail uuid={routeProps.match.params.uuid} />
+          )}
+        />            
         <Route
           exact={true}
           path="/organizations"
