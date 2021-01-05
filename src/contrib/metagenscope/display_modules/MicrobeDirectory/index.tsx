@@ -18,7 +18,7 @@ export class MicrobeDirectoryModule extends HighchartsDisplayContainer<
     super(props);
 
     this.title = 'Microbe Directory';
-    this.moduleName = 'metagenscope::v3.0.0::microbe_directory';
+    this.moduleName = 'metagenscope::microbe_directory';
     this.fieldName = 'md1';
     this.description = (
       <p>

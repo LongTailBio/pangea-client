@@ -11,7 +11,7 @@ export class AGSModule extends HighchartsDisplayContainer<AGSResultType> {
     super(props);
 
     this.title = 'Average Genome Size';
-    this.moduleName = 'metagenscope::v3.0.0::ave_genome_size';
+    this.moduleName = 'metagenscope::ave_genome_size';
     this.fieldName = 'ags';
     this.description = (
       <div>

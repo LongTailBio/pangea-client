@@ -11,7 +11,7 @@ export class CovidDisplayModule extends HighchartsDisplayContainer<CovidResultTy
     super(props);
 
     this.title = 'COVID-19';
-    this.moduleName = 'metagenscope::v3.0.0::covid_fast_detect';
+    this.moduleName = 'metagenscope::covid_fast_detect';
     this.fieldName = 'alpha_diversity';
     this.description = (
       <div>
