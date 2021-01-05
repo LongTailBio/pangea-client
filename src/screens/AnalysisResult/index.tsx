@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { Row } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 
 import { usePangeaAxios, PaginatedResult } from '../../services/api';
 import { AnalysisResultType } from '../../services/api/models/analysisResult';
@@ -37,6 +37,7 @@ const useGroup = (kind: ARType, uuid: string) => {
 const formatField = (field: AnalysisResultFieldType): ReactNode => {
   const { stored_data: storedData } = field;
   const isStoredS3Field = storedData['__type__'] === 's3';
+  const isStoredSRAField = storedData['__type__'] === 'sra';
   if (isStoredS3Field) {
     if (storedData['presigned_url']) {
       return <a href={storedData['presigned_url']}>{field.name}</a>;
@@ -46,6 +47,8 @@ const formatField = (field: AnalysisResultFieldType): ReactNode => {
       const s3Path = `${endpoint}/${path}`;
       return <a href={s3Path}>{field.name}</a>;
     }
+  } else if (isStoredSRAField) {
+    return <a href={storedData['url']}>{field.name}</a>;
   } else {
     return `${field.name} ${JSON.stringify(storedData)}`;
   }
@@ -86,16 +89,39 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
       <Row>
         <h1>{analysisResult.module_name}</h1>
         <h2>Analysis Result</h2>
-        <p>{new Date(analysisResult.created_at).toLocaleString()}</p>
-      </Row>
-      <Row>
+        <p>{'Replicate: "'}{analysisResult.replicate}{'"'}</p>
+        <p>{'Created At: '}{new Date(analysisResult.created_at).toLocaleString()}</p>
         <Link to={parentPath}>Parent</Link>
       </Row>
       <Row>
-        <h2>Fields</h2>
-        {fields.results.map(field => (
-          <li key={field.uuid}>{formatField(field)}</li>
-        ))}
+        <h2>Description</h2>
+        <p>{analysisResult.description}</p>        
+      </Row>
+      <Row>
+        <Col lg={6}>
+          <h2>Fields</h2>
+          {fields.results.map(field => (
+            <li key={field.uuid}>{formatField(field)}</li>
+          ))}
+        </Col>
+        <Col lg={6}>
+          <table className="table">
+            <thead>
+              <tr>
+                <th scope="col">Feature</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.keys(analysisResult.metadata).map(key => (
+                <tr key={key}>
+                  <th scope="row">{key}</th>
+                  <td>{JSON.stringify(analysisResult.metadata[key])}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Col>
       </Row>
     </>
   );

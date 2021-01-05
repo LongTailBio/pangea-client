@@ -14,6 +14,7 @@ import { OrganizationType } from '../../services/api/models/organization';
 import { SampleGroupType } from '../../services/api/models/analysisGroup';
 import { UserType } from '../../services/api/models/user';
 
+
 const useOrganization = (uuid: string) => {
   const [organization] = usePangeaAxios<OrganizationType>(
     `/organizations/${uuid}`,
@@ -118,7 +119,7 @@ export const OrganizationDetail = (props: OrganizationsProps) => {
           <Route
             exact={true}
             path="/organizations/:uuid/people"
-            render={_props => <PeopleList people={people.results} />}
+            render={_props => <PeopleList people={people.results} org={organization} />}
           />
           <Route
             exact={true}

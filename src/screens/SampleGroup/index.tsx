@@ -17,6 +17,14 @@ import { usePangeaAxios, PaginatedResult } from '../../services/api';
 import { SampleGroupType } from '../../services/api/models/sampleGroup';
 import { SampleType } from '../../services/api/models/sample';
 import { AnalysisResultType } from '../../services/api/models/analysisResult';
+import MetaDataPanel from './components/MetaDataPanel';
+import VizPanel from './components/VizPanel';
+import AnalysisResultPanel from './components/AnalysisResultPanel';
+import SampleListPanel from './components/SampleListPanel';
+import DownloadPanel from './components/DownloadPanel';
+import EditableDescription from './components/EditableDescription'
+import EditableLongDescription from './components/EditableLongDescription'
+
 
 const useSampleGroup = (uuid: string) => {
   const [sampleGroupResult] = usePangeaAxios<SampleGroupType>(
@@ -52,6 +60,7 @@ interface SampleGroupScreenProps {
 
 export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
   const [{ data, loading, error }] = useSampleGroup(props.uuid);
+  const { authToken } = window.localStorage;
 
   if (loading) {
     return (
@@ -99,12 +108,16 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
         <h2>Sample Group</h2>
         <p>{group.is_public ? 'Public' : 'Private'}</p>
         <p>{new Date(group.created_at).toLocaleString()}</p>
-      </Row>
-      <Row>
         <Link to={`/organizations/${group.organization}`}>
           Owner Organization
         </Link>
+        <EditableDescription group={group} />
       </Row>
+      <br/>
+      <Row>
+        <EditableLongDescription group={group} />
+      </Row>
+      <hr/>
 
       <Row>
         <Nav bsStyle="tabs" activeKey="1">
@@ -125,9 +138,14 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
               <Badge>{metadata_count}</Badge>
             </NavItem>
           </LinkContainer>
-          <LinkContainer to={`/sample-groups/${props.uuid}/resources`}>
+          <LinkContainer to={`/sample-groups/${props.uuid}/viz`}>
             <NavItem eventKey="4">
-              <Glyphicon glyph="tags" /> Resources{' '}
+              <Glyphicon glyph="tags" /> Visualization{' '}
+            </NavItem>
+          </LinkContainer>
+          <LinkContainer to={`/sample-groups/${props.uuid}/downloads`}>
+            <NavItem eventKey="5">
+              <Glyphicon glyph="download" /> Download{' '}
             </NavItem>
           </LinkContainer>
         </Nav>
@@ -139,128 +157,35 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
           exact={true}
           path="/sample-groups/:uuid"
           render={() => (
-            <Row>
-              <Col lg={12}>
-                {samples.count > 0 &&
-                  samples.results.map(sample => (
-                    <ul key={sample.uuid} className="analysis-group-list">
-                      <li className="analysis-group-list-item">
-                        <Link to={`/samples/${sample.uuid}`}>
-                          {sample.name}
-                        </Link>
-                      </li>
-                    </ul>
-                  ))}
-                {samples.count === 0 && (
-                  <Well className="text-center">
-                    <h4>This sample group has no samples.</h4>
-                  </Well>
-                )}
-              </Col>
-            </Row>
+            <SampleListPanel samples={samples} />
           )}
         />
         <Route
           exact={true}
           path="/sample-groups/:uuid/analysis-results"
           render={() => (
-            <Row>
-              <Col lg={12}>
-                {analysisResults.count > 0 &&
-                  analysisResults.results.map(analysisResult => (
-                    <ul
-                      key={analysisResult.uuid}
-                      className="analysis-group-list"
-                    >
-                      <li className="analysis-group-list-item">
-                        <Link
-                          to={`/sample-groups/${props.uuid}/analysis-results/${analysisResult.uuid}`}
-                        >
-                          {analysisResult.module_name} -{' '}
-                          {analysisResult.replicate}
-                        </Link>
-                      </li>
-                    </ul>
-                  ))}
-                {analysisResults.count === 0 && (
-                  <Well className="text-center">
-                    <h4>This sample group has no analysis results.</h4>
-                  </Well>
-                )}
-              </Col>
-            </Row>
+            <AnalysisResultPanel uuid={props.uuid} analysisResults={analysisResults.results} />
           )}
         />
         <Route
           exact={true}
           path="/sample-groups/:uuid/metadata"
           render={() => (
-            <Row>
-              <Col lg={12}>
-                {samples.count > 0 && (
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Sample</th>
-                        <th scope="col">Feature</th>
-                        <th scope="col">Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {samples.results.map(sample =>
-                        Object.keys(sample.metadata).map(key => (
-                          <tr key={sample.name + key}>
-                            <th scope="row">{sample.name}</th>
-                            <td>{key}</td>
-                            <td>{sample.metadata[key]}</td>
-                          </tr>
-                        )),
-                      )}
-                    </tbody>
-                  </table>
-                )}
-                {samples.count === 0 && (
-                  <Well className="text-center">
-                    <h4>This sample group has no samples.</h4>
-                  </Well>
-                )}
-              </Col>
-            </Row>
+            <MetaDataPanel group={group} samples={samples.results} analysisResults={analysisResults.results} />
           )}
         />
         <Route
           exact={true}
-          path="/sample-groups/:uuid/resources"
+          path="/sample-groups/:uuid/viz"
           render={() => (
-            <Row>
-              <Col lg={12}>
-                <ul key="get-manifest" className="analysis-group-list">
-                  <li className="analysis-group-list-item">
-                    <a
-                      href={`/api/sample_groups/${group.uuid}/module_counts?format=json`}
-                    >
-                      Module Counts - the number of modules of each type
-                      attached to this group
-                    </a>
-                  </li>
-                  <li className="analysis-group-list-item">
-                    <a
-                      href={`/api/sample_groups/${group.uuid}/manifest?format=json`}
-                    >
-                      Data Manifest - A file describing this group and
-                      everything in it
-                    </a>
-                  </li>
-                  <li className="analysis-group-list-item">
-                    <Link
-                      to={`/contrib/metagenscope/sample-groups/${group.uuid}`}
-                    >
-                      MetaGenScope - Automated Data Visualization
-                    </Link>
-                  </li>
-                </ul>
-              </Col>
-            </Row>
+            <VizPanel group={group} />
+          )}
+        />
+        <Route
+          exact={true}
+          path="/sample-groups/:uuid/downloads"
+          render={() => (
+            <DownloadPanel group={group} samples={samples.results} analysisResults={analysisResults.results} />
           )}
         />
       </Switch>

@@ -11,4 +11,6 @@ export interface AnalysisResultType {
   sample_group?: string;
   sample_obj?: SampleType;
   sample_group_obj?: SampleGroupType;
+  metadata: any;
+  description: string;
 }

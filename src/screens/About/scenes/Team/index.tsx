@@ -24,14 +24,21 @@ const team: Array<TeammateType> = [
   {
     imageName: 'danko.jpg',
     name: 'David C. Danko',
-    position: 'Lead Developer',
+    position: 'Project Lead',
     role: 'Ph.D. Student',
     email: 'dcd3001@med.cornell.edu',
   },
   {
+    imageName: 'chrobot.jpg',
+    name: 'Ben Chrobot',
+    position: 'Software Architect',
+    role: 'Developer',
+    email: '',
+  },
+  {
     imageName: 'cem.jpg',
-    name: 'Cem Meydan, Ph.D.',
-    position: 'Developer',
+    name: 'Cem Meydan',
+    position: 'Contributor',
     role: 'Post-Doctoral Researcher',
     email: '',
   },
@@ -72,10 +79,11 @@ class Team extends React.Component {
     return (
       <div>
         <h1>The Team</h1>
+        <br/>
         {team.map((teammate, index) => {
           return (
             <div key={index}>
-              {index !== 0 && <hr />}
+              {index !== 0 && <br />}
               <Teammate teammate={teammate} />
             </div>
           );

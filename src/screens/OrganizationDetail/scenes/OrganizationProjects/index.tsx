@@ -1,5 +1,6 @@
 import React from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
+import { Link } from 'react-router-dom';
 import { Row, Col, Well, Button } from 'react-bootstrap';
 
 import { SampleGroupType } from '../../../../services/api/models/analysisGroup';
@@ -8,27 +9,75 @@ import AnalysisGroupList from '../../../../components/AnalysisGroupList';
 interface OrganizationProjectsProps {
   sampleGroups: SampleGroupType[];
 }
+interface OrganizationProjectsState {
+  filter: string;
+}
 
-const OrganizationProjects = (props: OrganizationProjectsProps) => {
-  const sampleGroups = props.sampleGroups;
 
-  return (
-    <Row>
-      <Col lg={8}>
-        {sampleGroups.length > 0 && (
-          <AnalysisGroupList groupUUIDs={sampleGroups.map(g => g.uuid)} />
-        )}
-        {sampleGroups.length === 0 && (
-          <Well className="text-center">
-            <h4>This organization has no sample groups.</h4>
-            <LinkContainer to="#">
-              <Button bsStyle="success">New Sample Group</Button>
-            </LinkContainer>
-          </Well>
-        )}
-      </Col>
-    </Row>
-  );
-};
+export class OrganizationProjects extends React.Component<OrganizationProjectsProps, OrganizationProjectsState> {
+
+  constructor(props: OrganizationProjectsProps) {
+    super(props);
+    this.state = {
+      filter: '',
+    }
+    this.handleFilterChange = this.handleFilterChange.bind(this)
+  }
+
+  handleFilterChange = (event: React.FormEvent<HTMLInputElement>) => {
+    this.setState({
+      filter: event.currentTarget.value,
+    });
+  };
+
+  render() {
+    const sampleGroups = this.props.sampleGroups.filter(
+        sampleGroup =>
+          sampleGroup.name.toLowerCase().indexOf(this.state.filter.toLowerCase()) > -1
+      );
+
+    return (
+      <Row>
+        <Col lg={8}>
+            <Row>
+              <form>
+                <input
+                  name="filter"
+                  className="form-control input-lg"
+                  type="text"
+                  placeholder="Filter sample groups by name"
+                  required={true}
+                  value={this.state.filter}
+                  onChange={this.handleFilterChange}
+                />
+              </form>
+            </Row>
+          {sampleGroups.length > 0 && (
+            <AnalysisGroupList groupUUIDs={sampleGroups.map(g => g.uuid)} />
+          )}
+          {(sampleGroups.length === 0 && this.state.filter === '') && (
+            <Well className="text-center">
+              <h4>This organization has no sample groups.</h4>
+            </Well>
+          )}
+          {(sampleGroups.length === 0 && this.state.filter !== '') && (
+            <Well className="text-center">
+              <h4>This organization has no sample groups that match the specified filter.</h4>
+            </Well>
+          )}
+          <LinkContainer to="/sample-groups/create">
+            <Button bsStyle="success">New Sample Group</Button>
+          </LinkContainer>
+        </Col>
+        <Col lg={2} lgOffset={2}>
+          <Link to="/sample-groups/create" className="btn btn-primary">
+            New Sample Group
+          </Link>
+        </Col>
+      </Row>
+    );
+  }
+
+}
 
 export default OrganizationProjects;

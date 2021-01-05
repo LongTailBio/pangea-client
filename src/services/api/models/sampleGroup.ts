@@ -5,6 +5,7 @@ export interface SampleGroupType {
   organization: string;
   name: string;
   description: string;
+  long_description: string;
   is_public: boolean;
   theme: string;
   created_at: string;

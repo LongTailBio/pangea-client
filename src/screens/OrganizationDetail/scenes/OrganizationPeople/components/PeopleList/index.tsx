@@ -9,7 +9,9 @@ import {
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import { UserType } from '../../../../../services/api/models/user';
+import { OrganizationType } from '../../../../../../services/api/models/organization';
+import { UserType } from '../../../../../../services/api/models/user';
+import { AddUserForm } from './components/AddPerson';
 
 interface PersonRowProps {
   user: UserType;
@@ -38,26 +40,31 @@ const PersonRow = (props: PersonRowProps) => {
 
 interface PeopleListProps {
   people: UserType[];
+  org : OrganizationType;
 }
 
 export const PeopleList = (props: PeopleListProps) => {
   const people = props.people;
 
   return (
-    <Row>
-      <Col lg={12}>
-        <Panel>
-          <Panel.Heading>Select All</Panel.Heading>
-          <Panel.Body>
-            <ListGroup fill={true} componentClass="ul">
-              {people.map(user => (
-                <PersonRow key={user.id} user={user} />
-              ))}
-            </ListGroup>
-          </Panel.Body>
-        </Panel>
-      </Col>
-    </Row>
+    <>
+      <Row>
+        <Col lg={12}>
+          <Panel>
+            <Panel.Heading>Members</Panel.Heading>
+            <Panel.Body>
+              <ListGroup fill={true} componentClass="ul">
+                {people.map(user => (
+                  <PersonRow key={user.id} user={user} />
+                ))}
+              </ListGroup>
+              <AddUserForm org={props.org} />
+            </Panel.Body>
+          </Panel>
+        </Col>
+      </Row>
+
+    </>
   );
 };
 

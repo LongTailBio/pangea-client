@@ -8,4 +8,5 @@ export interface SampleType {
   created_at: string;
   updated_at: string;
   library_obj: SampleGroupType;
+  description: string;
 }

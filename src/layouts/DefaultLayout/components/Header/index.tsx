@@ -30,20 +30,32 @@ class Header extends React.Component<HeaderProps, {}> {
             </Navbar.Header>
             <Navbar.Collapse>
               <Nav pullRight={true}>
+                <LinkContainer to="/tools">
+                  <NavItem>Tools</NavItem>
+                </LinkContainer>              
                 <LinkContainer to="/about">
                   <NavItem>About</NavItem>
                 </LinkContainer>
                 <LinkContainer to="/docs">
                   <NavItem>Documentation</NavItem>
                 </LinkContainer>
+                <LinkContainer to="/organizations">
+                  <NavItem>Organizations</NavItem>
+                </LinkContainer>
+                <LinkContainer to="/tags">
+                  <NavItem>Tags</NavItem>
+                </LinkContainer>                                  
                 {this.props.isAuthenticated && (
                   <NavDropdown title="+" id="basic-nav-dropdown">
-                    <LinkContainer to="#">
-                      <MenuItem>Project</MenuItem>
+                    <LinkContainer to="/organizations/create">
+                      <MenuItem>New Organization</MenuItem>
                     </LinkContainer>
-                    <LinkContainer to="/organizations/new">
-                      <MenuItem>Organization</MenuItem>
+                    <LinkContainer to="/sample-groups/create">
+                      <MenuItem>New Sample Group</MenuItem>
                     </LinkContainer>
+                    <LinkContainer to="/samples/create">
+                      <MenuItem>New Sample</MenuItem>
+                    </LinkContainer>                    
                   </NavDropdown>
                 )}
                 <NavDropdown title="Account" id="basic-nav-dropdown">

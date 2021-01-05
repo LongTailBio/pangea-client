@@ -4,45 +4,21 @@ import { Options, makeUseAxios } from 'axios-hooks';
 import { history } from '../../history';
 import { API_BASE_URL, cancelableAxios } from './utils';
 import { UserType } from './models/user';
+import { OmniSearchResultType } from './models/omniSearchResult';
+
+import { createAxios, usePangeaAxios } from './coreApi'
+
+export { createAxios, usePangeaAxios };
 
 export interface PaginatedResult<T> {
   count: number;
+  next: string | undefined;
+  previous: string | undefined;
   results: T[];
 }
 
-export const createAxios = () => {
-  const { authToken } = window.localStorage;
-  const client = axios.create({
-    baseURL: API_BASE_URL,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: authToken ? `Token ${authToken}` : undefined,
-    },
-  });
 
-  client.interceptors.response.use(undefined, error => {
-    const { status } = error.response;
-    if (status === 401) {
-      // Allow component state update to complete before navigating away
-      setTimeout(() => {
-        window.localStorage.removeItem('authToken');
-        history.push('/login');
-      }, 0);
-    }
-    return Promise.reject(error);
-  });
 
-  return client;
-};
-
-export const usePangeaAxios = <T>(
-  config: AxiosRequestConfig | string,
-  options?: Options,
-) => {
-  const client = createAxios();
-  const useAxios = makeUseAxios({ axios: client });
-  return useAxios<T>(config, options);
-};
 
 type LoginType = {
   email: string;
@@ -75,6 +51,8 @@ interface ObjectLink {
   uuid: string;
 }
 
+
+
 export interface SearchResultType {
   search_term: string;
   sample_groups: Array<ObjectLink>;
@@ -96,6 +74,35 @@ export const search = (query: string, source: CancelTokenSource) => {
       organizations: res.data.organizations,
     };
 
+    return search_result;
+  });
+};
+
+export interface ModuleCountsType {
+  n_samples: number;
+  [key: string]: number;
+}
+
+export const getModuleCounts = (grpUUID: string, source: CancelTokenSource) => {
+  const options: AxiosRequestConfig = {
+    url: `${API_BASE_URL}/sample_groups/${grpUUID}/module_counts?format=json`,
+    method: 'get',
+  };
+
+  return cancelableAxios(options, source).then(res => {
+    const module_counts: ModuleCountsType = res.data.results;
+    console.log(module_counts)
+    return module_counts;
+  });
+};
+
+export const omnisearch = (query: string, source: CancelTokenSource) => {
+  const options: AxiosRequestConfig = {
+    url: `${API_BASE_URL}/contrib/omnisearch/search?query=${query}&format=json`,
+    method: 'get',
+  };
+  return cancelableAxios(options, source).then(res => {
+    const search_result: OmniSearchResultType = res.data.results;
     return search_result;
   });
 };
@@ -131,3 +138,5 @@ export const getUserStatus = (source: CancelTokenSource) => {
 
   return cancelableAxios(options, source).then(res => res.data.data);
 };
+
+

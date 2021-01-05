@@ -3,34 +3,25 @@ import { HtmlRenderer, Parser } from 'commonmark';
 
 const faqs: Array<[string, string]> = [
   [
-    'Can I upload my own data to MetaGenScope?',
-    'Not yet. In most cases we would be happy to process your data and ' +
-      'upload it for you.',
-  ],
-  ['Who can use MetaGenScope?', 'Currently everyone can use MetaGenScope.'],
-  [
-    'How does MetaGenScope get its results?',
-    'MetaGenScope relies on standard metagenomics tools assembled into the ' +
-      'MetaUltra pipeline. More details can be found ' +
-      '[here](/docs).',
+    'What is Pangea?',
+    'Pangea is built to be a central place where biologists can put their data. ' +
+    'Pangea is designed for computational analysis allowing jobs to upload and ' +
+    'download data from a single central source. Sometimes this is called a "data-mesh". ' +
+    'Pangea also supports data browsing, visualization, and search intended to make life ' +
+    'sciences data as easy to access as possible.'
   ],
   [
-    'How are tools chosen for MetaGenScope?',
-    'Currently tools are added based on their popularity and their ability ' +
-      'to add a new perspective to the data.<br />We are always ' +
-      'looking to add new tools. If you have a tool that you think ' +
-      'should be part of MetaGenScope let us know!',
+    'Can I upload my own data to Pangea?',
+    'Yes, you can upload data to Pangea using the command line tools. ' +
+    'Graphical tools to upload data are coming soon. See the ' +
+    'documentation pages for more',
   ],
   [
-    'When will v1.0 of MetaGenScope be released?',
-    'Version 1.0 of MetaGenScope will be released by the end of May 2016. ' +
-      'v0.9 is feature complete but may have bugs.',
-  ],
-  [
-    'How did you choose the projects on MetaGenScope?',
-    'MetaGenScope was originally developed to rapidly process data for the ' +
-      'StuckOnU projects. We will be consistently be adding new ' +
-      'projects.',
+    'How does Pangea store data?',
+    'Pangea stores project data and metadata on an SQL server ' +
+    'Some small data are stored on the server as well but the bulk ' +
+    'of bioinfornatics data is stored in cloud storage services and ' +
+    'linked to by Pangea.',
   ],
   [
     'Can you add a new feature?',
@@ -38,8 +29,8 @@ const faqs: Array<[string, string]> = [
       'dcd3001@med.cornell.edu',
   ],
   [
-    'How do I cite MetaGenScope?',
-    'Information about citing MetaGenScope and the tools it uses can be ' +
+    'How do I cite Pangea?',
+    'Information about citing Pangea and the tools it uses can be ' +
       'found [here](/docs).',
   ],
 ];
@@ -67,7 +58,7 @@ class Question extends React.Component<QuestionPropType, QuestionStateType> {
   render() {
     return (
       <div>
-        <h4>{this.state.question}</h4>
+        <h3>{this.state.question}</h3>
         <span dangerouslySetInnerHTML={{ __html: this.state.answer }} />
       </div>
     );
@@ -78,7 +69,7 @@ class FAQ extends React.Component<{}, {}> {
   render() {
     return (
       <div>
-        <h1>Frequently Asked Questions</h1>
+        <h1>Frequently Asked Questions</h1><br/>
         {faqs.map((faq, index) => {
           return <Question key={index} question={faq[0]} rawAnswer={faq[1]} />;
         })}

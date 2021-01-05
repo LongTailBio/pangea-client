@@ -1,84 +1,47 @@
 import React from 'react';
+import CSS from 'csstype';
+
 import { Link } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 
-import { SearchBar } from '../../components/SearchBar';
+import { OmniSearchBar } from '../../components/OmniSearchBar';
+
+const headerTextStyle: CSS.Properties = {
+  paddingTop: '20px',
+  fontWeight: 'lighter',
+  textAlign: 'center',
+  fontFamily: 'lora',
+  paddingBottom: '20px',
+};
+const searchBarStyle: CSS.Properties = {
+  paddingTop: '10px',
+};
+const leaderTextStyle: CSS.Properties = {
+  paddingTop: '20px',
+  fontWeight: 'lighter',
+  textAlign: 'center',
+  fontFamily: 'lora',
+};
+const followTextStyle: CSS.Properties = {
+  paddingTop: '10px',
+  textAlign: 'center',
+  paddingBottom: '200px',
+  fontFamily: 'Lora',
+};
+
 
 export const HomeScreen = () => (
   <>
-    <h1>Pangea</h1>
-    <h3>A content management system for the Life Sciences</h3>
+    <Row style={searchBarStyle}>
+      <Col lg={10} lgOffset={1}>
 
-    <hr />
+        <h1 style={headerTextStyle}>Pangea</h1>
 
-    <SearchBar />
+        <OmniSearchBar />
 
-    <hr />
+        <h2 style={leaderTextStyle}>A content management system for the Life Sciences</h2>
+        <h4 style={followTextStyle}>For Scientists, By Scientists</h4>
 
-    <Row>
-      <Col lg={3} md={6}>
-        <h4>Organizations</h4>
-        <p>Browse data from Pangea Organizations.</p>
-        <p>
-          <Link to="/organizations" className="btn btn-primary">
-            Organizations
-          </Link>
-        </p>
-      </Col>
-      <Col lg={3} md={6}>
-        <h4>MetaSUB</h4>
-        <p>See a map of microbes around the world</p>
-        <p>
-          <Link to="/contrib/metasub" className="btn btn-primary">
-            Search
-          </Link>
-        </p>
-      </Col>
-      <Col lg={3} md={6}>
-        <h4>COVID-19</h4>
-        <p>
-          <Link to="/contrib/covid-19" className="btn btn-primary">
-            Search
-          </Link>
-        </p>
-      </Col>
-      <Col lg={3} md={6}>
-        <h4>For Developers</h4>
-        <p>Documentation and API.</p>
-        <p>
-          <Link to="/docs" className="btn btn-primary">
-            API
-          </Link>
-        </p>
-      </Col>
-    </Row>
-    <Row>
-      <Col lg={3} md={6}>
-        <h4>Longtail Biotech</h4>
-        <p>Powerful tools for modern biotech.</p>
-        <p>
-          <a href="https://www.longtailbio.com/" className="btn btn-primary">
-            Visit
-          </a>
-        </p>
-      </Col>
-      <Col lg={3} md={6}>
-        <h4>Sequence Search</h4>
-        <p>Search DNA Sequences</p>
-        <p>
-          <a href="http://dnaloc.ethz.ch/" className="btn btn-primary">
-            Search
-          </a>
-        </p>
-      </Col>
-      <Col lg={3} md={6}>
-        <h4>Resistance Map</h4>
-        <p>Map AMRs</p>
-        <p>
-          <a href="https://resistanceopen.org/" className="btn btn-primary">
-            AMRs
-          </a>
-        </p>
       </Col>
     </Row>
   </>

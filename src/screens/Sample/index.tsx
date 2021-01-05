@@ -15,10 +15,16 @@ import { Helmet } from 'react-helmet';
 
 import { usePangeaAxios, PaginatedResult } from '../../services/api';
 import { SampleType } from '../../services/api/models/sample';
+import { TagType } from '../../services/api/models/tag';
 import { AnalysisResultType } from '../../services/api/models/analysisResult';
+
+import SampleMetadataPanel from './components/SampleMetadataPanel';
+import EditableDescription from './components/EditableDescription'
+
 
 const useGroup = (uuid: string) => {
   const [sampleResult] = usePangeaAxios<SampleType>(`/samples/${uuid}`);
+  const [tagResult] = usePangeaAxios<PaginatedResult<TagType>>(`/contrib/tags?sample=${uuid}`);
   const [analysisResultsResult] = usePangeaAxios<
     PaginatedResult<AnalysisResultType>
   >(`/sample_ars?sample_id=${uuid}`);
@@ -26,9 +32,10 @@ const useGroup = (uuid: string) => {
   const data = {
     sample: sampleResult.data,
     analysisResults: analysisResultsResult.data,
+    tags: tagResult.data,
   };
-  const loading = sampleResult.loading || analysisResultsResult.loading;
-  const error = sampleResult.error || analysisResultsResult.error || undefined;
+  const loading = sampleResult.loading || analysisResultsResult.loading || tagResult.loading;
+  const error = sampleResult.error || analysisResultsResult.error || tagResult.error || undefined;
   return [{ data, loading, error }];
 };
 
@@ -70,8 +77,7 @@ export const SampleScreen = (props: SampleScreenProps) => {
     );
   }
 
-  const { sample, analysisResults } = data;
-
+  const { sample, analysisResults, tags } = data;
   return (
     <>
       <Helmet>
@@ -80,11 +86,13 @@ export const SampleScreen = (props: SampleScreenProps) => {
       <Row>
         <h1>{sample.name}</h1>
         <h2>Sample</h2>
-      </Row>
-      <Row>
         <Link to={`/sample-groups/${sample.library}`}>Library</Link>
       </Row>
-
+      <br/>
+      <Row>
+        <EditableDescription sample={sample} />
+      </Row>
+      <hr/>
       <Row>
         <Nav bsStyle="tabs" activeKey="1">
           <LinkContainer to={`/samples/${sample.uuid}`}>
@@ -95,9 +103,14 @@ export const SampleScreen = (props: SampleScreenProps) => {
           </LinkContainer>
           <LinkContainer to={`/samples/${sample.uuid}/resources`}>
             <NavItem eventKey="2">
-              <Glyphicon glyph="tags" /> Resources{' '}
+              <Glyphicon glyph="th-large" /> Resources{' '}
             </NavItem>
           </LinkContainer>
+          <LinkContainer to={`/samples/${sample.uuid}/tags`}>
+            <NavItem eventKey="2">
+              <Glyphicon glyph="tags" />{' '}Tags{' '}
+            </NavItem>
+          </LinkContainer>          
         </Nav>
       </Row>
 
@@ -133,22 +146,7 @@ export const SampleScreen = (props: SampleScreenProps) => {
                 )}
               </Col>
               <Col lg={6}>
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">Feature</th>
-                      <th scope="col">Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Object.keys(sample.metadata).map(key => (
-                      <tr key={key}>
-                        <th scope="row">{key}</th>
-                        <td>{sample.metadata[key]}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <SampleMetadataPanel sample={sample} />
               </Col>
             </Row>
           )}
@@ -176,6 +174,36 @@ export const SampleScreen = (props: SampleScreenProps) => {
                 </ul>
               </Col>
             </Row>
+          )}
+        />
+        <Route
+          exact={true}
+          path="/samples/:uuid/tags"
+          render={() => (
+            <Row>
+              <Col lg={12}>
+                {tags.count > 0 &&
+                  tags.results.map(tag => (
+                    <ul
+                      key={tag.uuid}
+                      className="analysis-group-list"
+                    >
+                      <li className="analysis-group-list-item">
+                        <Link
+                          to={`/tags/${tag.uuid}`}
+                        >
+                          {tag.name}
+                        </Link>
+                      </li>
+                    </ul>
+                  ))}
+                {tags.count === 0 && (
+                  <Well className="text-center">
+                    <h4>This sample has no tags.</h4>
+                  </Well>
+                )}
+              </Col>
+            </Row>            
           )}
         />
       </Switch>
