@@ -6,7 +6,7 @@ import TaxaMetadataPanel from './components/taxametadata';
 import TaxaAbundancePanel from './components/taxonabundancepanel';
 import TaxaMaterialAbundancePanel from './components/taxonabundancepanelmaterial';
 import SampleMetadataPanel from './components/samplemetadata';
-import SampleSunburstPanel from './components/samplesunburst';
+//import SampleSunburstPanel from './components/samplesunburst';
 import TaxonEntryBar from './components/taxonentrybar';
 import { taxa_suggestions } from './assets/taxasuggestions';
 
@@ -28,6 +28,7 @@ interface MetasubMapState {
   sampleUUID: string;
   searchBar: string;
 }
+
 
 class MetasubMap extends React.Component<MetasubMapProps, MetasubMapState> {
   state = {
@@ -82,10 +83,12 @@ class MetasubMap extends React.Component<MetasubMapProps, MetasubMapState> {
             <Link to={`/samples/${sampleUUID}`}>
               <h3>Sample</h3>
             </Link>
-            <SampleSunburstPanel
-              sampleUUID={sampleUUID}
-              onClickAction={this.onSunburstClick}
-            />
+            {
+              // <SampleSunburstPanel
+              //   sampleUUID={sampleUUID}
+              //   onClickAction={this.onSunburstClick}
+              // />
+            }
             <SampleMetadataPanel sampleUUID={sampleUUID} />
           </Col>
         </Row>
