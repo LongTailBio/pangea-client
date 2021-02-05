@@ -11,4 +11,7 @@ export interface PipelineModuleType {
     long_description: string;
     pipeline: string;
     pipeline_obj: PipelineType;
+    dependencies: Array<string>;
+    dependency_modules: Array<[string, string, string]>;
+    downstream_modules: Array<[string, string, string]>;
 }
