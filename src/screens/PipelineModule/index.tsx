@@ -68,6 +68,43 @@ export const PipelineModuleScreen = (props: PipelineModuleScreenProps) => {
         <EditableLongDescriptionPanel pipelineModule={mymodule}/>        
       </Row>
       <Row>
+        <Col lg={6}>
+          <h3>Upstream Modules</h3>
+          {mymodule.dependency_modules.length > 0 && (
+            <ul>
+            {mymodule.dependency_modules.map(([uuid, name, version], ind) => (
+              <li key={uuid}>
+                <Link to={`/pipeline-modules/${uuid}`}>
+                  {name}{" "}{version}
+                </Link>
+              </li>   
+            ))}
+            </ul>
+          )}
+          {mymodule.dependency_modules.length === 0 && (
+            <h4>No dependencies.</h4>
+          )}
+        </Col>
+        <Col lg={6}>
+          <h3>Downstream Modules</h3>
+          {mymodule.downstream_modules.length > 0 && (
+            <ul>
+            {mymodule.downstream_modules.map(([uuid, name, version], ind) => (
+              <li key={uuid}>
+                <Link to={`/pipeline-modules/${uuid}`}>
+                  {name}{" "}{version}
+                </Link>
+              </li>   
+            ))}
+            </ul>
+          )}
+          {mymodule.downstream_modules.length === 0 && (
+            <h4>No dependencies.</h4>
+          )}
+        </Col>
+      </Row>
+      <Row>
+        <h3>Metadata</h3>
         <Col lg={12}>
           <table className="table">
             <thead>
