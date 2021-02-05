@@ -27,6 +27,9 @@ import SearchResult from './screens/SearchResult';
 import OmniSearchResult from './screens/OmniSearchResult';
 import ContribRouter from './contrib/router';
 import ToolsScreen from './screens/Tools';
+import PipelineList from './screens/PipelineList';
+import PipelineDetail from './screens/PipelineDetail';
+import PipelineModuleScreen from './screens/PipelineModule';
 
 
 export const App: React.FC = () => {
@@ -130,7 +133,24 @@ export const App: React.FC = () => {
           render={routeProps => (
             <OrganizationCreate isAuthenticated={isAuthenticated} />
           )}
-        />        
+        />
+        <Route
+          exact={true}
+          path="/pipelines"
+          render={() => <PipelineList />}
+        />
+        <Route
+          path="/pipelines/:uuid"
+          render={routeProps => (
+            <PipelineDetail uuid={routeProps.match.params.uuid} />
+          )}
+        />
+        <Route
+          path="/pipeline-modules/:uuid"
+          render={routeProps => (
+            <PipelineModuleScreen uuid={routeProps.match.params.uuid} />
+          )}
+        />         
         <Route
           path="/organizations/:uuid"
           render={routeProps => (
