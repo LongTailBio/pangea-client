@@ -54,6 +54,7 @@ const formatField = (field: AnalysisResultFieldType): ReactNode => {
   }
 };
 
+
 export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
   const [{ data, loading, error }] = useGroup(props.kind, props.uuid);
 
@@ -95,7 +96,10 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
       </Row>
       <Row>
         <h2>Description</h2>
-        <p>{analysisResult.description}</p>        
+        <p>{analysisResult.description}</p>
+        {analysisResult.pipeline_module_obj && (
+            <Link to={`/pipeline-modules/${analysisResult.pipeline_module_obj.uuid}`}>Pipeline Module</Link>
+        )}
       </Row>
       <Row>
         <Col lg={6}>
