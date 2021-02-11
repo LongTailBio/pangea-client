@@ -207,25 +207,31 @@ export class DisplayContainer<D, P = {}> extends React.Component<
   }
 
   render() {
-    return (
-      <div>
-        <Row>
-          <Col lg={12}>
-            <PlotHeader
-              title={this.title}
-              description={this.description}
-              downloadPng={this.saveSvg}
-              downloadCsv={() => {}} // eslint-disable-line
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={12}>
-            {this.state.data && this.plotContainer(this.state.data)}
-            {!this.state.data && <StatusMonitor state={this.state.status} />}
-          </Col>
-        </Row>
-      </div>
-    );
+    if(this.state.data){
+      return (
+        <div>
+          <Row>
+            <Col lg={12}>
+              <PlotHeader
+                title={this.title}
+                description={this.description}
+                downloadPng={this.saveSvg}
+                downloadCsv={() => {}} // eslint-disable-line
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              {this.plotContainer(this.state.data)}
+            </Col>
+          </Row>
+        </div>
+      );
+    } else {
+      return (<div></div>)
+    }
   }
 }
+
+//            {this.state.data && this.plotContainer(this.state.data)}
+//            {!this.state.data && <StatusMonitor state={this.state.status} />}
