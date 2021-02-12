@@ -170,7 +170,7 @@ export default class CovidDisplayContainer extends React.Component<
         type: 'boxplot',
       },
       title: {
-        text: 'SARS-CoV-2 Read Counts',
+        text: 'SARS-CoV-2 Reads, Parts Per Million',
       },
       legend: {
         enabled: true,
