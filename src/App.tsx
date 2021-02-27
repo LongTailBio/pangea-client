@@ -171,6 +171,16 @@ export const App: React.FC = () => {
           )}
         />
         <Route
+          path="/users-id/:id"
+          render={routeProps => (
+            <UserDetail
+              isAuthenticated={isAuthenticated}
+              isDjoserId={true}
+              id={routeProps.match.params.id}
+            />
+          )}
+        />        
+        <Route
           exact={true}
           path="/sample-groups/:group_uuid/analysis-results/:uuid"
           render={routeProps => (
