@@ -11,97 +11,106 @@ import {
   Glyphicon,
   Badge,
 } from 'react-bootstrap';
+
 import { Helmet } from 'react-helmet';
 import { default as axios, CancelTokenSource } from 'axios';
 import { getUser } from '../../services/api';
-import { UserType } from '../../services/api/models/user';
+import { PangeaUserType } from '../../services/api/models/user';
+import { usePangeaAxios } from '../../services/api';
+import PangeaUserSettings from './components/SettingsPanel'
+import UserOrgListPanel from './components/OrgListPanel'
 
-interface UserDetailScreenProps {
-  userUUID: string;
+interface PangeaUserDetailScreenProps {
   isAuthenticated: boolean;
-  updateTheme?(theme?: string): void;
+  isDjoserId: boolean;
+  currentUser: boolean;
+  id: string;
 }
 
-class UserDetailScreen extends React.Component<
-  UserDetailScreenProps,
-  UserType
-> {
-  protected sourceToken: CancelTokenSource;
 
-  constructor(props: UserDetailScreenProps) {
-    super(props);
-    this.sourceToken = axios.CancelToken.source();
-    this.state = {
-      id: '',
-      email: '',
-    };
+const usePangeaUser = (props: PangeaUserDetailScreenProps) => {
+  var url = '';
+  if(props.isDjoserId){
+    url = `/users/id/${props.id}`;
+  } else if(props.id){
+    url = `/users/${props.id}`;
+  } else if(props.currentUser){
+    url = `/users/me`;
   }
-
-  componentDidMount() {
-    // Assume that we are authenticated because Dashboard catches that
-    getUser(this.props.userUUID, this.sourceToken)
-      .then(user => {
-        this.setState(user);
-      })
-      .catch(error => {
-        if (!axios.isCancel(error)) {
-          console.log(error);
-        }
-      });
-  }
-
-  render() {
-    return (
-      <div>
-        <Helmet>
-          <title>{`Pangea :: ${this.state.email}`}</title>
-        </Helmet>
-        <Row>
-          <h1>{this.state.email}</h1>
-          <h2>User</h2>
-        </Row>
-
-        <Row>
-          <Nav bsStyle="tabs" activeKey="1">
-            <LinkContainer to={`/users/${this.props.userUUID}`}>
-              <NavItem eventKey="1">
-                <Glyphicon glyph="star" /> Organizations <Badge>0</Badge>
-              </NavItem>
-            </LinkContainer>
-          </Nav>
-        </Row>
-
-        <br />
-
-        <Switch>
-          <Route
-            exact={true}
-            path="/users/:uuid"
-            render={_props => (
-              <Row>
-                <Col lg={12}>
-                  {false && (
-                    <ul className="analysis-group-list">
-                      {[].map((org_uuid, i) => (
-                        <li key={org_uuid} className="analysis-group-list-item">
-                          <Link to={`/organizations/${org_uuid}`}>{[][i]}</Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {true && (
-                    <Well className="text-center">
-                      <h4>This user is not in any organizations.</h4>
-                    </Well>
-                  )}
-                </Col>
-              </Row>
-            )}
-          />
-        </Switch>
-      </div>
+  const [{ data, loading, error }] = usePangeaAxios<PangeaUserType>(
+      url,
     );
-  }
+  return [{ data, loading, error }];
+};
+
+
+export const PangeaUserDetail = (props: PangeaUserDetailScreenProps) => {
+  const [{ data, loading, error }] = usePangeaUser(props);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error.message}</p>;
+
+  return (
+    <>
+      <Helmet>
+        <title>Pangea :: User Detail</title>
+      </Helmet> 
+      <Row>
+        <Col lg={3}>
+          {(data.name) && (<h4>{data.name}</h4>)}
+          {(data.biography) && (<p>{data.biography}</p>)}
+
+          {(data.company) && (<h5><Glyphicon glyph="education"/> {data.company}</h5>)}
+          {(data.location) && (<h5><Glyphicon glyph="map-marker"/> {data.location}</h5>)}
+          {(data.twitter_username) && (<h5><Glyphicon glyph="asterisk"/> <a href={`https://twitter.com/${data.twitter_username}`}>{' Twitter: @'}{data.twitter_username}</a></h5>)}
+          {(data.github_username) && (<h5><Glyphicon glyph="asterisk"/><a href={`https://github.com/${data.github_username}`}>{' GitHub: '}{data.github_username}</a></h5>)}
+        </Col>
+        <Col lg={9}>
+
+          <Row>
+            <Nav bsStyle="tabs" activeKey="1">
+              <LinkContainer to={`/users/${data.uuid}`} exact={true}>
+                <NavItem eventKey="1">
+                  <Glyphicon glyph="bookmark" /> Organizations <Badge>{data.organization_objs.length}</Badge>
+                </NavItem>
+              </LinkContainer>
+              <LinkContainer to={`/users/${data.uuid}/settings`}>
+                <NavItem eventKey="2">
+                  <Glyphicon glyph="cog" /> Settings
+                </NavItem>
+              </LinkContainer>
+            </Nav>
+          </Row>
+
+          <br />
+          <Switch>
+            <Route
+              exact={true}
+              path="/users/:uuid"
+              render={() => (
+                <UserOrgListPanel orgs={data.organization_objs}/>
+              )}
+            />
+            <Route
+              exact={true}
+              path="/users/:uuid/settings"
+              render={() => (
+                <PangeaUserSettings user={data}/>
+              )}
+            />
+          </Switch>
+
+
+        </Col>
+      </Row>
+    </>
+  );
+};
+
+PangeaUserDetail.defaultProps = {
+  isDjoserId: false,
+  id: '',
+  currentUser: true,
 }
 
-export default UserDetailScreen;
+export default PangeaUserDetail;

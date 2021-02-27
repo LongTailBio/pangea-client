@@ -19,7 +19,7 @@ export const AuthForm = (props: FormProp) => {
   const [password, setPassword] = useState('');
   const [authErrors, setAuthErrors] = useState<string[]>([]);
 
-  if (isAuthenticated) return <Redirect to="/" />;
+  if (isAuthenticated) return <Redirect to="/users/me" />;
 
   const handleAuthError = (error: AxiosError) => {
     let errorMessages = [error.message];

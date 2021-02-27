@@ -97,11 +97,6 @@ export const App: React.FC = () => {
             />
           )}
         />
-        <Route exact={true} path="/status" render={() => <UserStatus />} />
-        <Route
-          path="/dashboard"
-          render={() => <Dashboard isAuthenticated={isAuthenticated} />}
-        />
         <Route
           path="/comingsoon"
           render={() => (<h1>Coming Soon!</h1>)}
@@ -158,11 +153,20 @@ export const App: React.FC = () => {
           )}
         />
         <Route
+          path="/users/me"
+          render={routeProps => (
+            <UserDetail
+              isAuthenticated={isAuthenticated}
+            />
+          )}
+        />
+        <Route
           path="/users/:uuid"
           render={routeProps => (
             <UserDetail
               isAuthenticated={isAuthenticated}
-              userUUID={routeProps.match.params.uuid}
+              isDjoserId={false}
+              id={routeProps.match.params.uuid}
             />
           )}
         />
