@@ -56,24 +56,19 @@ export class EditableLongDescriptionPanel extends React.Component<EditableLongDe
     this.setState({editText: value})
   }
 
-  handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  handleSubmit = (event: React.MouseEvent<HTMLInputElement>) => {
     modifySampleGroupDescription(this.props.group, this.state.editText, this.sourceToken, true)
       .then(sample => {
         this.setState({
           editMode: false,
         });
-      })
-      .catch(error => {
-        if (!axios.isCancel(error)) {
-          console.log(error);
-        }
       });
   }
 
   render(){
     if(this.state.editMode){
       return (
-        <form onSubmit={this.handleSubmit}>
+        <form>
           <div className="form-group">
             <Row>
               <Col lg={6}>
@@ -81,9 +76,10 @@ export class EditableLongDescriptionPanel extends React.Component<EditableLongDe
               </Col>
               <Col lg={2}>
                 <input
-                  type="submit"
+                  type="button"
                   className="btn btn-success btn-lg btn-block"
                   value="Save"
+                  onClick={this.handleSubmit}
                 />
               </Col>
             </Row>
