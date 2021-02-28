@@ -88,7 +88,7 @@ export const PangeaUserDetail = (props: PangeaUserDetailScreenProps) => {
               exact={true}
               path="/users/:uuid"
               render={() => (
-                <UserOrgListPanel orgs={data.organization_objs}/>
+                <UserOrgListPanel orgs={data.organization_objs} user={data}/>
               )}
             />
             <Route
