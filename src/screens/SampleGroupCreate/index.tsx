@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { Row, Col, Button, Checkbox } from 'react-bootstrap';
+import { Link, Redirect, useLocation, useHistory } from 'react-router-dom';
+import {
+  Row, Col, Panel, ListGroup, ListGroupItem, FormGroup,
+  FormControl, Popover, OverlayTrigger, Button, Glyphicon
+} from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 import { default as axios, CancelTokenSource, AxiosError } from 'axios';
 import useAxios from 'axios-hooks'
@@ -9,139 +12,203 @@ import { API_BASE_URL } from '../../services/api/utils';
 
 import { LoadingErrorMessage } from '../../components/LoadingErrorMessage'
 import { OrganizationType } from '../../services/api/models/organization';
+import { withFormik, FormikProps, FormikErrors, Form, Field } from 'formik';
+import { pangeaFetch } from '../../services/api/coreApi';
 
-type OrganizationResult = {
-  count: number;
-  results: OrganizationType[];
+import { PangeaUserType, OrgLink } from '../../services/api/models/user';
+import CSS from 'csstype';
+import { useUserContext } from '../../components/UserContext' 
+import { InfoButton, multilineText } from '../../components/CreateForm'
+
+interface CreateGrpValues {
+    name: string;
+    public: boolean;
+    library: boolean;
+    inputOrg: string;
+    description: string;
+}
+
+interface GrpInnerFormProps {
+  orgNames: Array<OrgLink> | undefined;
+}
+
+
+const CreateGrpInnerForm = (props: GrpInnerFormProps & FormikProps<CreateGrpValues>) => {
+  const { touched, errors, isSubmitting, orgNames } = props;
+  return (
+    <Form> 
+      <FormGroup>
+        <label htmlFor="name">Name
+          <InfoButton desc={"The name for the group. Names must be unique within the organization."} />
+        </label>
+         <Field id="name" name="name" placeholder="Name" className="form-control input-lg"/>
+      </FormGroup>
+      <FormGroup>
+        <label htmlFor="inputOrg">Organization
+          <InfoButton desc={"The organization this group will be created in."} />
+        </label><br/>
+        <Field name="inputOrg" component="select">
+          {orgNames && orgNames.map(el =>
+            (<option key={el.uuid} value={el.uuid}>{el.name}</option>)
+          )}
+        </Field>
+      </FormGroup>
+        <label>
+          <Field type="checkbox" name="public" />
+          Public
+          <InfoButton desc={"Make this group and the samples in it public."} />
+        </label>      
+      <FormGroup>
+        <label>
+          <Field type="checkbox" name="library" />
+          Library
+          <InfoButton desc={`
+            Sample groups can optionally be libraries.
+
+            If a sample group is a library it can have its own samples.
+
+            If a sample group is not a library it can only contain \
+            samples from other libraries. However, libraries can \
+            only hold their own samples.
+
+            If you are uploading new data you should use a library.
+          `} />
+        </label>      
+      </FormGroup>
+      <FormGroup>
+        <label htmlFor="description">Description</label>
+        <InfoButton desc={"A brief description of this sample group."} />
+
+        <Field id="description" name="description" placeholder="Description" className="form-control input-lg"/>
+      </FormGroup>      
+      <button type="submit" className="btn btn-primary btn-lg btn-block">Create</button>
+    </Form>
+  );
 };
 
 
-type FormDataType = {
-  name: string;
-  org: string;
-  library: boolean;
-  public: boolean;
-  description: string;
-};
+interface CreateGrpFormProps {
+  user: PangeaUserType | undefined;
+  org: OrganizationType | undefined;
+  history: any;
+  orgNames: Array<OrgLink> | undefined;
+}
 
-type CreateSampleGroupProps = {
+
+const CreateGrpForm = withFormik<CreateGrpFormProps, CreateGrpValues>({
+  mapPropsToValues: props => {
+    return {
+      name: '',
+      public: false,
+      library: true,
+      inputOrg: props.org ? props.org.name : '',
+      description: '',
+      orgNames: props.orgNames,
+    };
+  },
+
+  handleSubmit: (values, formikBag) => {
+    var orgUUID = '';
+    if(formikBag.props.orgNames){
+      var match = formikBag.props.orgNames.filter(el => {return el.name == values.inputOrg})
+      orgUUID = match[0].uuid;
+    }
+    const postData = {
+      name: values.name,
+      is_public: values.public,
+      is_library: values.library,
+      organization: orgUUID,
+      description: values.description ? values.description : values.name,
+    }
+    pangeaFetch(`/sample_groups`, 'POST', JSON.stringify(postData))
+        .then(response => response.json())
+        .then(data => `/sample-groups/${data.uuid}`)
+        .then(url => formikBag.props.history.push(url));    
+  },   
+})(CreateGrpInnerForm);
+
+
+type CreateGrpFormPageProps = {
   isAuthenticated: boolean;
 };
 
-export const CreateSampleGroupForm = (props: CreateSampleGroupProps) => {
-  const { isAuthenticated } = props;
 
-  const [name, setName] = useState('');
-  const [org, setOrg] = useState('');
-  const [pub, setPub] = useState(false);
-  const [library, setLib] = useState(false);
-  const [desc, setDesc] = useState('');
-  const [createSampleGroupErrors, setCreateSampleGroupErrors] = useState<string[]>([]);
-  const [isCreated, setCreated] = useState(false);
+export const CreateGrpFormPage = (props: CreateGrpFormPageProps) => {
+  let location = useLocation() as any
+  let history = useHistory();
+  const {user} = useUserContext();  
+  if (!props.isAuthenticated) return <p>You must be logged in to view this. Click <Link to="/login">here</Link> to log back in.</p>;
 
-  const { authToken } = window.localStorage;
-  const [
-    { data: putData, loading: putLoading, error: putError },
-    executePut
-  ] = useAxios(
-    {
-      url: `${API_BASE_URL}/sample_groups`,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: authToken ? `Token ${authToken}` : undefined,
-      },
-    },
-    { manual: true }
-  )
-
-  const [{ data: orgData, loading: orgLoading, error: orgError }] = usePangeaAxios<OrganizationResult>(
-    '/organizations',
-  );
-
-  const orgs: {[key: string]: string} = {};
-  if (!orgLoading && ! orgError){
-    orgData.results.map(el => (
-      orgs[el.name] = el.uuid
-    ))
+  var org = undefined;
+  if(location.state){
+    org = location.state.org ? location.state.org : undefined
   }
+  const orgNames = user ? user.organization_objs : []
 
-  if (!isAuthenticated) return <p>You must be logged in to view this. Click <Link to="/login">here</Link> to log back in.</p>;
-  if (putError || putLoading) return <LoadingErrorMessage loading={putLoading} error={putError} name={'Organization'} message={putError?.message} />;
+  const cmd_email = user ? user.email : '<your email>';
+  const cmd_org = org ? org.name : '<org name>';
+  const shcmd = 'pangea-api create sample-group -e ' + cmd_email + ' -p *** "' + cmd_org + '" "Your Group Name"';
+  const pycmd = `
+    from pangea_api import Knex, User, Organization
 
-  const handleUserFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setCreateSampleGroupErrors([]);
+    knex = Knex()
+    User(knex, ${cmd_email}, '***').login()
+    org = Organization(knex, "${cmd_org}")
+    org.idem()  # creates the org or fetches it if it already exists
+    grp = org.sample_group("${cmd_org}", is_public=False, is_library=True)
+    grp.idem()  # creates the org or fetches it if it already exists
+  `;
+  const grpdesc = `
+  Sample groups contain samples.
 
-    executePut({
-      data: {
-        name,
-        organization: org,
-        public: pub,
-        library,
-        description: desc,
-      }
-    })
-    setCreated(true);
-  }
+  Sample groups are meant to hold samples from the same \
+  project so that they can be analyzed together.
 
-  if (isCreated){
-    return (<Redirect to={`/sample-groups/${putData.uuid}`} />)
-  }
+  Sample groups can be libraries that contain new data \
+  or can be regular sample groups that hold samples originally \
+  from other groups. The latter is most useful for meta-analysis.
+
+  Samples can be in any number of sample groups but only one \
+  library.
+  `;
+  const apilink = "https://github.com/LongTailBio/pangea-django/tree/master/api-client";
 
   return (
     <Row>
       <Helmet>
         <title>Pangea :: New Sample Group</title>
       </Helmet>
-      <h1>Create New Sample Group</h1>
+      <div>
+        <h1>Create New Sample Group
+          <InfoButton desc={grpdesc} />
+        </h1>
+      </div>      
       <hr />
       <br />
-      <Col lg={6} lgOffset={3}>
-        <form onSubmit={handleUserFormSubmit}>
-          <div className="form-group">
-            <label htmlFor="grpName">Name</label>
-            <input
-              id="grpName"
-              name="name"
-              className="form-control input-lg"
-              type="text"
-              placeholder="Sample Group Name"
-              required={true}
-              value={name}
-              onChange={event => setName(event.currentTarget.value)}
-            />
-            <label htmlFor="inputOrg">Organization</label>
-            <select
-              id="inputOrg"
-              className="form-control"
-              onChange={event => setOrg(orgs[event.currentTarget.value])}
-            >
-              <option selected>Organization...</option>
-              {Object.keys(orgs).map(orgName => (<option>{orgName}</option>))}
-            </select>
-            <label htmlFor="grpPub">Public  </label>
-            <input type='checkbox' id="grpPub" name="public" onClick={event => setPub(!pub)} /><br/>
-            <label htmlFor="grpLib">Library </label>
-            <input type='checkbox' id="grpLib" name="library" onClick={event => setLib(!library)} /><br/>
-            <label htmlFor="description">Description</label>
-            <textarea
-              className="form-control"
-              id="description"
-              rows={3}
-              onChange={event => setDesc(event.currentTarget.value)}
-            ></textarea>
-          </div> 
-          <input
-            type="submit"
-            className="btn btn-primary btn-lg btn-block"
-            value="Create"
-          />
-        </form>
+      <Col lg={5} lgOffset={0}>
+        <CreateGrpForm user={user} org={org} history={history} orgNames={orgNames} />
         <br />
+      </Col>
+      <Col lg={6} lgOffset={1}>
+        <Row>
+          <h4>From the <a href={apilink}>Command Line</a></h4>
+          <code>
+            {shcmd}
+          </code>
+        </Row>
+        <br/><br/>
+        <Row>
+          <h4>Using <a href={apilink}>Python</a></h4>
+          <pre>
+            <code style={multilineText}>
+              {pycmd}
+            </code>
+          </pre>
+        </Row>
       </Col>
     </Row>
   );
 };
 
-export default CreateSampleGroupForm;
+export default CreateGrpFormPage;
+

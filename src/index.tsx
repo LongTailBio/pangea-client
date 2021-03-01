@@ -8,12 +8,15 @@ import { unregister } from './registerServiceWorker';
 import { history } from './history';
 import './utils';
 import './index.css';
+import {UserContextProvider} from './components/UserContext'
 
 ReactDOM.render(
   <Router history={history}>
-    <QueryParamProvider ReactRouterRoute={Route}>
-      <App />
-    </QueryParamProvider>
+    <UserContextProvider>
+        <QueryParamProvider ReactRouterRoute={Route}>
+          <App />
+        </QueryParamProvider>
+    </UserContextProvider>
   </Router>,
   document.getElementById('root') as HTMLElement,
 );

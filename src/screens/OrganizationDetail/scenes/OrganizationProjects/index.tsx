@@ -6,8 +6,12 @@ import { Row, Col, Well, Button } from 'react-bootstrap';
 import { SampleGroupType } from '../../../../services/api/models/analysisGroup';
 import AnalysisGroupList from '../../../../components/AnalysisGroupList';
 
+import { OrganizationType } from '../../../../services/api/models/organization';
+
+
 interface OrganizationProjectsProps {
   sampleGroups: SampleGroupType[];
+  organization: OrganizationType;
 }
 interface OrganizationProjectsState {
   filter: string;
@@ -35,7 +39,12 @@ export class OrganizationProjects extends React.Component<OrganizationProjectsPr
         sampleGroup =>
           sampleGroup.name.toLowerCase().indexOf(this.state.filter.toLowerCase()) > -1
       );
-
+    const linkTo = {
+      pathname: "/sample-groups/create",
+      state: {
+        org: this.props.organization,
+      }
+    }
     return (
       <Row>
         <Col lg={8}>
@@ -70,7 +79,7 @@ export class OrganizationProjects extends React.Component<OrganizationProjectsPr
           </LinkContainer>
         </Col>
         <Col lg={2} lgOffset={2}>
-          <Link to="/sample-groups/create" className="btn btn-primary">
+          <Link to={linkTo} className="btn btn-primary">
             New Sample Group
           </Link>
         </Col>

@@ -113,7 +113,7 @@ export const OrganizationDetail = (props: OrganizationsProps) => {
             exact={true}
             path="/organizations/:uuid"
             render={() => (
-              <OrganizationProjects sampleGroups={sampleGroups.results} />
+              <OrganizationProjects sampleGroups={sampleGroups.results} organization={organization} />
             )}
           />
           <Route

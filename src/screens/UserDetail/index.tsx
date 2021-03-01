@@ -19,6 +19,7 @@ import { PangeaUserType } from '../../services/api/models/user';
 import { usePangeaAxios } from '../../services/api';
 import PangeaUserSettings from './components/SettingsPanel'
 import UserOrgListPanel from './components/OrgListPanel'
+import {useUserContext} from '../../components/UserContext'
 
 interface PangeaUserDetailScreenProps {
   isAuthenticated: boolean;
@@ -29,6 +30,7 @@ interface PangeaUserDetailScreenProps {
 
 
 const usePangeaUser = (props: PangeaUserDetailScreenProps) => {
+  const {handleFetchUserProfile} = useUserContext();
   var url = '';
   if(props.isDjoserId){
     url = `/users/id/${props.id}`;
@@ -40,6 +42,7 @@ const usePangeaUser = (props: PangeaUserDetailScreenProps) => {
   const [{ data, loading, error }] = usePangeaAxios<PangeaUserType>(
       url,
     );
+  handleFetchUserProfile(data);
   return [{ data, loading, error }];
 };
 

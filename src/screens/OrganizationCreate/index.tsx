@@ -28,6 +28,22 @@ interface CreateOrgFormProps {
 }
 
 
+type CreateOrgFormPageProps = {
+  isAuthenticated: boolean;
+};
+
+
+const multilineText: CSS.Properties = {
+  whiteSpace: 'pre-line',
+};
+
+const popoverDescription = (description: React.ReactNode) => (
+  <Popover id="popover-description" title="" arrowOffsetLeft="300" style={multilineText}>
+    {description}
+  </Popover>
+);
+
+
 const CreateOrgInnerForm = (props: FormikProps<CreateOrgValues>) => {
   const { touched, errors, isSubmitting } = props;
   return (
@@ -70,20 +86,7 @@ const CreateOrgForm = withFormik<CreateOrgFormProps, CreateOrgValues>({
 })(CreateOrgInnerForm);
 
 
-type CreateOrgFormPageProps = {
-  isAuthenticated: boolean;
-};
 
-
-const multilineText: CSS.Properties = {
-  whiteSpace: 'pre-line',
-};
-
-const popoverDescription = (description: React.ReactNode) => (
-  <Popover id="popover-description" title="" arrowOffsetLeft="300" style={multilineText}>
-    {description}
-  </Popover>
-);
 
 export const CreateOrgFormPage = (props: CreateOrgFormPageProps) => {
   let location = useLocation() as any

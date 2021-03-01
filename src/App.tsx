@@ -17,7 +17,7 @@ import OrganizationCreate from './screens/OrganizationCreate';
 import OrganizationDetail from './screens/OrganizationDetail';
 import UserDetail from './screens/UserDetail';
 import SampleGroup from './screens/SampleGroup';
-import SampleGroupCreate from './screens/SampleGroupCreate';
+import CreateGrpFormPage from './screens/SampleGroupCreate';
 import SampleCreate from './screens/SampleCreate';
 import Sample from './screens/Sample';
 import AnalysisResult from './screens/AnalysisResult';
@@ -31,11 +31,21 @@ import PipelineList from './screens/PipelineList';
 import PipelineDetail from './screens/PipelineDetail';
 import PipelineModuleScreen from './screens/PipelineModule';
 
+import { PangeaUserType } from './services/api/models/user';
+import { usePangeaAxios } from './services/api';
+import {useUserContext} from './components/UserContext'
 
 export const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [title] = useState('Pangea');
   const [theme] = useState(undefined);
+  
+  const {handleFetchUserProfile} = useUserContext();
+  const [{ data, loading, error }] = usePangeaAxios<PangeaUserType>(`/users/me`);
+  
+  useEffect(() => {
+    handleFetchUserProfile(data);
+  }, [handleFetchUserProfile, data])
 
   useEffect(() => {
     if (window.localStorage.getItem('authToken')) {
@@ -193,7 +203,7 @@ export const App: React.FC = () => {
         <Route
           path="/sample-groups/create"
           render={routeProps => (
-            <SampleGroupCreate isAuthenticated={isAuthenticated} />
+            <CreateGrpFormPage isAuthenticated={isAuthenticated} />
           )}
         />
         <Route
