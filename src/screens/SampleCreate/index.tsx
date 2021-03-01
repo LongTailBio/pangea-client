@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { Row, Col, Button, Checkbox } from 'react-bootstrap';
+import { Link, Redirect, useLocation, useHistory } from 'react-router-dom';
+import {
+  Row, Col, Panel, ListGroup, ListGroupItem, FormGroup,
+  FormControl, Popover, OverlayTrigger, Button, Glyphicon
+} from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 import { default as axios, CancelTokenSource, AxiosError } from 'axios';
 import useAxios from 'axios-hooks'
@@ -9,117 +12,146 @@ import { API_BASE_URL } from '../../services/api/utils';
 
 import { LoadingErrorMessage } from '../../components/LoadingErrorMessage'
 import { SampleGroupType } from '../../services/api/models/sampleGroup';
+import { withFormik, FormikProps, FormikErrors, Form, Field } from 'formik';
+import { pangeaFetch } from '../../services/api/coreApi';
 
-type SampleGroupResult = {
-  count: number;
-  results: SampleGroupType[];
-};
+import { PangeaUserType, OrgLink } from '../../services/api/models/user';
+import CSS from 'csstype';
+import { useUserContext } from '../../components/UserContext' 
+import { InfoButton, multilineText } from '../../components/CreateForm'
 
-type CreateSampleProps = {
-  isAuthenticated: boolean;
-};
+interface CreateSampleValues {
+    name: string;
+}
 
-export const CreateSampleForm = (props: CreateSampleProps) => {
-  const { isAuthenticated } = props;
 
-  const [name, setName] = useState('');
-  const [createSampleErrors, setCreateSampleErrors] = useState<string[]>([]);
-  const [lib, setLib] = useState('');
-  const [isCreated, setCreated] = useState(false);
-
-  const { authToken } = window.localStorage;
-  const [
-    { data: putData, loading: putLoading, error: putError },
-    executePut
-  ] = useAxios(
-    {
-      url: `${API_BASE_URL}/samples`,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: authToken ? `Token ${authToken}` : undefined,
-      },
-    },
-    { manual: true }
-  )
-
-  const [{ data: grpData, loading: grpLoading, error: grpError }] = usePangeaAxios<SampleGroupResult>(
-    '/sample_groups',
+const CreateSampleInnerForm = (props: FormikProps<CreateSampleValues>) => {
+  const { touched, errors, isSubmitting } = props;
+  return (
+    <Form> 
+      <FormGroup>
+        <label htmlFor="name">Name
+          <InfoButton desc={"The name for the sample. Names must be unique within the library."} />
+        </label>
+         <Field id="name" name="name" placeholder="Name" className="form-control input-lg"/>
+      </FormGroup>    
+      <button type="submit" className="btn btn-primary btn-lg btn-block">Create</button>
+    </Form>
   );
+};
 
-  const grps: {[key: string]: string} = {};
-  if (!grpLoading && ! grpError){
-    var el: any;
-    for (el in grpData.results) {
-      el = grpData.results[el]
-      if(el.is_library){
-        grps[el.name] = el.uuid
-      }
+
+interface CreateSampleFormProps {
+  lib: string;
+  history: any;
+}
+
+
+const CreateSampleForm = withFormik<CreateSampleFormProps, CreateSampleValues>({
+  mapPropsToValues: props => {
+    return {
+      name: '',
+    };
+  },
+
+  handleSubmit: (values, formikBag) => {
+    const postData = {
+      name: values.name,
+      library: formikBag.props.lib,
     }
+    pangeaFetch(`/samples`, 'POST', JSON.stringify(postData))
+        .then(response => response.json())
+        .then(data => `/samples/${data.uuid}`)
+        .then(url => formikBag.props.history.push(url));    
+  },   
+})(CreateSampleInnerForm);
+
+
+type CreateSampleFormPageProps = {
+  isAuthenticated: boolean;
+  libraryUUID: string;
+};
+
+
+export const CreateSampleFormPage = (props: CreateSampleFormPageProps) => {
+  let location = useLocation() as any
+  let history = useHistory();
+  const {user} = useUserContext();  
+  if (!props.isAuthenticated) return <p>You must be logged in to view this. Click <Link to="/login">here</Link> to log back in.</p>;
+
+  var grp = undefined;
+  if(location.state){
+    grp = location.state.grp ? location.state.grp : undefined
   }
-
-  if (!isAuthenticated) return <p>You must be logged in to view this. Click <Link to="/login">here</Link> to log back in.</p>;
-  if (putError || putLoading) return <LoadingErrorMessage loading={putLoading} error={putError} name={'Organization'} message={putError?.message} />;
-
-  const handleUserFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setCreateSampleErrors([]);
-
-    executePut({
-      data: {
-        name,
-        library: lib,
-      }
-    })
-    setCreated(true);
+  const cmd_email = user ? user.email : '<your email>';
+  const cmd_grp = grp ? grp.name : '<grp name>';
+  var cmd_org = '<org name>';
+  if(grp){
+    cmd_org = grp.organization_obj.name;
   }
+  const shcmd = (
+    'pangea-api create sample -e ' +
+    cmd_email + ' -p *** "' + cmd_org +
+    '" "' + cmd_grp + '" "Your Sample Name"' 
+  );
+  const pycmd = `
+    from pangea_api import Knex, User, Organization
 
-  if (isCreated){
-    return (<Redirect to={`/samples/${putData.uuid}`} />)
-  }
+    knex = Knex()
+    User(knex, ${cmd_email}, '***').login()
+    org = Organization(knex, "${cmd_org}")
+    org.idem()  # creates the org or fetches it if it already exists
+    grp = org.sample_group("${cmd_grp}")
+    grp.idem()  # creates the grp or fetches it if it already exists
+    sample = grp.sample("Your Sample Name")
+    sample.idem()  # creates the sample or fetches it if it already exists
+  `;
+  const sampledesc = `
+  Samples contain data, results, and metadata.
+
+  Each sample belongs to exactly one sample library \
+  but can be added to any number of sample groups. \
+  Samples are only public if their library is public, \
+  otherwise they are private.
+  `;
+  const apilink = "https://github.com/LongTailBio/pangea-django/tree/master/api-client";
 
   return (
     <Row>
       <Helmet>
         <title>Pangea :: New Sample</title>
       </Helmet>
-      <h1>Create New Sample</h1>
+      <div>
+        <h1>Create New Sample
+          <InfoButton desc={sampledesc} />
+        </h1>
+      </div>      
       <hr />
       <br />
-      <Col lg={6} lgOffset={3}>
-        <form onSubmit={handleUserFormSubmit}>
-          <div className="form-group">
-            <label htmlFor="sampleName">Name</label>
-            <input
-              id="sampleName"
-              name="name"
-              className="form-control input-lg"
-              type="text"
-              placeholder="Sample Name"
-              required={true}
-              value={name}
-              onChange={event => setName(event.currentTarget.value)}
-            />
-            <label htmlFor="inputLib">Library</label>
-            <select
-              id="inputLib"
-              className="form-control"
-              onChange={event => setLib(grps[event.currentTarget.value])}
-            >
-              <option selected>Library...</option>
-              {Object.keys(grps).map(libName => (<option>{libName}</option>))}
-            </select>
-          </div> 
-          <input
-            type="submit"
-            className="btn btn-primary btn-lg btn-block"
-            value="Create"
-          />
-        </form>
+      <h4>Library: {grp ? grp.name : props.libraryUUID}</h4>
+      <Col lg={5} lgOffset={0}>
+        <CreateSampleForm lib={props.libraryUUID} history={history} />
         <br />
+      </Col>
+      <Col lg={6} lgOffset={1}>
+        <Row>
+          <h4>From the <a href={apilink}>Command Line</a></h4>
+          <code>
+            {shcmd}
+          </code>
+        </Row>
+        <br/><br/>
+        <Row>
+          <h4>Using <a href={apilink}>Python</a></h4>
+          <pre>
+            <code style={multilineText}>
+              {pycmd}
+            </code>
+          </pre>
+        </Row>
       </Col>
     </Row>
   );
 };
 
-export default CreateSampleForm;
+export default CreateSampleFormPage;

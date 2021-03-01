@@ -22,6 +22,7 @@ import { AnalysisResultType } from '../../../../services/api/models/analysisResu
 
 interface SampleListPanelProps {
   samples: PaginatedResult<SampleType>;
+  grp?: SampleGroupType;
 }
 
 interface SampleListPanelState {
@@ -106,6 +107,15 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
       sample =>
         sample.name.toLowerCase().indexOf(this.state.filter.toLowerCase()) > -1
     )
+    var linkTo = {}
+    if(this.props.grp){
+      linkTo = {
+        pathname: `/sample-groups/${this.props.grp.uuid}/create-sample`,
+        state: {
+          grp: this.props.grp,
+        }
+      }
+    }
     return (
       <>
         <Row>
@@ -145,9 +155,12 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
             )}
           </Col>
           <Col lg={2} lgOffset={2}>
-            <Link to="/samples/create" className="btn btn-primary">
-              Add Sample
-            </Link>
+            {this.props.grp && (
+              this.props.grp.is_library && (
+              <Link to={linkTo} className="btn btn-primary">
+                Create Sample
+              </Link>
+            ))}
           </Col>
         </Row>
         <Row>

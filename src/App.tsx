@@ -18,7 +18,7 @@ import OrganizationDetail from './screens/OrganizationDetail';
 import UserDetail from './screens/UserDetail';
 import SampleGroup from './screens/SampleGroup';
 import CreateGrpFormPage from './screens/SampleGroupCreate';
-import SampleCreate from './screens/SampleCreate';
+import CreateSampleFormPage from './screens/SampleCreate';
 import Sample from './screens/Sample';
 import AnalysisResult from './screens/AnalysisResult';
 import Dashboard from './screens/Dashboard';
@@ -207,6 +207,15 @@ export const App: React.FC = () => {
           )}
         />
         <Route
+          path="/sample-groups/:uuid/create-sample"
+          render={routeProps => (
+            <CreateSampleFormPage
+              isAuthenticated={isAuthenticated}
+              libraryUUID={routeProps.match.params.uuid}
+            />
+          )}
+        />
+        <Route
           path="/sample-groups/:uuid"
           render={routeProps => (
             <SampleGroup uuid={routeProps.match.params.uuid} />
@@ -218,11 +227,7 @@ export const App: React.FC = () => {
           render={routeProps => (
             <AnalysisResult uuid={routeProps.match.params.uuid} kind="sample" />
           )}
-        />
-        <Route
-          path="/samples/create"
-          render={routeProps => <SampleCreate isAuthenticated={isAuthenticated} />}
-        />        
+        />       
         <Route
           path="/samples/:uuid"
           render={routeProps => <Sample uuid={routeProps.match.params.uuid} />}

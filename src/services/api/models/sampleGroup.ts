@@ -7,6 +7,7 @@ export interface SampleGroupType {
   description: string;
   long_description: string;
   is_public: boolean;
+  is_library: boolean;
   theme: string;
   created_at: string;
   updated_at: string;
