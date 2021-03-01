@@ -31,9 +31,6 @@ class Header extends React.Component<HeaderProps, {}> {
             <Navbar.Collapse>
               <Nav pullRight={true}>
              
-                <LinkContainer to="/about">
-                  <NavItem>About</NavItem>
-                </LinkContainer>
                 <LinkContainer to="/docs">
                   <NavItem>Documentation</NavItem>
                 </LinkContainer>

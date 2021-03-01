@@ -9,7 +9,6 @@ import AuthForm from './screens/Auth/components/AuthForm';
 import UserStatus from './screens/UserStatus';
 import Logout from './screens/Auth/scenes/Logout';
 import Home from './screens/Home';
-import About from './screens/About';
 import TagList from './screens/TagList';
 import TagDetail from './screens/TagDetail';
 import OrganizationList from './screens/OrganizationList';
@@ -249,8 +248,7 @@ export const App: React.FC = () => {
           path="/logout"
           render={() => <Logout onLogoutUser={handleOnLogout} />}
         />
-        <Route exact={true} path="/about" component={About} />
-        <Route exact={true} path="/docs" component={Docs} />
+        <Route path="/docs" component={Docs} />
         <Route path="/contrib" component={ContribRouter} />
       </Switch>
     </DefaultLayout>

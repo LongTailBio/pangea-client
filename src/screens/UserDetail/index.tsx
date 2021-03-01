@@ -53,6 +53,8 @@ export const PangeaUserDetail = (props: PangeaUserDetailScreenProps) => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error.message}</p>;
 
+  const hasInfo = (data.name || data.biography || data.company || data.location || data.twitter_username || data.github_username);
+
   return (
     <>
       <Helmet>
@@ -60,6 +62,8 @@ export const PangeaUserDetail = (props: PangeaUserDetailScreenProps) => {
       </Helmet> 
       <Row>
         <Col lg={3}>
+          {(data.email) && (<h4>{data.email}</h4>)}
+          {!hasInfo && "Use the Settings tab to add info to your profile."}
           {(data.name) && (<h4>{data.name}</h4>)}
           {(data.biography) && (<p>{data.biography}</p>)}
 

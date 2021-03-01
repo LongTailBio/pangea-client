@@ -1,163 +1,70 @@
 import * as React from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Switch, Route } from 'react-router';
+import { LinkContainer } from 'react-router-bootstrap';
+import { Row, Col, Nav, NavItem } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const dataModel = require('./images/pangea_data_model.jpg');
-const pipelineStyle = {
-  width: '100%',
+import DocsAbout from './Pages/About';
+import DocsApi from './Pages/Api';
+import DocsDataModel from './Pages/DataModel';
+import DocsLanding from './Pages/Landing';
+import DocsExtensions from './Pages/Extensions';
+import DocsFaq from './Pages/Faq';
+import DocsMetagenscope from './Pages/Metagenscope';
+import DocsSearch from './Pages/Search';
+import DocsDownloads from './Pages/Downloads';
+import DocsUploads from './Pages/Uploads';
+import DocsPython from './Pages/Python';
+
+const Docs: React.FC = () => {
+  const links: Array<[string, string, React.FC]> = [
+    [`/docs`, 'Docs Home', DocsLanding],
+    [`/docs/about`, 'About', DocsAbout],
+    [`/docs/faq`, 'FAQ', DocsFaq],
+
+    [`/docs/data-model`, 'Data Model', DocsDataModel],
+    [`/docs/api`, 'REST API', DocsApi],
+    [`/docs/python`, 'Python API', DocsPython],
+    [`/docs/downloads`, 'Downloads', DocsDownloads],
+    [`/docs/uploads`, 'Uploads', DocsUploads],
+
+    [`/docs/extensions`, 'Extensions', DocsExtensions],
+    [`/docs/metagenscope`, 'MetaGenScope', DocsMetagenscope],
+    [`/docs/search`, 'Search', DocsSearch],
+
+  ];
+  return (
+    <>
+      <Helmet>
+        <title>Pangea :: Documenation</title>
+        <meta name="description" content="Pangea provides large scale storage for biological projects. This page documents how to use Pangea."/>
+      </Helmet>
+      <Row>
+        <Col lg={2}>
+          <Nav bsStyle="list" activeKey={links[0][1]}>
+            {links.map(el => (
+              <LinkContainer to={el[0]} exact={true}>
+                <NavItem eventKey={el[1]}>
+                  {el[1]}
+                </NavItem>
+              </LinkContainer>
+            ))} 
+          </Nav>
+        </Col>
+        <Col lg={10}>      
+          <Switch>
+            {links.map(el => (
+              <Route
+                exact={true}
+                path={el[0]}
+                render={() => el[2]({})}
+              />
+            ))}   
+          </Switch>
+        </Col>
+      </Row>
+    </>
+  )
 };
-
-const Docs: React.FC = () => (
-  <Row>
-    <Helmet>
-      <title>Pangea :: Documenation</title>
-      <meta name="description" content="Pangea provides large scale storage for biological projects. This page documents how to use Pangea."/>
-    </Helmet>
-    <Col lg={10} lgOffset={1}>
-      <h1>A Content Management System for the Life Sciences</h1>
-      <p>
-        Pangea is a Content Mangement System designed specifically for the Life
-        Sciences. It is designed to help researchers manage projects, track data
-        and metadata, and to find new interesting patterns in their data. Pangea
-        integrates cloud storage services (like Amazon S3) with High Performance
-        Compute Systems to allow researchers to manage and process their data
-        across its full lifecycle.
-      </p>
-      <p>
-        <b>Pangea Key Features</b>
-        <ul>
-          <li>Organize Biological Data and Projects</li>
-          <li>Low Cost Storage of Petabytes of Data</li>
-          <li>Search, Visualize, and Compare Datasets</li>
-        </ul>
-      </p>
-      <p>
-        At its core Pangea employs a simple flexible data model which can
-        support a wide variety of project types. Individual samples contain both
-        raw data and analyses. Samples can be grouped together to form Sample
-        Groups which may also contain data and analyses relevant to all the
-        samples together. Organizations control samples and groups and Users may
-        belong to organizations. More detail on this data model may be found
-        below.
-      </p>
-      <hr/>
-      <h2>Support</h2>
-      <p>
-        Please feel free to email dev@longtailbio.com for questions and help.
-      </p>
-      <hr/>
-      <h2>Downloading Data</h2>
-      <p>
-        Individual files may be downloaded from Pangea by clicking on the
-        provided links. To find a file search for the relevant Sample or Sample
-        Group, navigate to the result you want and click the name of the desired
-        result.
-      </p>
-      <h3>Bulk Downloads</h3>
-      <p>
-        The best way to download a large number of files from Pangea is 
-        to use the Python API which may be found
-        <a href="https://github.com/LongTailBio/pangea-django/tree/master/api-client"> here.</a>
-      </p>
-      <hr/>
-      <h2>Uploading Data</h2>
-      <p>
-       Currently uploading data requires some experience with the command line. To upload data
-       you should use the python API, found <a href="https://github.com/LongTailBio/pangea-django/tree/master/api-client"> here.</a>
-       If your data is large you will need to upload it to S3 or another cloud storage provider
-       before uploading to Pangea.
-      </p>
-      <hr/>
-      <h2>Search</h2>
-      <p>
-        Pangea includes a powerful set of search tools for biological data. Users can search by keyword,
-        DNA sequence, taxon name, and by metadata features. Use the "random" search button to see some
-        example searches.
-      </p>
-      <hr/>
-      <h2>The API</h2>
-      <p>
-        Pangea supports a RESTful API for users to interact with. This API may be
-        used directly with tools like CURL or may be accessed through the officially
-        support python library.
-      </p>
-      <h3>Swagger Documentation</h3>
-      <p>
-        Swagger documentation for the RESTful API may be found
-        <a href="https://app.swaggerhub.com/apis/dcdanko/Pangea/beta"> here.</a>
-      </p>
-      <h3>Python Library</h3>
-      <p>
-        Pangea includes an officially supported Python library to interact with the API.
-      </p>
-      <p>
-        Source code and documentation for the Python library may be found
-        <a href="https://github.com/LongTailBio/pangea-django/tree/master/api-client"> here.</a>
-      </p>
-      <hr/>
-      <h2>Visualization and MetaGenScope</h2>
-      <p>
-        Pangea supports data visualization through extension modules (see below). 
-        MetaGenScope is a visualization module for Metagenomic data. To access 
-        MetaGenScope for a Sample or Sample Group navigate to the appropriate
-        page and click on the <i>Resources</i> tab. This tab contains a link
-        to MetaGenScope.
-      </p>
-      <hr/>
-      <h2>The Data Model</h2>
-      <p>
-        Pangea employs a simple data model that can support a variety of use
-        cases. The core of this data model is a Sample. Samples represent a
-        singular physical object like a biopsy or swab. Samples contain metadata
-        which records details that researchers deem important for their
-        experiments, common examples include date of collection, processing
-        technician, and more.
-      </p>
-      <img src={dataModel} alt="Pangea data model" style={pipelineStyle} />
-      <p>
-        To group samples into projects Pangea supports Sample-Groups.
-        Sample-Groups are quite literally just groups of samples. Samples may
-        belong to many different groups to support different analyses and
-        sub-group analyses with the only restrictions being related to privacy.
-        The only exception to this are Sample Libraries (often called just
-        Libraries in our documentation). Sample Libraries are also Sample Groups
-        but have a special property that every sample must belong to exactly one
-        Sample Library. This library is, in effect, the sample&apos;s home-base.
-      </p>
-      <p>
-        The real strength of Pangea is its ability to connect data and analyses
-        to samples. Samples contain Analysis-Results which represent either raw
-        data from the sample or results derived from analysis of that data. An
-        example of this could be the raw reads from paired-end DNA sequencing of
-        a sample. The raw reads would be stored as an Analysis-Result with two
-        Analysis-Result-Fields, one each for the forward and reverse reads. Each
-        Field could point to a file stored on the cloud or, for results that
-        require less storage, be stored directly in Pangea.
-      </p>
-      <p>
-        Sample-Groups may also contain Analysis-Results. In this case
-        Analysis-Results are used to represent anything that applies to all the
-        samples at once. An example would be a pairwise distance matrix between
-        all samples in a dataset.
-      </p>
-      <p>
-        Analysis-Results may contain multiple replicates of the same type and
-        each Analysis-Result may contain a list of the other Analysis-Results it
-        was derived from. This helps to ensure provenance of each result and
-        reproducible research.
-      </p>
-      <hr/>
-      <h2>Extension Modules</h2>
-      <p>
-        In addition to its core functionalty Pangea supports a system of
-        extension modules. These extension modules may be used to support a wide
-        variety of additional use cases. Critically, extension modules can
-        support search and visualization of data.
-      </p>
-
-    </Col>
-  </Row>
-);
 
 export default Docs;
