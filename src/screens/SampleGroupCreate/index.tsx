@@ -47,9 +47,9 @@ const CreateGrpInnerForm = (props: GrpInnerFormProps & FormikProps<CreateGrpValu
         <label htmlFor="inputOrg">Organization
           <InfoButton desc={"The organization this group will be created in."} />
         </label><br/>
-        <Field name="inputOrg" component="select">
+        <Field name="inputOrg" as="select">
           {orgNames && orgNames.map(el =>
-            (<option key={el.uuid} value={el.uuid}>{el.name}</option>)
+            (<option key={el.name} value={el.name}>{el.name}</option>)
           )}
         </Field>
       </FormGroup>

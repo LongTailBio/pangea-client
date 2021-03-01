@@ -105,6 +105,11 @@ export const OrganizationDetail = (props: OrganizationsProps) => {
                 <Glyphicon glyph="user" /> People <Badge>{people.count}</Badge>
               </NavItem>
             </LinkContainer>
+            <LinkContainer to={`/organizations/${props.uuid}/settings`}>
+              <NavItem eventKey="2">
+                <Glyphicon glyph="cog" /> Settings
+              </NavItem>
+            </LinkContainer>            
           </Nav>
         </Row>
         <br />
@@ -134,7 +139,7 @@ export const OrganizationDetail = (props: OrganizationsProps) => {
           <Route
             path="/organizations/:uuid/settings"
             render={props => (
-              <OrganizationSettings uuid={props.match.params.uuid} />
+              <OrganizationSettings org={organization} />
             )}
           />
         </Switch>

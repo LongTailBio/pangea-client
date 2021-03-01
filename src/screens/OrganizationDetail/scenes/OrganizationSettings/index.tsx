@@ -1,105 +1,28 @@
 import * as React from 'react';
-import { Row, Col, Panel, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Row, Col, Panel, ListGroup, ListGroupItem, Tab, Tabs, } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Switch, Route, Redirect } from 'react-router';
-
-import Settings from './components/Profile';
+import { OrganizationType } from '../../../../services/api/models/organization';
+import OrgSettingsProfile from './components/Profile';
+import OrgSettingsCloudStorage from './components/CloudStorage';
 
 interface OrganizationSettingsProps {
-  uuid: string;
+  org: OrganizationType;
 }
 
-export default class OrganizationSettings extends React.Component<
-  OrganizationSettingsProps,
-  {}
-> {
+export default class OrganizationSettings extends React.Component<OrganizationSettingsProps, {}> {
   render() {
     return (
+
       <Row>
-        <Col lg={3}>
-          <Panel>
-            <Panel.Heading>Organization Settings</Panel.Heading>
-            <Panel.Body>
-              <ListGroup fill={true}>
-                <LinkContainer
-                  to={`/organizations/${this.props.uuid}/settings/profile`}
-                >
-                  <ListGroupItem>Profile</ListGroupItem>
-                </LinkContainer>
-                <LinkContainer
-                  to={`/organizations/${this.props.uuid}/settings/member_privileges`}
-                >
-                  <ListGroupItem>Member privileges</ListGroupItem>
-                </LinkContainer>
-                <LinkContainer
-                  to={`/organizations/${this.props.uuid}/settings/projects`}
-                >
-                  <ListGroupItem>Projects</ListGroupItem>
-                </LinkContainer>
-              </ListGroup>
-            </Panel.Body>
-          </Panel>
-          <Panel>
-            <Panel.Heading>Developer Settings</Panel.Heading>
-            <Panel.Body>
-              <ListGroup fill={true}>
-                <LinkContainer
-                  to={`/organizations/${this.props.uuid}/settings/tokens`}
-                >
-                  <ListGroupItem>API Tokens</ListGroupItem>
-                </LinkContainer>
-              </ListGroup>
-            </Panel.Body>
-          </Panel>
-        </Col>
-        <Col lg={9}>
-          <Switch>
-            <Route
-              exact={true}
-              path="/organizations/:uuid/settings"
-              render={_props => (
-                <Redirect
-                  to={`/organizations/${this.props.uuid}/settings/profile`}
-                />
-              )}
-            />
-            <Route
-              exact={true}
-              path="/organizations/:uuid/settings/profile"
-              render={_props => <Settings uuid={this.props.uuid} />}
-            />
-            <Route
-              exact={true}
-              path="/organizations/:uuid/settings/member_privileges"
-              render={_props => (
-                <div>
-                  <h3>Member Privileges</h3>
-                  <hr />
-                </div>
-              )}
-            />
-            <Route
-              exact={true}
-              path="/organizations/:uuid/settings/projects"
-              render={_props => (
-                <div>
-                  <h3>Projects</h3>
-                  <hr />
-                </div>
-              )}
-            />
-            <Route
-              exact={true}
-              path="/organizations/:uuid/settings/tokens"
-              render={_props => (
-                <div>
-                  <h3>API Tokens</h3>
-                  <hr />
-                </div>
-              )}
-            />
-          </Switch>
-        </Col>
+        <Tabs id="user_settings_tabs">
+          <Tab eventKey={1} title="Profile">
+            <OrgSettingsProfile org={this.props.org} />
+          </Tab>
+          <Tab eventKey={2} title="Storage">
+            <OrgSettingsCloudStorage uuid={this.props.org.uuid} />
+          </Tab>        
+        </Tabs>
       </Row>
     );
   }

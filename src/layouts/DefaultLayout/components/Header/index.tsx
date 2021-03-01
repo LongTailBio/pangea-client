@@ -58,10 +58,7 @@ class Header extends React.Component<HeaderProps, {}> {
                     </LinkContainer>
                     <LinkContainer to="/sample-groups/create">
                       <MenuItem>New Sample Group</MenuItem>
-                    </LinkContainer>
-                    <LinkContainer to="/samples/create">
-                      <MenuItem>New Sample</MenuItem>
-                    </LinkContainer>                    
+                    </LinkContainer>                  
                   </NavDropdown>
                 )}
                 {!this.props.isAuthenticated && (
