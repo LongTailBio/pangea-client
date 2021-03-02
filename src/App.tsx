@@ -29,6 +29,7 @@ import ToolsScreen from './screens/Tools';
 import PipelineList from './screens/PipelineList';
 import PipelineDetail from './screens/PipelineDetail';
 import PipelineModuleScreen from './screens/PipelineModule';
+import CreateAnalysisResultFormPage from './screens/AnalysisResultCreate';
 
 import { PangeaUserType } from './services/api/models/user';
 import { usePangeaAxios } from './services/api';
@@ -215,16 +216,39 @@ export const App: React.FC = () => {
           )}
         />
         <Route
+          exact={true}
+          path="/sample-groups/:uuid/create-analysis-results"
+          render={routeProps => (
+            <CreateAnalysisResultFormPage
+              isAuthenticated={isAuthenticated}
+              sampleUUID={routeProps.match.params.uuid}
+              kind={"sample-group"}
+            />
+          )}
+        /> 
+        <Route
           path="/sample-groups/:uuid"
           render={routeProps => (
             <SampleGroup uuid={routeProps.match.params.uuid} />
           )}
         />
+        
         <Route
           exact={true}
           path="/samples/:sample_uuid/analysis-results/:uuid"
           render={routeProps => (
             <AnalysisResult uuid={routeProps.match.params.uuid} kind="sample" />
+          )}
+        /> 
+        <Route
+          exact={true}
+          path="/samples/:uuid/create-analysis-results"
+          render={routeProps => (
+            <CreateAnalysisResultFormPage
+              isAuthenticated={isAuthenticated}
+              sampleUUID={routeProps.match.params.uuid}
+              kind={"sample"}
+            />
           )}
         />       
         <Route

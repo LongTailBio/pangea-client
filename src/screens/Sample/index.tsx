@@ -78,6 +78,12 @@ export const SampleScreen = (props: SampleScreenProps) => {
   }
 
   const { sample, analysisResults, tags } = data;
+  const linkToCreateAr = {
+    pathname: `/samples/${sample.uuid}/create-analysis-results`,
+    state: {
+      sample: sample,
+    }
+  }
   return (
     <>
       <Helmet>
@@ -144,6 +150,9 @@ export const SampleScreen = (props: SampleScreenProps) => {
                     <h4>This sample has no analysis results.</h4>
                   </Well>
                 )}
+                <Link to={linkToCreateAr} className="btn btn-primary">
+                  Create Analysis Result
+                </Link>
               </Col>
               <Col lg={6}>
                 <SampleMetadataPanel sample={sample} />

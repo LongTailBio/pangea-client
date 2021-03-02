@@ -26,6 +26,9 @@ interface AnalysisResultPanelProps {
 export const AnalysisResultPanel = (props: AnalysisResultPanelProps) => {
   const { authToken } = window.localStorage;
   const analysisResults = props.analysisResults;
+  const linkToCreateAr = {
+    pathname: `/sample-groups/${props.uuid}/create-analysis-results`,
+  }  
   return (
       <Row>
         <Col lg={12}>
@@ -45,6 +48,9 @@ export const AnalysisResultPanel = (props: AnalysisResultPanelProps) => {
                 </li>
               </ul>
             ))}
+          <Link to={linkToCreateAr} className="btn btn-primary">
+            Create Analysis Result
+          </Link>
           {analysisResults.length === 0 && (
             <Well className="text-center">
               <h4>This sample group has no analysis results.</h4>
