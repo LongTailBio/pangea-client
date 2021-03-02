@@ -1,7 +1,7 @@
 import React from 'react';
 import Uppy from '@uppy/core';
 import AwsS3Multipart, { AwsS3Part } from '@uppy/aws-s3-multipart';
-import { DragDrop, StatusBar } from '@uppy/react';
+import { DragDrop, StatusBar, Dashboard, DashboardModal } from '@uppy/react';
 
 import { getCompanionHost } from '../../services/api/utils';
 import { pangeaFetch } from '../../services/api/coreApi';
@@ -9,17 +9,21 @@ import { pangeaFetch } from '../../services/api/coreApi';
 import '@uppy/core/dist/style.css';
 import '@uppy/drag-drop/dist/style.css';
 import '@uppy/status-bar/dist/style.css';
+import '@uppy/dashboard/dist/style.css'
 
 type MaybePromise<T> = T | Promise<T>
 
 interface S3UploaderProps {
-  rootUrl: string;
+  getRootUrl: () => string;
+  uploadDone: () => void;
+  upload: boolean;
 }
 
 interface S3UploaderState {
   didComplete: boolean;
   uploadId: string;
   uploadUrls: string[];
+  rootUrl: string;
 }
 
 interface S3PartData {uploadId: string; key: string; body: Blob; number: number}
@@ -31,6 +35,7 @@ export class S3Uploader extends React.Component<S3UploaderProps, S3UploaderState
     didComplete: false,
     uploadId: '',
     uploadUrls: [],
+    rootUrl: '',
   };
 
   constructor(props: S3UploaderProps) {
@@ -38,10 +43,10 @@ export class S3Uploader extends React.Component<S3UploaderProps, S3UploaderState
     this.uppy = Uppy<Uppy.StrictTypes>({
       restrictions: {
         maxNumberOfFiles: 1,
-        allowedFileTypes: ['.gz'],
       },
-      autoProceed: true,
+      autoProceed: false,
     });
+
     this.myCreateMultipartUpload = this.myCreateMultipartUpload.bind(this)
     this.myPrepareUploadPart = this.myPrepareUploadPart.bind(this)
     this.myCompleteMultipartUpload = this.myCompleteMultipartUpload.bind(this)
@@ -62,13 +67,12 @@ export class S3Uploader extends React.Component<S3UploaderProps, S3UploaderState
   {
     const chunkSize = 5 * 1024 * 1024;
     const n_parts: number = Math.ceil(file.size / chunkSize);
-    const url = this.props.rootUrl + '/upload_s3';
+    const url = this.props.getRootUrl() + '/upload_s3';
     const body = {
       'filename': file.name,
       'n_parts': n_parts,
       'stance': 'upload-multipart',
     };
-    console.log(body);
     const result = pangeaFetch(url, 'POST', JSON.stringify(body))
       .then((response) => {
         return response.json()
@@ -95,17 +99,23 @@ export class S3Uploader extends React.Component<S3UploaderProps, S3UploaderState
   myCompleteMultipartUpload(file: Uppy.UppyFile, opts: { uploadId: string; key: string; parts: AwsS3Part[] }): MaybePromise<{}>
   {
     const { uploadId, key, parts } = opts;
-    const url = this.props.rootUrl + '/complete_upload_s3';
+    const url = this.props.getRootUrl() + '/complete_upload_s3';
     const body = {
       'upload_id': this.state.uploadId,
       'parts': parts,
     };
     return pangeaFetch(url, 'POST', JSON.stringify(body))
       .then((response) => {
+        this.props.uploadDone()
         return {}
       });
   }
 
+  componentDidUpdate() {
+    if(this.props.upload){
+      this.uppy.upload();
+    }
+  }
 
   componentWillUnmount(): void {
     this.uppy.close();
@@ -131,11 +141,7 @@ export class S3Uploader extends React.Component<S3UploaderProps, S3UploaderState
     }
 
     return (
-      <>
-        <DragDrop uppy={this.uppy} note="GZipped FASTQ Files Only" />
-        <br />
-        <StatusBar uppy={this.uppy} showProgressDetails={true} />
-      </>
+      <Dashboard uppy={this.uppy} showProgressDetails={true} hideUploadButton={true} />
     );
   }
 }

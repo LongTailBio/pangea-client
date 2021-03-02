@@ -5,6 +5,8 @@ import { Row, Col } from 'react-bootstrap';
 import { usePangeaAxios, PaginatedResult } from '../../services/api';
 import { AnalysisResultType } from '../../services/api/models/analysisResult';
 import { AnalysisResultFieldType } from '../../services/api/models/analysisResultField';
+import { CreateFieldFormPage } from './components/CreateField';
+
 
 type ARType = 'sample' | 'sample-group';
 
@@ -85,6 +87,11 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
       : `/sample-groups/${data.analysisResult.sample_group}`;
 
   const { analysisResult, fields } = data;
+  const baseRootUrl = 
+    props.kind === 'sample'
+      ? `/sample_ar_fields/`
+      : `/sample_group_ar_fields/`;
+
   return (
     <>
       <Row>
@@ -105,8 +112,10 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
         <Col lg={6}>
           <h2>Fields</h2>
           {fields.results.map(field => (
-            <li key={field.uuid}>{formatField(field)}</li>
-          ))}
+            <>
+              <li key={field.uuid}>{formatField(field)}</li>
+            </>
+          ))}       
         </Col>
         <Col lg={6}>
           <table className="table">
@@ -127,6 +136,13 @@ export const AnalysisResultScreen = (props: AnalysisResultScreenProps) => {
           </table>
         </Col>
       </Row>
+      <br/>
+      <hr/>
+      <CreateFieldFormPage
+        isAuthenticated={true}
+        analysisResult={analysisResult}
+        kind={props.kind}
+      />
     </>
   );
 };
