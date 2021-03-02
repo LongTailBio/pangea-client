@@ -26,6 +26,7 @@ interface CreateGrpValues {
     library: boolean;
     inputOrg: string;
     description: string;
+    customStorage: boolean;
 }
 
 interface GrpInnerFormProps {
@@ -80,7 +81,12 @@ const CreateGrpInnerForm = (props: GrpInnerFormProps & FormikProps<CreateGrpValu
         <InfoButton desc={"A brief description of this sample group."} />
 
         <Field id="description" name="description" placeholder="Description" className="form-control input-lg"/>
-      </FormGroup>      
+      </FormGroup>
+        <label>
+          <Field type="checkbox" name="customStorage" />
+          Use Custom Storage
+          <InfoButton desc={"Set up custom storage later instead of using the default storage. Advanced."} />
+        </label>     
       <button type="submit" className="btn btn-primary btn-lg btn-block">Create</button>
     </Form>
   );
@@ -104,6 +110,7 @@ const CreateGrpForm = withFormik<CreateGrpFormProps, CreateGrpValues>({
       inputOrg: props.org ? props.org.name : '',
       description: '',
       orgNames: props.orgNames,
+      customStorage: false,
     };
   },
 
@@ -119,6 +126,7 @@ const CreateGrpForm = withFormik<CreateGrpFormProps, CreateGrpValues>({
       is_library: values.library,
       organization: orgUUID,
       description: values.description ? values.description : values.name,
+      storage_provider_name: values.customStorage ? 'custom' : 'default',
     }
     pangeaFetch(`/sample_groups`, 'POST', JSON.stringify(postData))
         .then(response => response.json())
