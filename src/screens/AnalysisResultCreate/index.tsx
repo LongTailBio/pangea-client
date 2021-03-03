@@ -22,6 +22,11 @@ import { PangeaUserType, OrgLink } from '../../services/api/models/user';
 import CSS from 'csstype';
 import { useUserContext } from '../../components/UserContext' 
 import { InfoButton, multilineText } from '../../components/CreateForm'
+import {
+  ardesc,
+  createSampleAnalysisResultCmds,
+  createSampleGroupAnalysisResultCmds
+} from '../../components/Docs'
 
 
 type ARType = 'sample' | 'sample-group';
@@ -113,70 +118,6 @@ type CreateAnalysisResultFormPageProps = {
   kind: ARType;
 };
 
-const getSampleCmds = (props: CreateAnalysisResultFormPageProps, location: any, user: any): ReactElement =>  {
-  var sample = undefined;
-  if(location.state){
-    sample = location.state.sample ? location.state.sample : undefined
-  }
-  const cmd_sample = sample ? sample.name : '<your sample>'
-  const cmd_email = user ? user.email : '<your email>';
-  var cmd_grp = '<grp name>';
-  var cmd_org = '<org name>';
-  if(sample){
-    cmd_grp = sample.library_obj.name;
-    cmd_org = sample.library_obj.organization_obj.name;
-  }
-  const shcmd1 = (
-    `pangea-api create sample-ar -e '${cmd_email}' -p *** -r '<replicate id>' '${cmd_org}' '${cmd_grp}' '${cmd_sample}' 'Your Module Name'`
-
-  );
-  const shcmd2 = (
-    `pangea-api create sample-ar -e '${cmd_email}' -p *** -r '<replicate id>' '${props.sampleUUID}'  'Your Module Name'`
-  );
-  const pycmd = `
-    from pangea_api import Knex, User, Organization
-
-    knex = Knex()
-    User(knex, "${cmd_email}", "***").login()
-    org = Organization(knex, "${cmd_org}").idem()
-    grp = org.sample_group("${cmd_grp}").idem()
-    sample = grp.sample("Your Sample Name").idem()
-    ar = sample.analysis_result("Your Module Name", "<replicate id>").idem()
-  `;
-  const apilink = "https://github.com/LongTailBio/pangea-django/tree/master/api-client";
-
-  return (
-    <>
-      <Row>
-        <h4>From the <a href={apilink}>Command Line</a></h4>
-        <code>
-          {shcmd1}
-        </code>
-        <br/>Or<br/>
-        <code>
-          {shcmd2}
-        </code>          
-      </Row>
-      <br/><br/>
-      <Row>
-        <h4>Using <a href={apilink}>Python</a></h4>
-        <pre>
-          <code style={multilineText}>
-            {pycmd}
-          </code>
-        </pre>
-      </Row>
-    </>
-  )
-}
-
-const getSampleGroupCmds = (props: CreateAnalysisResultFormPageProps, location: any, user: any): ReactElement =>  {
-  return (
-    <>
-    </>
-  )
-}
-
 
 export const CreateAnalysisResultFormPage = (props: CreateAnalysisResultFormPageProps) => {
   let location = useLocation() as any
@@ -185,14 +126,12 @@ export const CreateAnalysisResultFormPage = (props: CreateAnalysisResultFormPage
   if (!props.isAuthenticated) return <p>You must be logged in to view this. Click <Link to="/login">here</Link> to log back in.</p>;
 
   
-  const sampledesc = `
-  Analysis results contain files and data such as reads.
-
-  Analysis Results can have multiple fields \
-  this makes it easy to group related files \
-  together such as the first and second reads \
-  from a sequencing run.
-  `;
+  var grp = undefined;
+  var sample = undefined;
+  if(location.state){
+    grp = location.state.grp ? location.state.grp : undefined
+    sample = location.state.sample ? location.state.sample : undefined
+  }
   
 
   return (
@@ -202,7 +141,7 @@ export const CreateAnalysisResultFormPage = (props: CreateAnalysisResultFormPage
       </Helmet>
       <div>
         <h1>Create New Analysis Result
-          <InfoButton desc={sampledesc} />
+          <InfoButton desc={ardesc} />
         </h1>
       </div>      
       <hr />
@@ -211,8 +150,8 @@ export const CreateAnalysisResultFormPage = (props: CreateAnalysisResultFormPage
         <CreateAnalysisResultForm uuid={props.sampleUUID} history={history} kind={props.kind} />
       </Col>
       <Col lg={6} lgOffset={1}>
-        {props.kind === 'sample' && getSampleCmds(props, location, user)}
-        {props.kind === 'sample-group' && getSampleGroupCmds(props, location, user)}
+        {props.kind === 'sample' && createSampleAnalysisResultCmds(user, sample)}
+        {props.kind === 'sample-group' && createSampleGroupAnalysisResultCmds(user, grp)}
       </Col>
     </Row>
   );

@@ -25,7 +25,6 @@ export const addUserToOrg = (org: OrganizationType, user: UserType, source: Canc
     data: data,
   };
   return cancelableAxios(options, source).then(res => {
-    console.log(res)
     const user: UserType = res.data.results;
     return user;
   });
