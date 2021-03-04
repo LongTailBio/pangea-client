@@ -180,15 +180,121 @@ export const createSampleAnalysisResultCmds = (user?: PangeaUserType, sample?: S
 }
 
 export const createSampleGroupAnalysisResultCmds = (user?: PangeaUserType, grp?: SampleGroupType): ReactElement =>  {
+
+
   return (
     <>
+
     </>
   )
 }
 
 export const downloadSampleARsFromGroupCmds = (user?: PangeaUserType, grp?: SampleGroupType): ReactElement =>  {
+  const cmd_grp = grp ? grp.name : '<your grp>'
+  const cmd_grp_uuid = grp ? grp.uuid : '<group uuid>'
+  const cmd_email = user ? user.email : '<your email>';
+  var cmd_org = '<org name>';
+  if(grp){
+    cmd_org = grp.organization_obj.name;
+  }
+  const shcmd1 = (
+    `pangea-api download sample-results -e '${cmd_email}' -p *** --module-name '<module name>' '${cmd_org}' '${cmd_grp}'`
+
+  );
+  const shcmd2 = (
+    `pangea-api download sample-results -e '${cmd_email}' -p *** --module-name '<module name>' '${cmd_grp_uuid}'`
+  );
+  const pycmd = `
+    from pangea_api import Knex, User, Organization
+
+    knex = Knex()
+    User(knex, "${cmd_email}", "***").login()
+    org = Organization(knex, "${cmd_org}").idem()
+    grp = org.sample_group("${cmd_grp}").idem()
+    for sample in grp.get_samples(cache=False):
+        for ar in sample.get_analysis_results(cache=False):
+            if ar.module_name != '<module name>':
+                continue
+            for field in ar.get_fields(cache=False):
+                field.download_file(filename=filename)
+  `;
   return (
     <>
+      <Row>
+        <h4>From the <a href={apilink}>Command Line</a></h4>
+        <code>
+          {shcmd1}
+        </code>
+        <br/>Or<br/>
+        <code>
+          {shcmd2}
+        </code>          
+      </Row>
+      <br/><br/>
+      <Row>
+        <h4>Using <a href={apilink}>Python</a></h4>
+        <pre>
+          <code style={multilineText}>
+            {pycmd}
+          </code>
+        </pre>
+      </Row>
+    </>
+  )
+}
+
+export const downloadMetadataFromGroupCmds = (user?: PangeaUserType, grp?: SampleGroupType): ReactElement =>  {
+  const cmd_grp = grp ? grp.name : '<your grp>'
+  const cmd_grp_uuid = grp ? grp.uuid : '<group uuid>'
+  const cmd_email = user ? user.email : '<your email>';
+  var cmd_org = '<org name>';
+  if(grp){
+    cmd_org = grp.organization_obj.name;
+  }
+  const shcmd1 = (
+    `pangea-api download metadata -e '${cmd_email}' -p *** '${cmd_org}' '${cmd_grp}'`
+
+  );
+  const shcmd2 = (
+    `pangea-api download metadata -e '${cmd_email}' -p *** '${cmd_grp_uuid}'`
+  );
+  const pycmd = `
+    import pandas as pd
+    from pangea_api import Knex, User, Organization
+
+    knex = Knex()
+    User(knex, "${cmd_email}", "***").login()
+    org = Organization(knex, "${cmd_org}").idem()
+    grp = org.sample_group("${cmd_grp}").idem()
+    metadata = {}
+    for sample in grp.get_samples(cache=False):
+        if sample_names and sample.name not in sample_names:
+            continue
+        metadata[sample.name] = sample.metadata
+    metadata = pd.DataFrame.from_dict(metadata, orient='index')
+    metadata.to_csv("${cmd_grp}_metadata.csv")
+  `;
+  return (
+    <>
+      <Row>
+        <h4>From the <a href={apilink}>Command Line</a></h4>
+        <code>
+          {shcmd1}
+        </code>
+        <br/>Or<br/>
+        <code>
+          {shcmd2}
+        </code>          
+      </Row>
+      <br/><br/>
+      <Row>
+        <h4>Using <a href={apilink}>Python</a></h4>
+        <pre>
+          <code style={multilineText}>
+            {pycmd}
+          </code>
+        </pre>
+      </Row>
     </>
   )
 }
