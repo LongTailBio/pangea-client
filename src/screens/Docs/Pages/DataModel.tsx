@@ -4,6 +4,7 @@ import { Row, Col, Nav, NavItem } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 
 const dataModel = require('../images/pangea_data_model.jpg');
+const dataModelFull = require('../images/pangea_data_model_full.jpg');
 const pipelineStyle = {
   width: '100%',
 };
@@ -12,6 +13,7 @@ const pipelineStyle = {
 const DocsDataModel: React.FC = () => (
   <Row>
       <h2 id='datamodel'>The Data Model</h2>
+      <img src={dataModel} alt="Pangea data model" style={pipelineStyle} />
       <p>
         Pangea employs a simple data model that can support a variety of use
         cases. The core of this data model is a Sample. Samples represent a
@@ -20,7 +22,7 @@ const DocsDataModel: React.FC = () => (
         experiments, common examples include date of collection, processing
         technician, and more.
       </p>
-      <img src={dataModel} alt="Pangea data model" style={pipelineStyle} />
+      <img src={dataModelFull} alt="Full Pangea data model" style={pipelineStyle} />
       <p>
         To group samples into projects Pangea supports Sample-Groups.
         Sample-Groups are quite literally just groups of samples. Samples may
