@@ -33,6 +33,11 @@ const DocsMetagenscope: React.FC = () => (
         below.
       </p>
       <hr/>
+      <h2>Guides</h2>
+        <ul>
+          <li><a href='/docs/how-to-upload-reads'>Uploading Reads to Pangea</a></li>
+          <li><a href='/docs/write-pipelines'>Writing Pipelines with Pangea</a></li>
+        </ul>
       <h2>Support</h2>
       <p>
         Please feel free to email dev@longtailbio.com for questions and help.
