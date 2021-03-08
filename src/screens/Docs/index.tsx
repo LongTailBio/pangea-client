@@ -15,6 +15,7 @@ import DocsSearch from './Pages/Search';
 import DocsDownloads from './Pages/Downloads';
 import DocsUploads from './Pages/Uploads';
 import DocsPython from './Pages/Python';
+import DocsHowToUploadReads from './Pages/HowToUploadReads'
 
 const Docs: React.FC = () => {
   const links: Array<[string, string, React.FC]> = [
@@ -22,6 +23,7 @@ const Docs: React.FC = () => {
     [`/docs/about`, 'About', DocsAbout],
     [`/docs/faq`, 'FAQ', DocsFaq],
 
+    [`/docs/how-to-uploadreads`, 'How To Upload Reads', DocsHowToUploadReads],
     [`/docs/data-model`, 'Data Model', DocsDataModel],
     [`/docs/api`, 'REST API', DocsApi],
     [`/docs/python`, 'Python API', DocsPython],
