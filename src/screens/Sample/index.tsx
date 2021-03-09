@@ -142,6 +142,11 @@ export const SampleScreen = (props: SampleScreenProps) => {
                           {analysisResult.module_name} -{' '}
                           {analysisResult.replicate}
                         </Link>
+                        {analysisResult.description && (
+                          <>
+                            <br/>
+                            <p>{analysisResult.description}</p>
+                          </>)}
                       </li>
                     </ul>
                   ))}
