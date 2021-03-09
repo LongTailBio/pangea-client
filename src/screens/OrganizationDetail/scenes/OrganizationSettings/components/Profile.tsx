@@ -7,13 +7,63 @@ import {
   FormControl,
   Button,
 } from 'react-bootstrap';
+import { withFormik, FormikProps, FormikErrors, Form, Field, } from 'formik';
+import { InfoButton, multilineText } from '../../../../../components/CreateForm'
+import { pangeaFetch } from '../../../../../services/api/coreApi';
+import { OrganizationType } from '../../../../../services/api/models/organization';
 
-interface SettingsProps {
-  uuid: string;
+
+
+interface OrgProfileValues {
+    name: string;
 }
 
-export default class OrganizationSettingsProfile extends React.Component<
-  SettingsProps,
+
+const OrgProfileInnerForm = (props: FormikProps<OrgProfileValues>) => {
+  const { touched, errors, isSubmitting } = props;
+  return (
+    <Form> 
+      <FormGroup>
+        <label htmlFor="name">Organization Name
+          <InfoButton desc={"The name of this organization."} />
+        </label>
+         <Field id="name" name="name" placeholder="name" className="form-control input-lg"/>
+      </FormGroup>    
+      <button type="submit" className="btn btn-primary btn-lg btn-block">Save</button>
+    </Form>
+  );
+}; 
+
+interface OrgProfileFormProps {
+  uuid: string;
+  name: string;
+}
+
+
+const OrgProfileForm = withFormik<OrgProfileFormProps, OrgProfileValues>({
+  mapPropsToValues: props => {
+    return {
+      name: props.name,
+    };
+  },
+
+  handleSubmit: (values, formikBag) => {
+    const postData = {
+      name: values.name,
+    }
+    pangeaFetch(`/organizations/${formikBag.props.uuid}`, 'PATCH', JSON.stringify(postData))
+        .then(response => response.json())
+        .then(data => window.location.reload(false))   
+  },   
+})(OrgProfileInnerForm);
+
+
+interface OrgSettingsProps {
+  org: OrganizationType
+}
+
+export default class OrgSettingsProfile extends React.Component<
+  OrgSettingsProps,
   {}
 > {
   render() {
@@ -23,64 +73,7 @@ export default class OrganizationSettingsProfile extends React.Component<
         <hr />
         <Row>
           <Col lg={7}>
-            <form>
-              <FormGroup controlId="organizationName">
-                <ControlLabel>Organization display name</ControlLabel>
-                <FormControl
-                  type="text"
-                  // value={this.state.value}
-                  placeholder="Organization name"
-                  // onChange={this.handleChange}
-                />
-                <FormControl.Feedback />
-                {/* <HelpBlock>Validation is based on string length.</HelpBlock> */}
-              </FormGroup>
-              <FormGroup controlId="organizationPublicEmail">
-                <ControlLabel>Email (public)</ControlLabel>
-                <FormControl
-                  type="email"
-                  // value={this.state.value}
-                  placeholder="info@lab.org"
-                  // onChange={this.handleChange}
-                />
-                <FormControl.Feedback />
-                {/* <HelpBlock>Validation is based on string length.</HelpBlock> */}
-              </FormGroup>
-              <FormGroup controlId="organizationDescription">
-                <ControlLabel>Description</ControlLabel>
-                <FormControl
-                  type="text"
-                  // value={this.state.value}
-                  // placeholder="admin@lab.org"
-                  // onChange={this.handleChange}
-                />
-                <FormControl.Feedback />
-                {/* <HelpBlock>Validation is based on string length.</HelpBlock> */}
-              </FormGroup>
-              <FormGroup controlId="organizationURL">
-                <ControlLabel>URL</ControlLabel>
-                <FormControl
-                  type="text"
-                  // value={this.state.value}
-                  // placeholder="admin@lab.org"
-                  // onChange={this.handleChange}
-                />
-                <FormControl.Feedback />
-                {/* <HelpBlock>Validation is based on string length.</HelpBlock> */}
-              </FormGroup>
-              <FormGroup controlId="organizationAdminEmail">
-                <ControlLabel>Admin email (private)</ControlLabel>
-                <FormControl
-                  type="email"
-                  // value={this.state.value}
-                  placeholder="admin@lab.org"
-                  // onChange={this.handleChange}
-                />
-                <FormControl.Feedback />
-                {/* <HelpBlock>Validation is based on string length.</HelpBlock> */}
-              </FormGroup>
-              <Button bsStyle="success">Update Organization</Button>
-            </form>
+            <OrgProfileForm uuid={this.props.org.uuid} name={this.props.org.name}/>
           </Col>
         </Row>
       </div>

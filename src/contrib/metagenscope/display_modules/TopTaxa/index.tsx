@@ -11,7 +11,7 @@ export class TopTaxaModule extends HighchartsDisplayContainer<TopTaxaType> {
     super(props);
 
     this.title = 'Top Taxa';
-    this.moduleName = 'metagenscope::v3.0.0::top_taxa';
+    this.moduleName = 'metagenscope::top_taxa';
     this.fieldName = 'top_taxa';
     this.description = (
       <p>

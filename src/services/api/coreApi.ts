@@ -31,6 +31,29 @@ export const createAxios = () => {
 };
 
 
+export const pangeaFetch = (
+  url: string,
+  method: string,
+  body?: any,
+) => {
+  const { authToken } = window.localStorage;
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': authToken ? `Token ${authToken}` : '',
+  }
+  const fullUrl = API_BASE_URL + url
+  const requestOptions = {
+      method: method,
+      headers: headers,
+      body: body ? body : {}
+  };
+  return fetch(fullUrl, requestOptions)
+};
+
+
+
+
+
 export const usePangeaAxios = <T>(
   config: AxiosRequestConfig | string,
   options?: Options,

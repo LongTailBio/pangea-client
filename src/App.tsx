@@ -9,7 +9,6 @@ import AuthForm from './screens/Auth/components/AuthForm';
 import UserStatus from './screens/UserStatus';
 import Logout from './screens/Auth/scenes/Logout';
 import Home from './screens/Home';
-import About from './screens/About';
 import TagList from './screens/TagList';
 import TagDetail from './screens/TagDetail';
 import OrganizationList from './screens/OrganizationList';
@@ -17,8 +16,8 @@ import OrganizationCreate from './screens/OrganizationCreate';
 import OrganizationDetail from './screens/OrganizationDetail';
 import UserDetail from './screens/UserDetail';
 import SampleGroup from './screens/SampleGroup';
-import SampleGroupCreate from './screens/SampleGroupCreate';
-import SampleCreate from './screens/SampleCreate';
+import CreateGrpFormPage from './screens/SampleGroupCreate';
+import CreateSampleFormPage from './screens/SampleCreate';
 import Sample from './screens/Sample';
 import AnalysisResult from './screens/AnalysisResult';
 import Dashboard from './screens/Dashboard';
@@ -27,12 +26,26 @@ import SearchResult from './screens/SearchResult';
 import OmniSearchResult from './screens/OmniSearchResult';
 import ContribRouter from './contrib/router';
 import ToolsScreen from './screens/Tools';
+import PipelineList from './screens/PipelineList';
+import PipelineDetail from './screens/PipelineDetail';
+import PipelineModuleScreen from './screens/PipelineModule';
+import CreateAnalysisResultFormPage from './screens/AnalysisResultCreate';
 
+import { PangeaUserType } from './services/api/models/user';
+import { usePangeaAxios } from './services/api';
+import {useUserContext} from './components/UserContext'
 
 export const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [title] = useState('Pangea');
   const [theme] = useState(undefined);
+  
+  const {handleFetchUserProfile} = useUserContext();
+  const [{ data, loading, error }] = usePangeaAxios<PangeaUserType>(`/users/me`);
+  
+  useEffect(() => {
+    handleFetchUserProfile(data);
+  }, [handleFetchUserProfile, data])
 
   useEffect(() => {
     if (window.localStorage.getItem('authToken')) {
@@ -94,11 +107,6 @@ export const App: React.FC = () => {
             />
           )}
         />
-        <Route exact={true} path="/status" render={() => <UserStatus />} />
-        <Route
-          path="/dashboard"
-          render={() => <Dashboard isAuthenticated={isAuthenticated} />}
-        />
         <Route
           path="/comingsoon"
           render={() => (<h1>Coming Soon!</h1>)}
@@ -130,7 +138,24 @@ export const App: React.FC = () => {
           render={routeProps => (
             <OrganizationCreate isAuthenticated={isAuthenticated} />
           )}
-        />        
+        />
+        <Route
+          exact={true}
+          path="/pipelines"
+          render={() => <PipelineList />}
+        />
+        <Route
+          path="/pipelines/:uuid"
+          render={routeProps => (
+            <PipelineDetail uuid={routeProps.match.params.uuid} />
+          )}
+        />
+        <Route
+          path="/pipeline-modules/:uuid"
+          render={routeProps => (
+            <PipelineModuleScreen uuid={routeProps.match.params.uuid} />
+          )}
+        />         
         <Route
           path="/organizations/:uuid"
           render={routeProps => (
@@ -138,14 +163,33 @@ export const App: React.FC = () => {
           )}
         />
         <Route
+          path="/users/me"
+          render={routeProps => (
+            <UserDetail
+              isAuthenticated={isAuthenticated}
+            />
+          )}
+        />
+        <Route
           path="/users/:uuid"
           render={routeProps => (
             <UserDetail
               isAuthenticated={isAuthenticated}
-              userUUID={routeProps.match.params.uuid}
+              isDjoserId={false}
+              id={routeProps.match.params.uuid}
             />
           )}
         />
+        <Route
+          path="/users-id/:id"
+          render={routeProps => (
+            <UserDetail
+              isAuthenticated={isAuthenticated}
+              isDjoserId={true}
+              id={routeProps.match.params.id}
+            />
+          )}
+        />        
         <Route
           exact={true}
           path="/sample-groups/:group_uuid/analysis-results/:uuid"
@@ -159,26 +203,54 @@ export const App: React.FC = () => {
         <Route
           path="/sample-groups/create"
           render={routeProps => (
-            <SampleGroupCreate isAuthenticated={isAuthenticated} />
+            <CreateGrpFormPage isAuthenticated={isAuthenticated} />
           )}
         />
+        <Route
+          path="/sample-groups/:uuid/create-sample"
+          render={routeProps => (
+            <CreateSampleFormPage
+              isAuthenticated={isAuthenticated}
+              libraryUUID={routeProps.match.params.uuid}
+            />
+          )}
+        />
+        <Route
+          exact={true}
+          path="/sample-groups/:uuid/create-analysis-results"
+          render={routeProps => (
+            <CreateAnalysisResultFormPage
+              isAuthenticated={isAuthenticated}
+              sampleUUID={routeProps.match.params.uuid}
+              kind={"sample-group"}
+            />
+          )}
+        /> 
         <Route
           path="/sample-groups/:uuid"
           render={routeProps => (
             <SampleGroup uuid={routeProps.match.params.uuid} />
           )}
         />
+        
         <Route
           exact={true}
           path="/samples/:sample_uuid/analysis-results/:uuid"
           render={routeProps => (
             <AnalysisResult uuid={routeProps.match.params.uuid} kind="sample" />
           )}
-        />
+        /> 
         <Route
-          path="/samples/create"
-          render={routeProps => <SampleCreate isAuthenticated={isAuthenticated} />}
-        />        
+          exact={true}
+          path="/samples/:uuid/create-analysis-results"
+          render={routeProps => (
+            <CreateAnalysisResultFormPage
+              isAuthenticated={isAuthenticated}
+              sampleUUID={routeProps.match.params.uuid}
+              kind={"sample"}
+            />
+          )}
+        />       
         <Route
           path="/samples/:uuid"
           render={routeProps => <Sample uuid={routeProps.match.params.uuid} />}
@@ -200,8 +272,7 @@ export const App: React.FC = () => {
           path="/logout"
           render={() => <Logout onLogoutUser={handleOnLogout} />}
         />
-        <Route exact={true} path="/about" component={About} />
-        <Route exact={true} path="/docs" component={Docs} />
+        <Route path="/docs" component={Docs} />
         <Route path="/contrib" component={ContribRouter} />
       </Switch>
     </DefaultLayout>

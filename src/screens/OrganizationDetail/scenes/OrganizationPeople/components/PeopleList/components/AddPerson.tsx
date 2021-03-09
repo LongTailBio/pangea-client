@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import CSS from 'csstype';
-import { Link, Redirect } from 'react-router-dom';
-import { Row, Col, Button, Checkbox } from 'react-bootstrap';
-import { Helmet } from 'react-helmet';
-import { default as axios, CancelTokenSource, AxiosError } from 'axios';
-import useAxios from 'axios-hooks'
+import { Row, Col } from 'react-bootstrap';
+import { default as axios, CancelTokenSource } from 'axios';
 
 import { OrganizationType } from '../../../../../../../services/api/models/organization';
 import { UserType } from         '../../../../../../../services/api/models/user';
@@ -65,11 +62,7 @@ export class AddUserForm extends React.Component<AddUserProps, AddUserState>{
     // User pressed the enter key, update the input and close the
     // suggestions
     if (e?.keyCode && e.keyCode === 13) {
-      this.setState({
-        activeSuggestion: 0,
-        activeUser: filteredUsers[activeSuggestion],
-        userName: filteredUsers[activeSuggestion].email,
-      });
+      this.handleValueChange(filteredUsers[activeSuggestion].email)
     }
     // User pressed the up arrow, decrement the index
     else if (e.keyCode === 38) {
@@ -90,32 +83,31 @@ export class AddUserForm extends React.Component<AddUserProps, AddUserState>{
   };
 
   handleChange(event: React.FormEvent<HTMLInputElement>) {
-    const { name, value } = event.currentTarget;
+    const { value } = event.currentTarget;
+    this.handleValueChange(value)
+  }
+
+  handleValueChange(value: string){
     const users: UserType[] = this.state.allUsers.filter(
       user =>
         user.email.toLowerCase().indexOf(value) > -1
     )
     var user: UserType | undefined = undefined;
-    if(users.length == 1){
-      if(value == users[0].email){
+    if(users.length === 1){
+      if(value === users[0].email){
         user = users[0]
       }
     }
-    this.setState({userName: value, filteredUsers: users, activeUser: user})
+    this.setState({userName: value, filteredUsers: users, activeUser: user})  
   }
 
-  handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  handleSubmit(event: React.MouseEvent<HTMLInputElement>) {  
     if(!this.state.activeUser){
       return
     }
     addUserToOrg(this.props.org, this.state.activeUser, this.sourceToken)
       .then(sample => {
-        this.setState({
-          userName: '',
-          activeSuggestion: 0,
-          allUsers: [],
-          filteredUsers: [],
-        });
+        window.location.reload(false)
       })
       .catch(error => {
         if (!axios.isCancel(error)) {
@@ -165,7 +157,7 @@ export class AddUserForm extends React.Component<AddUserProps, AddUserState>{
       );
     }
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={e => {e.preventDefault()}}>
         <Row>
           <Col lg={2}>
             <h3>Add User</h3>
@@ -185,9 +177,10 @@ export class AddUserForm extends React.Component<AddUserProps, AddUserState>{
           </Col>
           <Col lg={2}>
             <input
-              type="submit"
+              type="button"
               className="btn btn-success btn-lg btn-block"
-              value="Add"
+              onClick={this.handleSubmit}
+              value='Add'
             />
           </Col>          
         </Row>    

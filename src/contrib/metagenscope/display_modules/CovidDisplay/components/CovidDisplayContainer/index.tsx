@@ -52,7 +52,6 @@ export default class CovidDisplayContainer extends React.Component<
     const rankData = this.props.data.by_tool[activeTool].by_taxa_rank[
       activeTaxaRank
     ]
-    console.log(rankData.by_category_name[categories[0]][0].metrics)
     const metrics = rankData.by_category_name[activeCategory][0].metrics
     const activeMetric = metrics[0];
     this.state = {
@@ -171,7 +170,7 @@ export default class CovidDisplayContainer extends React.Component<
         type: 'boxplot',
       },
       title: {
-        text: 'SARS-CoV-2 Read Counts',
+        text: 'SARS-CoV-2 Reads, Parts Per Million',
       },
       legend: {
         enabled: true,

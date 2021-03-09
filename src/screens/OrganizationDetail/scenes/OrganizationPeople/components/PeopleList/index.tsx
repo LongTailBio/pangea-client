@@ -20,7 +20,7 @@ interface PersonRowProps {
 const PersonRow = (props: PersonRowProps) => {
   return (
     <li className="list-group-item">
-      <Link to={`/users/${props.user.id}`}>{props.user.email}</Link>
+      <Link to={`/users-id/${props.user.id}`}>{props.user.email}</Link>
       <span className="pull-right">
         <DropdownButton
           title="Settings"

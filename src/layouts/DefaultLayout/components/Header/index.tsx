@@ -30,21 +30,24 @@ class Header extends React.Component<HeaderProps, {}> {
             </Navbar.Header>
             <Navbar.Collapse>
               <Nav pullRight={true}>
-                <LinkContainer to="/tools">
-                  <NavItem>Tools</NavItem>
-                </LinkContainer>              
-                <LinkContainer to="/about">
-                  <NavItem>About</NavItem>
-                </LinkContainer>
+             
                 <LinkContainer to="/docs">
                   <NavItem>Documentation</NavItem>
                 </LinkContainer>
-                <LinkContainer to="/organizations">
-                  <NavItem>Organizations</NavItem>
-                </LinkContainer>
-                <LinkContainer to="/tags">
-                  <NavItem>Tags</NavItem>
-                </LinkContainer>                                  
+                <NavDropdown title="Browse Data" id="basic-nav-dropdown">
+                  <LinkContainer to="/organizations">
+                    <NavItem>Organizations</NavItem>
+                  </LinkContainer>
+                  <LinkContainer to="/tags">
+                    <NavItem>Tags</NavItem>
+                  </LinkContainer>
+                  <LinkContainer to="/pipelines">
+                    <NavItem>Pipelines</NavItem>
+                  </LinkContainer> 
+                  <LinkContainer to="/tools">
+                    <NavItem>Tools</NavItem>
+                  </LinkContainer>                                 
+                </NavDropdown>                                     
                 {this.props.isAuthenticated && (
                   <NavDropdown title="+" id="basic-nav-dropdown">
                     <LinkContainer to="/organizations/create">
@@ -52,40 +55,24 @@ class Header extends React.Component<HeaderProps, {}> {
                     </LinkContainer>
                     <LinkContainer to="/sample-groups/create">
                       <MenuItem>New Sample Group</MenuItem>
-                    </LinkContainer>
-                    <LinkContainer to="/samples/create">
-                      <MenuItem>New Sample</MenuItem>
-                    </LinkContainer>                    
+                    </LinkContainer>                  
                   </NavDropdown>
                 )}
-                <NavDropdown title="Account" id="basic-nav-dropdown">
-                  {!this.props.isAuthenticated && (
+                {!this.props.isAuthenticated && (
+                  <NavDropdown title="Login" id="basic-nav-dropdown">
                     <LinkContainer to="/register">
                       <MenuItem>Register</MenuItem>
                     </LinkContainer>
-                  )}
-                  {!this.props.isAuthenticated && (
                     <LinkContainer to="/login">
                       <MenuItem>Log In</MenuItem>
                     </LinkContainer>
-                  )}
-                  {this.props.isAuthenticated && (
-                    <LinkContainer to="/status">
-                      <MenuItem>User Status</MenuItem>
-                    </LinkContainer>
-                  )}
-                  {this.props.isAuthenticated && (
-                    <LinkContainer to="/dashboard">
-                      <MenuItem>Dashboard</MenuItem>
-                    </LinkContainer>
-                  )}
-                  {this.props.isAuthenticated && <MenuItem divider={true} />}
-                  {this.props.isAuthenticated && (
-                    <LinkContainer to="/logout">
-                      <MenuItem>Log Out</MenuItem>
-                    </LinkContainer>
-                  )}
-                </NavDropdown>
+                  </NavDropdown>
+                )}
+                {this.props.isAuthenticated && (
+                  <LinkContainer to="/users/me">
+                    <NavItem>Your Profile</NavItem>
+                  </LinkContainer> 
+                )}                
               </Nav>
             </Navbar.Collapse>
           </Navbar>

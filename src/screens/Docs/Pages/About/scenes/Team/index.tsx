@@ -36,6 +36,13 @@ const team: Array<TeammateType> = [
     email: '',
   },
   {
+    imageName: 'vincent.jpg',
+    name: 'Vincent Preikstas',
+    position: 'UX Developer',
+    role: 'Masters Student',
+    email: '',
+  },
+  {
     imageName: 'cem.jpg',
     name: 'Cem Meydan',
     position: 'Contributor',

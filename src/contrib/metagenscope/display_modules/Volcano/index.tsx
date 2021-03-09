@@ -11,7 +11,7 @@ export class VolcanoModule extends HighchartsDisplayContainer<VolcanoType> {
     super(props);
 
     this.title = 'Differential Abundance';
-    this.moduleName = 'metagenscope::v3.0.0::volcano';
+    this.moduleName = 'metagenscope::volcano';
     this.fieldName = 'volcano';
     this.description = (
       <div>

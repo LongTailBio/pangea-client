@@ -18,7 +18,7 @@ export class ReadsClassifiedModule extends HighchartsDisplayContainer<
     super(props);
 
     this.title = 'Reads Classified';
-    this.moduleName = 'metagenscope::v3.0.0::reads_classified';
+    this.moduleName = 'metagenscope::reads_classified';
     this.fieldName = 'json';
     this.description = (
       <p>

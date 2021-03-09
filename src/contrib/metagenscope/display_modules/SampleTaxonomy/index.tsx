@@ -13,7 +13,7 @@ export class SampleTaxonomyModule extends HighchartsDisplayContainer<
     super(props);
 
     this.title = 'Sample Taxonomy';
-    this.moduleName = 'metagenscope::v3.0.0::taxa_tree';
+    this.moduleName = 'metagenscope::taxa_tree';
     this.fieldName = 'sunburst';
     this.description = (
       <div>

@@ -157,7 +157,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
           exact={true}
           path="/sample-groups/:uuid"
           render={() => (
-            <SampleListPanel samples={samples} />
+            <SampleListPanel samples={samples} grp={group} />
           )}
         />
         <Route

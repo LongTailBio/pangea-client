@@ -47,6 +47,28 @@ export const modifySampleMetadata = (sample: SampleType, metadata: any, source: 
   return cancelableAxios(options, source).then(res => {
     const sample: SampleType = res.data.results;
     return sample;
+  })
+    .catch(error => {
+    if (error.response) {
+      // Request made and server responded
+      console.log('Request was made, server responded')
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.log('Request was made, no response was received')
+      console.log(url);
+      console.log(metadata);
+      console.log(options);
+      console.log(error.message)
+      console.log(error.request);
+      console.log(error)
+    } else {
+      console.log('Error during request setup')
+      // Something happened in setting up the request that triggered an Error
+      console.log('Error', error.message);
+    }
   });
 }
 
@@ -65,5 +87,27 @@ export const modifySampleDescription = (sample: SampleType, description: string,
   return cancelableAxios(options, source).then(res => {
     const sample: SampleType = res.data.results;
     return sample;
+  })
+    .catch(error => {
+    if (error.response) {
+      // Request made and server responded
+      console.log('Request was made, server responded')
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.log('Request was made, no response was received')
+      console.log(url);
+      console.log(data);
+      console.log(options);
+      console.log(error.message)
+      console.log(error.request);
+      console.log(error)
+    } else {
+      console.log('Error during request setup')
+      // Something happened in setting up the request that triggered an Error
+      console.log('Error', error.message);
+    }
   });
 }

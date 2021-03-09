@@ -13,7 +13,7 @@ export class AlphaDiversityModule extends HighchartsDisplayContainer<
     super(props);
 
     this.title = 'Alpha Diversity';
-    this.moduleName = 'metagenscope::v3.0.0::alpha_diversity';
+    this.moduleName = 'metagenscope::alpha_diversity';
     this.fieldName = 'alpha_diversity';
     this.description = (
       <div>

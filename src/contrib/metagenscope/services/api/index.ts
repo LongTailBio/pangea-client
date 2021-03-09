@@ -44,7 +44,7 @@ export const getGroupAnalysisResult = <T>(
     method: 'get' as const,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${window.localStorage.authToken}`,
+      Authorization: `Token ${window.localStorage.authToken}`,
     },
   };
 
@@ -81,7 +81,7 @@ export const getSampleAnalysisResult = <T>(
     method: 'get' as const,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${window.localStorage.authToken}`,
+      Authorization: `Token ${window.localStorage.authToken}`,
     },
   };
 

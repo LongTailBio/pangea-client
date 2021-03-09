@@ -17,6 +17,10 @@ import { SampleGroupType } from '../../../../services/api/models/sampleGroup';
 import { SampleType } from '../../../../services/api/models/sample';
 import { AnalysisResultType } from '../../../../services/api/models/analysisResult';
 import { getModuleCounts, ModuleCountsType, usePangeaAxios } from '../../../../services/api'
+import { downloadSampleARsFromGroupCmds } from '../../../../components/Docs'
+import { useUserContext } from '../../../../components/UserContext' 
+
+
 
 interface DownloadPanelProps {
   group: SampleGroupType;
@@ -26,6 +30,7 @@ interface DownloadPanelProps {
 
 export const DownloadPanel = (props: DownloadPanelProps) => {
   const { authToken } = window.localStorage;
+  const {user} = useUserContext(); 
   const group = props.group;
   const samples = props.samples;
   const analysisResults = props.analysisResults;
@@ -41,8 +46,12 @@ export const DownloadPanel = (props: DownloadPanelProps) => {
     return (<p>Loading...</p>)
   }
   const data: ModuleCountsType = moduleCountsResult.data
-  return (
-    <Row>
+
+  return downloadSampleARsFromGroupCmds(user, group);
+};
+
+
+/*    <Row>
       <ul key="get-manifest" className="analysis-group-list">
       {
         Object.keys(data).filter(key => (key != 'n_samples')).map(key => (
@@ -57,7 +66,5 @@ export const DownloadPanel = (props: DownloadPanelProps) => {
       }
       </ul>
     </Row>
-  );
-};
-
+*/
 export default DownloadPanel;
