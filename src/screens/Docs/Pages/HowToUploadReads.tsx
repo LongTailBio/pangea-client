@@ -76,7 +76,19 @@ const DocsHowToUploadReads: React.FC = () => (
         on that group's name from the organization page instead.
       </p>
 
-      <h3>Creating a Sample</h3>
+      <h3>Creating a Sample and Uploading Reads</h3>
+
+      <p>
+        You can create samples and upload data using the web app or with the CLI.
+        The CLI is more convenient for large numbers of samples.
+      </p>
+
+      <h4>Using the Web App</h4>
+      <p>
+        If you are creating a small number of samples you can use the web application.
+        If instead you are creating a large number of samples the command line will be
+        more convenient (see below).
+      </p>
       <img src={createSamplePage} alt="Create Sample Example" style={screenshotStyle} />
       <br/><br/>
       <p>
@@ -90,7 +102,7 @@ const DocsHowToUploadReads: React.FC = () => (
         on that sample's name from the sample group page instead.
       </p>
 
-      <h3>Creating an Analysis Result</h3>
+      <h4>Creating an Analysis Result on the Web App</h4>
       <img src={createARPage} alt="Create Analysis Result Example" style={screenshotStyle} />
       <br/><br/>
       <p>
@@ -138,7 +150,7 @@ const DocsHowToUploadReads: React.FC = () => (
         on that results's name from the sample page instead.
       </p>
 
-      <h3>Uploading Data to the Analysis Result</h3>
+      <h4>Uploading Data to the Analysis Result on the Web App</h4>
       <img src={uploadARFieldPage} alt="Upload Data to Analysis Result Example" style={screenshotStyle} />
       <br/><br/>
       <p>
@@ -175,7 +187,26 @@ const DocsHowToUploadReads: React.FC = () => (
           </tr>
         </tbody>        
       </table>
-      <p>Once the upload is compete you will see a link to the file on the page.</p> 
+      <p>Once the upload is compete you will see a link to the file on the page.</p>
+      <h4 id='upload-reads-cli'>Using the Command Line</h4>
+      <p>
+        You can automatically create samples and upload reads using the <a href='https://github.com/LongTailBio/pangea-django/tree/master/api-client'>Pangea Command Line. </a>
+        This is more convenient when dealing with a large number of samples or samples stored on a server.
+      </p>
+      <p>
+        <ol>
+          <li>Install the pangea api on your server by running <code>pip install pangea-api</code></li>
+          <li>Navigate to the directory with your fastq files</li>
+          <li>Make a file with all the fastq filepaths. Usually <code>find . -name "*.fastq.gz" > file_list.txt</code> works but the file extension for your reads might be different</li>
+          <li>Upload the reads with the following command, samples will automatically be created. <code>{'pangea-api upload reads -e <your pangea email> -p <your pangea password> -1 _R1.fastq.gz -2 _R2.fastq.gz <organization name> <sample library name> file_list.txt'}</code>
+            <ul>
+              <li>note that your read extensions (<code>-1 _R1.fastq.gz -2 _R2.fastq.gz</code>) might be different</li>
+              <li>you can parrallelize the above command using <code>split</code> and <code>xargs</code></li>
+              <li>run <code>pangea-api upload reads --help</code> to see more options</li>
+            </ul>
+          </li>
+        </ol>
+      </p>
   </Row>
 );
 
