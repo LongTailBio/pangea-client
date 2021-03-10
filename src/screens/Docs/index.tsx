@@ -16,6 +16,7 @@ import DocsDownloads from './Pages/Downloads';
 import DocsUploads from './Pages/Uploads';
 import DocsPython from './Pages/Python';
 import DocsHowToUploadReads from './Pages/HowToUploadReads'
+import DocsHowToDownloadData from './Pages/HowToDownloadData'
 import DocsWritePipelines from './Pages/WritePipelines'
 
 const Docs: React.FC = () => {
@@ -24,8 +25,10 @@ const Docs: React.FC = () => {
     [`/docs/about`, 'About', DocsAbout],
     [`/docs/faq`, 'FAQ', DocsFaq],
 
+    [`/docs/how-to-download-data`, 'How To Download Data', DocsHowToDownloadData],
     [`/docs/how-to-upload-reads`, 'How To Upload Reads', DocsHowToUploadReads],
     [`/docs/write-pipelines`, 'Writing Pipelines With Pangea', DocsWritePipelines],
+
     [`/docs/data-model`, 'Data Model', DocsDataModel],
     [`/docs/api`, 'REST API', DocsApi],
     [`/docs/python`, 'Python API', DocsPython],
