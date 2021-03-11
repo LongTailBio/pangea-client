@@ -2,6 +2,7 @@ import * as React from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Row, Col, Nav, NavItem } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
+import ReactPlayer from "react-player"
 
 const arExample = require('../images/analysis_result_page.png');
 const screenshotStyle = {
@@ -13,10 +14,17 @@ const screenshotStyle = {
 const DocsHowToDownloadData: React.FC = () => (
   <Row>
       <h2>How to Download Data From Pangea</h2>
+      <br/>
+      <br/>      
+      <ReactPlayer
+        url="https://youtu.be/IYAwWxDNxLs"
+      />
+      <br/>
+      <br/>      
       <p>
           This guide will show you how to download data and metadata from Pangea.
           Data can be downloaded using the web app or using the 
-          <a href='https://github.com/LongTailBio/pangea-django/tree/master/api-client'>CLI or Python API</a>.
+          <a href='https://github.com/LongTailBio/pangea-django/tree/master/api-client'> CLI or Python API</a>.
           For bulk downloads the CLI is most convenient. 
       </p>
 

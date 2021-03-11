@@ -19,7 +19,8 @@ import { TagType } from '../../services/api/models/tag';
 import { AnalysisResultType } from '../../services/api/models/analysisResult';
 
 import SampleMetadataPanel from './components/SampleMetadataPanel';
-import EditableDescription from './components/EditableDescription'
+import EditableDescription from './components/EditableDescription';
+import SampleSettings from './components/SampleSettings';
 
 
 const useGroup = (uuid: string) => {
@@ -220,6 +221,13 @@ export const SampleScreen = (props: SampleScreenProps) => {
             </Row>            
           )}
         />
+        <Route
+          exact={true}
+          path="/samples/:uuid/settings"
+          render={() => (
+            <SampleSettings sample={sample}/>           
+          )}
+        />        
       </Switch>
     </>
   );
