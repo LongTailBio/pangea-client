@@ -113,11 +113,11 @@ export const SampleScreen = (props: SampleScreenProps) => {
               <Glyphicon glyph="th-large" /> Resources{' '}
             </NavItem>
           </LinkContainer>
-          <LinkContainer to={`/samples/${sample.uuid}/tags`}>
+          <LinkContainer to={`/samples/${sample.uuid}/settings`}>
             <NavItem eventKey="2">
-              <Glyphicon glyph="tags" />{' '}Tags{' '}
+              <Glyphicon glyph="cog" />{' '}Settings{' '}
             </NavItem>
-          </LinkContainer>          
+          </LinkContainer>                      
         </Nav>
       </Row>
 
@@ -193,39 +193,9 @@ export const SampleScreen = (props: SampleScreenProps) => {
         />
         <Route
           exact={true}
-          path="/samples/:uuid/tags"
-          render={() => (
-            <Row>
-              <Col lg={12}>
-                {tags.count > 0 &&
-                  tags.results.map(tag => (
-                    <ul
-                      key={tag.uuid}
-                      className="analysis-group-list"
-                    >
-                      <li className="analysis-group-list-item">
-                        <Link
-                          to={`/tags/${tag.uuid}`}
-                        >
-                          {tag.name}
-                        </Link>
-                      </li>
-                    </ul>
-                  ))}
-                {tags.count === 0 && (
-                  <Well className="text-center">
-                    <h4>This sample has no tags.</h4>
-                  </Well>
-                )}
-              </Col>
-            </Row>            
-          )}
-        />
-        <Route
-          exact={true}
           path="/samples/:uuid/settings"
           render={() => (
-            <SampleSettings sample={sample}/>           
+            <SampleSettings sample={sample} tags={tags} />           
           )}
         />        
       </Switch>
