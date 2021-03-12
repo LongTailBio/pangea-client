@@ -51,6 +51,22 @@ export const pangeaFetch = (
 };
 
 
+export const pangeaGet = (
+  url: string,
+) => {
+  const { authToken } = window.localStorage;
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': authToken ? `Token ${authToken}` : '',
+  }
+  const fullUrl = API_BASE_URL + url
+  const requestOptions = {
+      method: 'GET',
+      headers: headers,
+  };
+  return fetch(fullUrl, requestOptions)
+};
+
 
 
 

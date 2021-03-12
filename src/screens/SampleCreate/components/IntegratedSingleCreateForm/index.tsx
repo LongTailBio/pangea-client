@@ -9,13 +9,15 @@ import {
 import { Helmet } from 'react-helmet';
 import { default as axios, CancelTokenSource, AxiosError } from 'axios';
 import useAxios from 'axios-hooks'
-import { usePangeaAxios } from '../../../../services/api';
+import { usePangeaAxios, PaginatedResult } from '../../../../services/api';
 import { API_BASE_URL } from '../../../../services/api/utils';
 
 import { LoadingErrorMessage } from '../../../../components/LoadingErrorMessage'
 import { SampleGroupType } from '../../../../services/api/models/sampleGroup';
+import { WorkOrderProtoType } from '../../../../services/api/models/workOrder';
+
 import { withFormik, FormikProps, FormikErrors, Form, Field, FieldArray, useFormikContext, useField } from 'formik';
-import { pangeaFetch } from '../../../../services/api/coreApi';
+import { pangeaFetch, pangeaGet } from '../../../../services/api/coreApi';
 
 import { PangeaUserType, OrgLink } from '../../../../services/api/models/user';
 import CSS from 'csstype';
@@ -39,17 +41,19 @@ const dataTypeFields: {[key: string]: string[]} = {
 interface ICreateSampleValues {
     sampleName: string;
     dataType: string;
+    checked: string[];
 }
 
 interface ICreateSampleInnerFormProps {
   handleDataChange: (e: React.ChangeEvent<any>) => void;
+  workOrders: WorkOrderProtoType[];
 }
 
 
 
 
 const ICreateSampleInnerForm = (props: ICreateSampleInnerFormProps & FormikProps<ICreateSampleValues>) => {
-  const { values, touched, errors, handleChange, isSubmitting, handleDataChange } = props;
+  const { values, touched, errors, handleChange, isSubmitting, handleDataChange, workOrders } = props;
   return (
     <Form> 
       <FormGroup>
@@ -67,6 +71,23 @@ const ICreateSampleInnerForm = (props: ICreateSampleInnerFormProps & FormikProps
           onChange={(e: React.ChangeEvent<any>) => {handleChange(e); handleDataChange(e)}} >
           {dataTypeChoices.map(el => (<option key={el} value={el}>{el}</option>))}
         </Field>
+      </FormGroup>
+      <FormGroup>
+        <h4>Work Orders<InfoButton desc={"Analyses to run on this sample"} /></h4>
+        <div role="group" aria-labelledby="checkbox-group">
+          {workOrders.map(wo => {
+            return (
+              <>
+                <label>
+                  <Field type="checkbox" name="checked" value={wo.name} />
+                  {wo.name}
+                </label>
+                <InfoButton desc={wo.description} />
+                <br/>
+              </>            
+            )
+          })}
+        </div> 
       </FormGroup>          
       <button type="submit" className="btn btn-primary btn-lg btn-block">Create and Upload</button>
     </Form>
@@ -78,6 +99,7 @@ interface CreateSampleFormProps {
   history: any;
   uploadTo: (fieldName: string, rootUrl: string, uploadDone: () => void) => void;
   handleDataChange: (e: React.ChangeEvent<any>) => void;
+  workOrders: WorkOrderProtoType[];
 }
 
 const MiddleCreateSampleForm = withFormik<CreateSampleFormProps, ICreateSampleValues>({
@@ -86,6 +108,8 @@ const MiddleCreateSampleForm = withFormik<CreateSampleFormProps, ICreateSampleVa
       sampleName: '',
       dataType: dataTypeChoices[0],
       handleDataChange: props.handleDataChange,
+      workOrders: props.workOrders,
+      checked: [],
     };
   },
 
@@ -94,35 +118,43 @@ const MiddleCreateSampleForm = withFormik<CreateSampleFormProps, ICreateSampleVa
       name: values.sampleName,
       library: formikBag.props.lib,
     }
-    pangeaFetch(`/samples`, 'POST', JSON.stringify(postData))
+    const createSamplePromise = pangeaFetch(`/samples`, 'POST', JSON.stringify(postData))
         .then(response => response.json())
-        .then(data => {
-          const arPostData = {
-            module_name: values.dataType,
-            sample: data.uuid,
-          }
-          pangeaFetch(`/sample_ars`, 'POST', JSON.stringify(arPostData))
-            .then(arResponse => arResponse.json())
-            .then(arData => {
-              dataTypeFields[values.dataType].map(fieldName => {
-                const arFieldPostData = {
-                  name: fieldName,
-                  analysis_result: arData.uuid,
-                  stored_data: {},
+    const createWorkOrdersPromise = createSamplePromise.then(data => {
+      values.checked.map(woName => {
+        const wo = formikBag.props.workOrders.filter(el => el.name === woName)[0]
+        pangeaFetch(`/samples/${data.uuid}/work_orders/${wo.uuid}`, 'POST', JSON.stringify({}))
+          .then(response => response.json())        
+      })
+      return data
+    })
+    createWorkOrdersPromise.then(data => {
+      const arPostData = {
+        module_name: values.dataType,
+        sample: data.uuid,
+      }
+      pangeaFetch(`/sample_ars`, 'POST', JSON.stringify(arPostData))
+        .then(arResponse => arResponse.json())
+        .then(arData => {
+          dataTypeFields[values.dataType].map(fieldName => {
+            const arFieldPostData = {
+              name: fieldName,
+              analysis_result: arData.uuid,
+              stored_data: {},
+            }
+            pangeaFetch(`/sample_ar_fields`, 'POST', JSON.stringify(arFieldPostData))
+              .then(response => response.json())
+              .then(data => `/sample_ar_fields/${data.uuid}`)
+              .then(url => {
+                var uploadDone = function(){};
+                if(dataTypeFields[values.dataType].indexOf(fieldName) === dataTypeFields[values.dataType].length - 1){
+                  uploadDone = function(){formikBag.props.history.push(`/samples/${data.uuid}`)}
                 }
-                pangeaFetch(`/sample_ar_fields`, 'POST', JSON.stringify(arFieldPostData))
-                  .then(response => response.json())
-                  .then(data => `/sample_ar_fields/${data.uuid}`)
-                  .then(url => {
-                    var uploadDone = function(){};
-                    if(dataTypeFields[values.dataType].indexOf(fieldName) === dataTypeFields[values.dataType].length - 1){
-                      uploadDone = function(){formikBag.props.history.push(`/samples/${data.uuid}`)}
-                    }
-                    formikBag.props.uploadTo(fieldName, url, uploadDone);
-                  });                                  
-              })
-            })
+                formikBag.props.uploadTo(fieldName, url, uploadDone);
+              });                                  
+          })
         })
+    })
   },   
 })(ICreateSampleInnerForm);
 
@@ -139,8 +171,8 @@ interface RootUrl {
 interface IntegratedCreateSampleFormState {
   rootUrl: {[key: string]: RootUrl};
   dataType: string;
+  workOrders: WorkOrderProtoType[];
 }
-
 
 
 export class IntegratedCreateSampleForm extends React.Component<IntegratedCreateSampleFormProps, IntegratedCreateSampleFormState> {
@@ -148,15 +180,28 @@ export class IntegratedCreateSampleForm extends React.Component<IntegratedCreate
   state = {
     rootUrl: {} as {[key: string]: RootUrl},
     dataType: dataTypeChoices[0],
+    workOrders: [],
   };
 
   constructor(props: IntegratedCreateSampleFormProps) {
     super(props);
+
+    this.componentDidMount = this.componentDidMount.bind(this);
     this.handleDataChange = this.handleDataChange.bind(this);
     this.uploadTo = this.uploadTo.bind(this);
     this.getRootUrl = this.getRootUrl.bind(this)
     this.getUpload = this.getUpload.bind(this)
     this.getUploadDone = this.getUploadDone.bind(this)
+  }
+
+
+  componentDidMount(){
+    pangeaGet(`/work_order_prototypes`)
+        .then(response => response.json())
+        .then(rawData => {
+          const data = rawData as PaginatedResult<WorkOrderProtoType>;
+          this.setState({workOrders: data.results})
+        })
   }
 
   handleDataChange(e: React.ChangeEvent<any>) {
@@ -190,6 +235,7 @@ export class IntegratedCreateSampleForm extends React.Component<IntegratedCreate
           history={this.props.history}
           uploadTo={this.uploadTo}
           handleDataChange={this.handleDataChange}
+          workOrders={this.state.workOrders}
         />
         {dataTypeFields[this.state.dataType].map(fieldName => {
           return (

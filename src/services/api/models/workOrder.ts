@@ -5,6 +5,7 @@ export interface WorkOrderProtoType {
   name: string;
   created_at: string;
   updated_at: string;
+  description: string;
 }
 
 export interface JobOrderType {
@@ -16,6 +17,7 @@ export interface JobOrderType {
   analysis_result: string | null;
   created_at: string;
   updated_at: string;
+  description: string;
 }
 
 
@@ -29,4 +31,5 @@ export interface WorkOrderType {
     job_order_objs: JobOrderType[];
     status: string;
     progress_summary: {[key: string]: number}
+    description: string;
 }
