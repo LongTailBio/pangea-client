@@ -17,6 +17,8 @@ interface S3UploaderProps {
   getRootUrl: () => string;
   uploadDone: () => void;
   upload: boolean;
+  width?: number;
+  height?: number;
 }
 
 interface S3UploaderState {
@@ -141,7 +143,13 @@ export class S3Uploader extends React.Component<S3UploaderProps, S3UploaderState
     }
 
     return (
-      <Dashboard uppy={this.uppy} showProgressDetails={true} hideUploadButton={true} />
+      <Dashboard
+        uppy={this.uppy}
+        showProgressDetails={true}
+        hideUploadButton={true}
+        width={this.props.width ? this.props.width : 750} 
+        height={this.props.height ? this.props.height : 200}
+       />
     );
   }
 }
