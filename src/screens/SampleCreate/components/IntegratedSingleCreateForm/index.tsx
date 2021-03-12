@@ -97,9 +97,10 @@ const ICreateSampleInnerForm = (props: ICreateSampleInnerFormProps & FormikProps
 interface CreateSampleFormProps {
   lib: string;
   history: any;
-  uploadTo: (fieldName: string, rootUrl: string, uploadDone: () => void) => void;
   handleDataChange: (e: React.ChangeEvent<any>) => void;
   workOrders: WorkOrderProtoType[];
+  uploadTo: (fieldName: string, rootUrl: string) => void;
+  setSampleUUID: (sampleUUID: string) => void;
 }
 
 const MiddleCreateSampleForm = withFormik<CreateSampleFormProps, ICreateSampleValues>({
@@ -121,6 +122,7 @@ const MiddleCreateSampleForm = withFormik<CreateSampleFormProps, ICreateSampleVa
     const createSamplePromise = pangeaFetch(`/samples`, 'POST', JSON.stringify(postData))
         .then(response => response.json())
     const createWorkOrdersPromise = createSamplePromise.then(data => {
+      formikBag.props.setSampleUUID(data.uuid)
       values.checked.map(woName => {
         const wo = formikBag.props.workOrders.filter(el => el.name === woName)[0]
         pangeaFetch(`/samples/${data.uuid}/work_orders/${wo.uuid}`, 'POST', JSON.stringify({}))
@@ -146,11 +148,7 @@ const MiddleCreateSampleForm = withFormik<CreateSampleFormProps, ICreateSampleVa
               .then(response => response.json())
               .then(data => `/sample_ar_fields/${data.uuid}`)
               .then(url => {
-                var uploadDone = function(){};
-                if(dataTypeFields[values.dataType].indexOf(fieldName) === dataTypeFields[values.dataType].length - 1){
-                  uploadDone = function(){formikBag.props.history.push(`/samples/${data.uuid}`)}
-                }
-                formikBag.props.uploadTo(fieldName, url, uploadDone);
+                formikBag.props.uploadTo(fieldName, url);
               });                                  
           })
         })
@@ -166,12 +164,14 @@ interface IntegratedCreateSampleFormProps {
 interface RootUrl {
   url: string;
   upload: boolean;
-  uploadDone: () => void;
 }
 interface IntegratedCreateSampleFormState {
   rootUrl: {[key: string]: RootUrl};
   dataType: string;
   workOrders: WorkOrderProtoType[];
+  nToUpload: number;
+  nUploaded: number;
+  sampleUUID: string;
 }
 
 
@@ -181,6 +181,9 @@ export class IntegratedCreateSampleForm extends React.Component<IntegratedCreate
     rootUrl: {} as {[key: string]: RootUrl},
     dataType: dataTypeChoices[0],
     workOrders: [],
+    nToUpload: 0,
+    nUploaded: 0,
+    sampleUUID: '',
   };
 
   constructor(props: IntegratedCreateSampleFormProps) {
@@ -191,9 +194,13 @@ export class IntegratedCreateSampleForm extends React.Component<IntegratedCreate
     this.uploadTo = this.uploadTo.bind(this);
     this.getRootUrl = this.getRootUrl.bind(this)
     this.getUpload = this.getUpload.bind(this)
-    this.getUploadDone = this.getUploadDone.bind(this)
+    this.uploadDone = this.uploadDone.bind(this)
+    this.setSampleUUID = this.setSampleUUID.bind(this)
   }
 
+  setSampleUUID(sampleUUID: string){
+    this.setState({ sampleUUID })
+  }
 
   componentDidMount(){
     pangeaGet(`/work_order_prototypes`)
@@ -208,11 +215,11 @@ export class IntegratedCreateSampleForm extends React.Component<IntegratedCreate
     this.setState({dataType: e.target.value})
   }
 
-  uploadTo(fieldName: string, rootUrl: string, uploadDone: () => void){
+  uploadTo(fieldName: string, rootUrl: string){
     const newRootUrls: {[key: string]: RootUrl} = {...this.state.rootUrl};
-    const myRoot: RootUrl = {url: rootUrl, upload: true, uploadDone: uploadDone};
+    const myRoot: RootUrl = {url: rootUrl, upload: true};
     newRootUrls[fieldName] = myRoot
-    this.setState({rootUrl: newRootUrls})
+    this.setState({rootUrl: newRootUrls, nToUpload: this.state.nToUpload + 1})
   }
 
   getRootUrl(field: string){
@@ -223,8 +230,11 @@ export class IntegratedCreateSampleForm extends React.Component<IntegratedCreate
     return this.state.rootUrl.hasOwnProperty(field) ? this.state.rootUrl[field].upload : false
   }
 
-  getUploadDone(field: string){
-    return this.state.rootUrl.hasOwnProperty(field) ? this.state.rootUrl[field].uploadDone : () => {}
+  uploadDone(field: string){
+    this.setState({nUploaded: this.state.nUploaded + 1})
+    if(this.state.nUploaded === this.state.nToUpload){
+        this.props.history.push(`/samples/${this.state.sampleUUID}`) 
+    }
   }
 
   render(): React.ReactElement {
@@ -236,6 +246,7 @@ export class IntegratedCreateSampleForm extends React.Component<IntegratedCreate
           uploadTo={this.uploadTo}
           handleDataChange={this.handleDataChange}
           workOrders={this.state.workOrders}
+          setSampleUUID={this.setSampleUUID}
         />
         {dataTypeFields[this.state.dataType].map(fieldName => {
           return (
@@ -244,7 +255,7 @@ export class IntegratedCreateSampleForm extends React.Component<IntegratedCreate
               <S3Uploader
                 getRootUrl={() => this.getRootUrl(fieldName)}
                 upload={this.getUpload(fieldName)}
-                uploadDone={this.getUploadDone(fieldName)}
+                uploadDone={() => this.uploadDone(fieldName)}
                 height={100}
               />
             </>
