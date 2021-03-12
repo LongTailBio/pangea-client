@@ -18,6 +18,8 @@ import DocsPython from './Pages/Python';
 import DocsHowToUploadReads from './Pages/HowToUploadReads'
 import DocsHowToDownloadData from './Pages/HowToDownloadData'
 import DocsWritePipelines from './Pages/WritePipelines'
+import DocsUploadMetadata from './Pages/HowToUploadMetadata'
+
 
 const Docs: React.FC = () => {
   const links: Array<[string, string, React.FC]> = [
@@ -27,6 +29,7 @@ const Docs: React.FC = () => {
 
     [`/docs/how-to-download-data`, 'How To Download Data', DocsHowToDownloadData],
     [`/docs/how-to-upload-reads`, 'How To Upload Reads', DocsHowToUploadReads],
+    [`/docs/how-to-upload-metadata`, 'How To Upload Metadata', DocsUploadMetadata],
     [`/docs/write-pipelines`, 'Writing Pipelines With Pangea', DocsWritePipelines],
 
     [`/docs/data-model`, 'Data Model', DocsDataModel],

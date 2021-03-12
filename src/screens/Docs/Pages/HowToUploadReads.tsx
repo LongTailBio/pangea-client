@@ -207,6 +207,8 @@ const DocsHowToUploadReads: React.FC = () => (
           </li>
         </ol>
       </p>
+      <h3>Uploading metadata</h3>
+      <p>Once you have uploaded reads you may want to upload metadata. See <a href='/docs/how-to-upload-metadata'> this guide</a> for more.</p>
   </Row>
 );
 
