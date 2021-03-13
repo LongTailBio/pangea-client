@@ -83,8 +83,8 @@ export const iCreateSampleCmds = (user?: PangeaUserType, grp?: SampleGroupType):
   if(grp){
     cmd_org = grp.organization_obj.name;
   }
-  const shcmd1 = `pangea-api create samples -m 'raw::paired_short_reads '-e ${cmd_email} -p *** "${cmd_org}"  "${cmd_grp}" "Sample Name" <fastq 1> <fastq 2>`
-  const shcmd2 = `pangea-api create samples -m 'raw::single_short_reads '-e ${cmd_email} -p *** "${cmd_org}"  "${cmd_grp}" "Sample Name" <fastq 1>`
+  const shcmd1 = `pangea-api create sample-with-data -m 'raw::paired_short_reads '-e ${cmd_email} -p *** "${cmd_org}"  "${cmd_grp}" "Sample Name" <fastq 1> <fastq 2>`
+  const shcmd2 = `pangea-api create sample-with-data -m 'raw::single_short_reads '-e ${cmd_email} -p *** "${cmd_org}"  "${cmd_grp}" "Sample Name" <fastq 1>`
 
   return (
       <>

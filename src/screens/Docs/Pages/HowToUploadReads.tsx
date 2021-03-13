@@ -10,6 +10,7 @@ const createSampleGroupPage = require('../images/create_sample_group.png');
 const createSamplePage = require('../images/create_sample.png');
 const createARPage = require('../images/create_ar.png');
 const uploadARFieldPage = require('../images/upload_ar_field.png');
+const integratedFormPage = require('../images/integrated_create_sample.png')
 const screenshotStyle = {
   width: '60%',
   border: '2px solid #888',
@@ -80,10 +81,32 @@ const DocsHowToUploadReads: React.FC = () => (
 
       <p>
         You can create samples and upload data using the web app or with the CLI.
-        The CLI is more convenient for large numbers of samples.
+        The CLI is more convenient for large numbers of samples. If you use the web
+        app there are two ways to do it: an all-in-one sample creation form or a manual 
+        step by step process.
       </p>
 
-      <h4>Using the Web App</h4>
+      <h4>Using the All-in-One Form</h4>
+      <img src={integratedFormPage} alt="Create All in One Example" style={screenshotStyle} />
+      <br/><br/>
+      <p>
+        From the sample group home page you will see a 'New Sample' button.
+        Click that button and you will be taken to a page to create an sample.
+        This page has multiple tabs. Select the 'One Sample with Data' tab.
+      </p>
+      <p>
+        To create a sample you should enter your desired sample name and select the
+        appropriate data type using the dropdown menu. Depending on the data type
+        you select the appropriate fields will appear (the full list may also be
+        found below on this page). You should select the matching fastq files for each
+        field using the dialogue. 
+      </p>
+      <p>
+        Optionally you may also select one or more 'Work Orders'. These are analyses
+        that will be automatically performed on your data such as quality control.
+      </p>
+
+      <h4>Manually, Using the Web App</h4>
       <p>
         If you are creating a small number of samples you can use the web application.
         If instead you are creating a large number of samples the command line will be
