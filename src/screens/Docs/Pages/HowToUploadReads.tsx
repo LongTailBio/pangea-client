@@ -2,6 +2,7 @@ import * as React from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Row, Col, Nav, NavItem } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
+import ReactPlayer from "react-player"
 
 const whereIsLoginButton = require('../images/find_login.png');
 const profilePage = require('../images/profile_page_example.png');
@@ -20,7 +21,13 @@ const screenshotStyle = {
 const DocsHowToUploadReads: React.FC = () => (
   <Row>
       <h2 id='datamodel'>How To Upload Sequencing Reads to Pangea</h2>
-     
+      <br/>
+      <br/>      
+      <ReactPlayer
+        url="https://youtu.be/DgKR5KV-7bw"
+      />
+      <br/>
+      <br/>        
       <p>
         This guide will show you how to upload sequencing reads to Pangea.
         It will cover every step of the process from creating a user account 
