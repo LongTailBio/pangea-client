@@ -53,16 +53,23 @@ export class PipelineModules extends React.Component<PipelineModulesProps, Pipel
                 />
               </form>
             </Row>
-          {modules.length > 0 && (
-            <AnalysisGroupList groupUUIDs={modules.map(g => g.uuid)} />
-          )}
           {modules.length > 0 &&
             modules.map(mymodule => (
               <ul key={mymodule.uuid} className="analysis-group-list">
                 <li className="analysis-group-list-item">
+                  <Row>
                   <Link to={`/pipeline-modules/${mymodule.uuid}`}>
-                    {mymodule.name} {" "} {mymodule.version}
+                    <Col lg={4}>{mymodule.name}</Col>
+                    <Col lg={4} lgOffset={4}>{"version: "} {mymodule.version}</Col>
                   </Link>
+                  </Row>
+                  <Row>
+                  {mymodule.description && (
+                    <>
+                      <Col md={15} mdOffset={1}><p>{mymodule.description}</p></Col>
+                    </>
+                  )}
+                  </Row>                
                 </li>
               </ul>
             ))}          

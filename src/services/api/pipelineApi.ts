@@ -15,8 +15,8 @@ export const getModulesInPipeline = (uuid: string) => {
 }
 
 
-export const modifyPipelineModuleDescription = (sampleGroup: PipelineModuleType, description: string, source: CancelTokenSource, long: boolean = false) => {
-  const url = `${API_BASE_URL}/sample_groups/${sampleGroup.uuid}`
+export const modifyPipelineModuleDescription = (pipelineModule: PipelineModuleType, description: string, source: CancelTokenSource, long: boolean = false) => {
+  const url = `${API_BASE_URL}/pipeline_modules/${pipelineModule.uuid}`
   var data;
   if(long){
     data = { long_description: description }
@@ -33,7 +33,31 @@ export const modifyPipelineModuleDescription = (sampleGroup: PipelineModuleType,
     data: data,
   };
   return cancelableAxios(options, source).then(res => {
-    const sampleGroup: PipelineModuleType = res.data.results;
-    return sampleGroup;
+    const pipelineModule: PipelineModuleType = res.data.results;
+    return pipelineModule;
+  });
+}
+
+
+export const modifyPipelineDescription = (pipeline: PipelineType, description: string, source: CancelTokenSource, long: boolean = false) => {
+  const url = `${API_BASE_URL}/pipelines/${pipeline.uuid}`
+  var data;
+  if(long){
+    data = { long_description: description }
+  } else {
+    data = { description: description }
+  }
+  const options: AxiosRequestConfig = {
+    url: url,
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Token ${window.localStorage.authToken}`,
+    },
+    data: data,
+  };
+  return cancelableAxios(options, source).then(res => {
+    const pipeline: PipelineModuleType = res.data.results;
+    return pipeline;
   });
 }

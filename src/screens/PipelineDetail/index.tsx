@@ -1,4 +1,5 @@
 import React from 'react';
+import { default as axios, CancelTokenSource } from 'axios';
 import { Switch, Route } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Row, Col, Nav, NavItem, Glyphicon, Badge } from 'react-bootstrap';
@@ -9,6 +10,9 @@ import PipelineModules from './scenes/PipelineModules';
 import { usePangeaAxios, PaginatedResult } from '../../services/api';
 import { PipelineType } from '../../services/api/models/pipeline';
 import { PipelineModuleType } from '../../services/api/models/pipelineModule';
+import { modifyPipelineDescription } from '../../services/api/pipelineApi'
+
+import EditableText from '../../components/EditableText';
 
 
 const usePipeline = (uuid: string) => {
@@ -82,6 +86,18 @@ export const PipelineDetail = (props: PipelineProps) => {
             <h1>{pipeline.name}</h1>
             <h2>Pipeline</h2>
           </Col>
+          <EditableText
+            onSubmit={(text: string) => modifyPipelineDescription(pipeline, text, axios.CancelToken.source(), false)}
+            initialText={pipeline.description}
+            inputType={"inline"}
+            title={"Description"}
+          />
+          <EditableText
+            onSubmit={(text: string) => modifyPipelineDescription(pipeline, text, axios.CancelToken.source(), true)}
+            initialText={pipeline.long_description}
+            inputType={"area"}
+            title={"Long Description"}
+          />          
         </Row>
         <Row>
           <Nav bsStyle="tabs" activeKey="1">
