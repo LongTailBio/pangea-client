@@ -47,6 +47,7 @@
     "d3-sankey": "^0.12.3",
     "formik": "^2.2.6",
     "highcharts": "^8.0.4",
+    "logrocket": "^1.0.14",
     "plotly": "^1.0.6",
     "plotly.js": "^1.53.0",
     "react": "^16.12.0",
