@@ -101,7 +101,7 @@ export class SampleMetadataPanel extends React.Component<SampleMetadataPanelProp
   }
 
 
-  handleSubmitMetadata = (event: React.FormEvent<HTMLFormElement>) => {
+  handleSubmitMetadata = () => {
     for (var oldKey in this.state.editKeys){
       var newKey = this.state.editKeys[oldKey]
       if(newKey != oldKey){
@@ -120,6 +120,7 @@ export class SampleMetadataPanel extends React.Component<SampleMetadataPanelProp
         this.setState({
           editMode: false,
         });
+        window.location.reload()
       })
       .catch(error => {
         if (!axios.isCancel(error)) {
@@ -131,7 +132,7 @@ export class SampleMetadataPanel extends React.Component<SampleMetadataPanelProp
   render(){
     if(this.state.editMode){
       return (
-        <form onSubmit={this.handleSubmitMetadata}>
+        <form>
           <div className="form-group">
             {Object.keys(this.state.editMetadata).map(key => (
               <Row>
@@ -179,9 +180,10 @@ export class SampleMetadataPanel extends React.Component<SampleMetadataPanelProp
             </Col>
             <Col lg={6} lgOffset={3}>
               <input
-                type="submit"
+                type="button"
                 className="btn btn-success btn-lg btn-block"
                 value="Save"
+                onClick={this.handleSubmitMetadata}
               />
             </Col>
           </Row>
