@@ -34,8 +34,10 @@ import CreateAnalysisResultFormPage from './screens/AnalysisResultCreate';
 import { PangeaUserType } from './services/api/models/user';
 import { usePangeaAxios } from './services/api';
 import {useUserContext} from './components/UserContext'
+import LogRocket from 'logrocket';
 
 export const App: React.FC = () => {
+  LogRocket.init('fua08n/pangea')
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [title] = useState('Pangea');
   const [theme] = useState(undefined);
