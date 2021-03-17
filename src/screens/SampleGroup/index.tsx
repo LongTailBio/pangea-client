@@ -12,7 +12,6 @@ import {
   Badge,
 } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
-
 import { usePangeaAxios, PaginatedResult } from '../../services/api';
 import { SampleGroupType } from '../../services/api/models/sampleGroup';
 import { SampleType } from '../../services/api/models/sample';
@@ -25,6 +24,8 @@ import DownloadPanel from './components/DownloadPanel';
 import EditableDescription from './components/EditableDescription'
 import EditableLongDescription from './components/EditableLongDescription'
 import { HandleErrorLoading } from '../../components/ErrorLoadingHandler'
+import SampleGroupSettings from './components/SampleGroupSettings'
+
 
 const useSampleGroup = (uuid: string) => {
   const [sampleGroupResult] = usePangeaAxios<SampleGroupType>(
@@ -121,6 +122,11 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
               <Glyphicon glyph="download" /> Download{' '}
             </NavItem>
           </LinkContainer>
+          <LinkContainer to={`/sample-groups/${props.uuid}/settings`}>
+            <NavItem eventKey="6">
+              <Glyphicon glyph="cog" /> Settings{' '}
+            </NavItem>
+          </LinkContainer>          
         </Nav>
       </Row>
 
@@ -161,6 +167,14 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
             <DownloadPanel group={group} samples={samples.results} analysisResults={analysisResults.results} />
           )}
         />
+        SampleGroupSettings
+        <Route
+          exact={true}
+          path="/sample-groups/:uuid/settings"
+          render={() => (
+            <SampleGroupSettings grp={group}/>
+          )}
+        />        
       </Switch>
     </>
   );
