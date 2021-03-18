@@ -118,7 +118,7 @@ export const OrganizationDetail = (props: OrganizationsProps) => {
             exact={true}
             path="/organizations/:uuid"
             render={() => (
-              <OrganizationProjects sampleGroups={sampleGroups.results} organization={organization} />
+              <OrganizationProjects sampleGroups={sampleGroups} organization={organization} />
             )}
           />
           <Route
