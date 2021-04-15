@@ -20,6 +20,7 @@ import { PangeaUserType, OrgLink } from '../../services/api/models/user';
 import CSS from 'csstype';
 import { useUserContext } from '../../components/UserContext' 
 import { InfoButton, multilineText } from '../../components/CreateForm'
+
 import { sampledesc, createSampleCmds, createBulkSampleCmds, iCreateSampleCmds } from '../../components/Docs'
 import { CreateSampleForm } from './components/SingleCreateForm';
 import { IntegratedCreateSampleForm } from './components/IntegratedSingleCreateForm';
@@ -38,7 +39,6 @@ export const CreateSampleFormPage = (props: CreateSampleFormPageProps) => {
   let history = useHistory();
   const {user} = useUserContext();  
   if (!props.isAuthenticated) return <p>You must be logged in to view this. Click <Link to="/login">here</Link> to log back in.</p>;
-
   var grp = undefined;
   if(location.state){
     grp = location.state.grp ? location.state.grp : undefined
@@ -58,6 +58,7 @@ export const CreateSampleFormPage = (props: CreateSampleFormPageProps) => {
       <br />
       <h4>Library: {grp ? grp.name : props.libraryUUID}</h4>
       <Tabs id="user_settings_tabs">
+
         <Tab eventKey={1} title="One Sample with Data">
           <Col lg={5} lgOffset={0}>
             <IntegratedCreateSampleForm lib={props.libraryUUID} history={history} />

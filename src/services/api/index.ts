@@ -17,7 +17,10 @@ export interface PaginatedResult<T> {
   results: T[];
 }
 
-
+export interface LinkList<T> {
+  count: number;
+  links: T[];
+}
 
 
 type LoginType = {

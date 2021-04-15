@@ -17,6 +17,7 @@ interface S3UploaderProps {
   getRootUrl: () => string;
   uploadDone: () => void;
   upload: boolean;
+
   width?: number;
   height?: number;
 }

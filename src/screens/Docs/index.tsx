@@ -20,7 +20,6 @@ import DocsHowToDownloadData from './Pages/HowToDownloadData'
 import DocsWritePipelines from './Pages/WritePipelines'
 import DocsUploadMetadata from './Pages/HowToUploadMetadata'
 
-
 const Docs: React.FC = () => {
   const links: Array<[string, string, React.FC]> = [
     [`/docs`, 'Docs Home', DocsLanding],
@@ -37,7 +36,7 @@ const Docs: React.FC = () => {
     [`/docs/python`, 'Python API', DocsPython],
     [`/docs/downloads`, 'Downloads', DocsDownloads],
     [`/docs/uploads`, 'Uploads', DocsUploads],
-
+        
     [`/docs/extensions`, 'Extensions', DocsExtensions],
     [`/docs/metagenscope`, 'MetaGenScope', DocsMetagenscope],
     [`/docs/search`, 'Search', DocsSearch],

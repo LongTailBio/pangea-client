@@ -102,7 +102,6 @@ export const iCreateSampleCmds = (user?: PangeaUserType, grp?: SampleGroupType):
   )
 }
 
-
 export const createBulkSampleCmds = (user?: PangeaUserType, grp?: SampleGroupType): ReactElement => {
   const cmd_email = user ? user.email : '<your email>';
   const cmd_grp = grp ? grp.name : '<grp name>';

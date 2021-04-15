@@ -3,6 +3,7 @@ import React, { createContext, useState, useCallback, useMemo, useContext } from
 import { PangeaUserType } from '../../services/api/models/user';
 import LogRocket from 'logrocket';
 
+
 interface UserContextInterface {
     user: PangeaUserType | undefined;
     handleFetchUserProfile: (newUser: PangeaUserType) => void

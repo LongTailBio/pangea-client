@@ -24,7 +24,6 @@ import { useUserContext } from '../../../../components/UserContext'
 
 interface DownloadPanelProps {
   group: SampleGroupType;
-  samples: Array<SampleType>;
   analysisResults: Array<AnalysisResultType>;
 }
 
@@ -32,12 +31,7 @@ export const DownloadPanel = (props: DownloadPanelProps) => {
   const { authToken } = window.localStorage;
   const {user} = useUserContext(); 
   const group = props.group;
-  const samples = props.samples;
   const analysisResults = props.analysisResults;
-  let metadata_count = 0;
-  samples.map(
-    sample => (metadata_count += Object.keys(sample.metadata).length),
-  );
   const sourceToken = axios.CancelToken.source();
   const [moduleCountsResult] = usePangeaAxios<ModuleCountsType>(`/sample_groups/${group.uuid}/module_counts?format=json`)
   const loading = moduleCountsResult.loading

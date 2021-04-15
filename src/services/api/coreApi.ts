@@ -69,7 +69,6 @@ export const pangeaGet = (
 
 
 
-
 export const usePangeaAxios = <T>(
   config: AxiosRequestConfig | string,
   options?: Options,

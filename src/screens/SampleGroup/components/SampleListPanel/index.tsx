@@ -3,6 +3,7 @@ import axios, { CancelTokenSource, AxiosRequestConfig } from 'axios';
 import { Switch, Route } from 'react-router';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
+
 import {
   Row,
   Col,
@@ -11,102 +12,125 @@ import {
   NavItem,
   Glyphicon,
   Badge,
+  Pagination,
 } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 import { cancelableAxios } from '../../../../services/api/utils';
-import { usePangeaAxios, PaginatedResult } from '../../../../services/api';
+import { usePangeaAxios, LinkList } from '../../../../services/api';
 import { SampleGroupType } from '../../../../services/api/models/sampleGroup';
-import { SampleType } from '../../../../services/api/models/sample';
+import { SampleLinkType } from '../../../../services/api/models/sample';
 import { AnalysisResultType } from '../../../../services/api/models/analysisResult';
 
 
 interface SampleListPanelProps {
-  samples: PaginatedResult<SampleType>;
+  samples: LinkList<SampleLinkType>;
   grp?: SampleGroupType;
 }
 
 interface SampleListPanelState {
-  samples: SampleType[];
-  next: string | undefined;
-  previous: string | undefined;
+  samplesOnCurrentPage: SampleLinkType[];
+  samplesInCurrentFilter: SampleLinkType[];
+  allSamples: SampleLinkType[];
+  currentPage: number;
+  totalPages: number;
   filter: string;
 }
 
 export class SampleListPanel extends React.Component<SampleListPanelProps, SampleListPanelState> {
   protected sourceToken: CancelTokenSource;
+  protected pageLength: number;
 
   constructor(props: SampleListPanelProps) {
     super(props);
     this.sourceToken = axios.CancelToken.source();
+    this.pageLength = 50;
+
     this.state = {
-      samples: props.samples.results,
-      next: props.samples.next,
-      previous: props.samples.previous,
+      allSamples: props.samples.links,
+      samplesInCurrentFilter: props.samples.links,
+      samplesOnCurrentPage: props.samples.links.slice(0, this.pageLength),
+
+      currentPage: 0,
+      totalPages: Math.ceil(props.samples.count / this.pageLength),
       filter: '',
     }
-    this.getPageNum = this.getPageNum.bind(this)
     this.handleFilterChange = this.handleFilterChange.bind(this)
-    this.loadNextSamplePage = this.loadNextSamplePage.bind(this);
-    this.loadPrevSamplePage = this.loadPrevSamplePage.bind(this);
     this.loadSamplePage = this.loadSamplePage.bind(this);
   }
 
-  getPageNum(){
-    if( this.state.next ){
-      return parseInt(this.state.next.split('page=')[1]) - 1
-    } else if( this.state.previous ){
-      return parseInt(this.state.previous.split('page=')[1]) + 1
-    }
-  }
-
   handleFilterChange = (event: React.FormEvent<HTMLInputElement>) => {
+    const filterStr = event.currentTarget.value.toLowerCase();
+    const filteredSamples = this.state.allSamples.filter(
+      sample =>
+        sample.name.toLowerCase().indexOf(filterStr) > -1
+    )
+
     this.setState({
       filter: event.currentTarget.value,
+      samplesInCurrentFilter: filteredSamples,
+      totalPages: Math.ceil(filteredSamples.length / this.pageLength),
+      samplesOnCurrentPage: filteredSamples.slice(0, this.pageLength),
     });
   };
 
-  loadNextSamplePage() {
-    this.loadSamplePage(this.state.next);
+  loadSamplePage(pageNum: number) {
+    const myPageNum = Math.max(Math.min(pageNum, this.state.totalPages - 1), 0);
+    const start = myPageNum * this.pageLength;
+    const end = start + this.pageLength;
+    const samples = this.state.samplesInCurrentFilter.slice(start, end);
+    this.setState({
+      currentPage: myPageNum,
+      samplesOnCurrentPage: samples,
+    });
   }
 
-  loadPrevSamplePage() {
-    this.loadSamplePage(this.state.previous);
-  }
-
-  loadSamplePage(url: string | undefined) {
-    if (!url){
-      return
+  _renderPaginator() {
+    if(this.state.totalPages == 1){
+      return <></>
     }
-    const options: AxiosRequestConfig = {
-      url: url,
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${window.localStorage.authToken}`,
-      },
-    };
-    cancelableAxios(options, this.sourceToken)
-      .then(res => {
-        const pageRes: PaginatedResult<SampleType> = res.data;
-        this.setState({
-          samples: pageRes.results,
-          next: pageRes.next,
-          previous: pageRes.previous
-        })
-      })
-      .catch(error => {
-        if (!axios.isCancel(error)) {
-          console.log(error);
-        }
-      });
-  }
+    return (
+      <Pagination>
+        <Pagination.First onClick={() => this.loadSamplePage(0)}/>
+        <Pagination.Prev onClick={() => this.loadSamplePage(this.state.currentPage - 1)} />
 
+
+        {this.state.currentPage == 1 ?
+          <Pagination.Item onClick={() => this.loadSamplePage(this.state.currentPage - 1)}>{this.state.currentPage}</Pagination.Item>
+          :
+          <></>
+        }
+        {this.state.currentPage > 1 ?
+          <>
+            <Pagination.Ellipsis />
+            <Pagination.Item onClick={() => this.loadSamplePage(this.state.currentPage - 1)}>{this.state.currentPage}</Pagination.Item>
+          </>
+          :
+          <></>
+        }
+        <Pagination.Item active>{this.state.currentPage + 1}</Pagination.Item>
+
+        {this.state.currentPage + 2 < this.state.totalPages ?
+          <>  
+            <Pagination.Item onClick={() => this.loadSamplePage(this.state.currentPage + 1)}>{this.state.currentPage + 2}</Pagination.Item>
+            <Pagination.Ellipsis />          
+          </>
+          :
+          <></>
+        }
+        {this.state.currentPage + 2 == this.state.totalPages ?
+          <Pagination.Item onClick={() => this.loadSamplePage(this.state.currentPage + 1)}>{this.state.currentPage + 2}</Pagination.Item>
+          :
+          <></>
+        }
+
+        <Pagination.Next onClick={() => this.loadSamplePage(this.state.currentPage + 1)}/>
+        <Pagination.Last onClick={() => this.loadSamplePage(this.state.totalPages)}/>
+      </Pagination>
+    )
+  }
 
   render() {
-    const samples = this.state.samples.filter(
-      sample =>
-        sample.name.toLowerCase().indexOf(this.state.filter.toLowerCase()) > -1
-    )
+    const samples = this.state.samplesOnCurrentPage;
     var linkTo = {}
     if(this.props.grp){
       linkTo = {
@@ -150,7 +174,7 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
             )}
             {(samples.length === 0 && this.state.filter !== '') && (
               <Well className="text-center">
-                <h4>No samples on this page match the specified filter.</h4>
+                <h4>No samples match the specified filter.</h4>
               </Well>
             )}
           </Col>
@@ -164,24 +188,9 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
           </Col>
         </Row>
         <Row>
-            <Col lg={2} lgOffset={0}>
-              <button
-                type='button'
-                className="btn btn-secondary btn-lg btn-block"
-                onClick={this.loadPrevSamplePage}
-              >Previous</button>
-            </Col>
-            <Col lg={1}>
-              Page {this.getPageNum()}
-            </Col>
-            <Col lg={2}>
-              <button
-                type='button'
-                className="btn btn-secondary btn-lg btn-block"
-                onClick={this.loadNextSamplePage}
-              >Next</button>
-            </Col>
+          {this._renderPaginator()}
         </Row>
+
       </>
     );
   }

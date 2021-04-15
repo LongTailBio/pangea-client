@@ -21,7 +21,6 @@ import { downloadMetadataFromGroupCmds } from '../../../../components/Docs'
 
 interface MetaDataPanelProps {
   group: SampleGroupType;
-  samples: Array<SampleType>;
   analysisResults: Array<AnalysisResultType>;
 }
 
@@ -29,12 +28,7 @@ export const MetaDataPanel = (props: MetaDataPanelProps) => {
   const { authToken } = window.localStorage;
   const {user} = useUserContext(); 
   const group = props.group;
-  const samples = props.samples;
   const analysisResults = props.analysisResults;
-  let metadata_count = 0;
-  samples.map(
-    sample => (metadata_count += Object.keys(sample.metadata).length),
-  );
   return (
     <Row>
       <ul key="get-manifest" className="analysis-group-list">

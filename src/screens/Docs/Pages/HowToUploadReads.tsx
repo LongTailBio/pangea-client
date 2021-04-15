@@ -12,6 +12,7 @@ const createSamplePage = require('../images/create_sample.png');
 const createARPage = require('../images/create_ar.png');
 const uploadARFieldPage = require('../images/upload_ar_field.png');
 const integratedFormPage = require('../images/integrated_create_sample.png')
+
 const screenshotStyle = {
   width: '60%',
   border: '2px solid #888',
@@ -119,6 +120,7 @@ const DocsHowToUploadReads: React.FC = () => (
         If instead you are creating a large number of samples the command line will be
         more convenient (see below).
       </p>
+
       <img src={createSamplePage} alt="Create Sample Example" style={screenshotStyle} />
       <br/><br/>
       <p>
