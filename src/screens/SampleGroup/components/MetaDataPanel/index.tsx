@@ -21,7 +21,6 @@ import { downloadMetadataFromGroupCmds } from '../../../../components/Docs'
 
 interface MetaDataPanelProps {
   group: SampleGroupType;
-  samples: Array<SampleType>;
   analysisResults: Array<AnalysisResultType>;
 }
 
@@ -29,16 +28,10 @@ export const MetaDataPanel = (props: MetaDataPanelProps) => {
   const { authToken } = window.localStorage;
   const {user} = useUserContext(); 
   const group = props.group;
-  const samples = props.samples;
   const analysisResults = props.analysisResults;
-  let metadata_count = 0;
-  samples.map(
-    sample => (metadata_count += Object.keys(sample.metadata).length),
-  );
   return (
     <Row>
       <ul key="get-manifest" className="analysis-group-list">
-        <li className="analysis-group-list-item">
         <li className="analysis-group-list-item">
           <a
             href={`/api/sample_groups/${group.uuid}/metadata?kind=csv&token=${authToken}`}
@@ -46,6 +39,7 @@ export const MetaDataPanel = (props: MetaDataPanelProps) => {
             Metadata - Download metadata for this group as a CSV
           </a>
         </li>
+        <li className="analysis-group-list-item">
           <a
             href={`/api/sample_groups/${group.uuid}/module_counts?format=json&token=${authToken}`}
           >

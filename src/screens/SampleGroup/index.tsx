@@ -13,9 +13,9 @@ import {
 } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 
-import { usePangeaAxios, PaginatedResult } from '../../services/api';
+import { usePangeaAxios, PaginatedResult, LinkList } from '../../services/api';
 import { SampleGroupType } from '../../services/api/models/sampleGroup';
-import { SampleType } from '../../services/api/models/sample';
+import { SampleLinkType } from '../../services/api/models/sample';
 import { AnalysisResultType } from '../../services/api/models/analysisResult';
 import MetaDataPanel from './components/MetaDataPanel';
 import VizPanel from './components/VizPanel';
@@ -30,8 +30,8 @@ const useSampleGroup = (uuid: string) => {
   const [sampleGroupResult] = usePangeaAxios<SampleGroupType>(
     `/sample_groups/${uuid}`,
   );
-  const [samplesResult] = usePangeaAxios<PaginatedResult<SampleType>>(
-    `/sample_groups/${uuid}/samples`,
+  const [samplesResult] = usePangeaAxios<LinkList<SampleLinkType>>(
+    `/sample_groups/${uuid}/sample_links`,
   );
   const [analysisResultsResult] = usePangeaAxios<
     PaginatedResult<AnalysisResultType>
@@ -94,10 +94,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
   }
 
   const { group, samples, analysisResults } = data;
-  let metadata_count = 0;
-  samples.results.map(
-    sample => (metadata_count += Object.keys(sample.metadata).length),
-  );
+  let metadata_count = samples.count;
   return (
     <>
       <Helmet>
@@ -171,7 +168,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
           exact={true}
           path="/sample-groups/:uuid/metadata"
           render={() => (
-            <MetaDataPanel group={group} samples={samples.results} analysisResults={analysisResults.results} />
+            <MetaDataPanel group={group} analysisResults={analysisResults.results} />
           )}
         />
         <Route
@@ -185,7 +182,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
           exact={true}
           path="/sample-groups/:uuid/downloads"
           render={() => (
-            <DownloadPanel group={group} samples={samples.results} analysisResults={analysisResults.results} />
+            <DownloadPanel group={group} analysisResults={analysisResults.results} />
           )}
         />
       </Switch>

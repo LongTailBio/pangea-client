@@ -107,7 +107,7 @@ export const TagDetail = (props: TagDetailProps) => {
           <Route
             exact={true}
             path="/tags/:uuid"
-            render={_props => <SampleListPanel samples={samples} />}
+            render={_props => <></> } // <SampleListPanel samples={samples} />
           />
           <Route
             exact={true}

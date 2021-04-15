@@ -10,3 +10,8 @@ export interface SampleType {
   library_obj: SampleGroupType;
   description: string;
 }
+
+export interface SampleLinkType {
+  uuid: string;
+  name: string;
+}
