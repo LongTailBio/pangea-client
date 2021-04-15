@@ -35,6 +35,7 @@ const DocsMetagenscope: React.FC = () => (
       <hr/>
       <h2>Guides</h2>
         <ul>
+          <li><a href='/docs/how-to-download-data'>Downloading Data from Pangea</a></li>
           <li><a href='/docs/how-to-upload-reads'>Uploading Reads to Pangea</a></li>
           <li><a href='/docs/write-pipelines'>Writing Pipelines with Pangea</a></li>
         </ul>

@@ -19,7 +19,8 @@ import { TagType } from '../../services/api/models/tag';
 import { AnalysisResultType } from '../../services/api/models/analysisResult';
 
 import SampleMetadataPanel from './components/SampleMetadataPanel';
-import EditableDescription from './components/EditableDescription'
+import EditableDescription from './components/EditableDescription';
+import SampleSettings from './components/SampleSettings';
 
 
 const useGroup = (uuid: string) => {
@@ -112,11 +113,11 @@ export const SampleScreen = (props: SampleScreenProps) => {
               <Glyphicon glyph="th-large" /> Resources{' '}
             </NavItem>
           </LinkContainer>
-          <LinkContainer to={`/samples/${sample.uuid}/tags`}>
+          <LinkContainer to={`/samples/${sample.uuid}/settings`}>
             <NavItem eventKey="2">
-              <Glyphicon glyph="tags" />{' '}Tags{' '}
+              <Glyphicon glyph="cog" />{' '}Settings{' '}
             </NavItem>
-          </LinkContainer>          
+          </LinkContainer>                      
         </Nav>
       </Row>
 
@@ -142,6 +143,11 @@ export const SampleScreen = (props: SampleScreenProps) => {
                           {analysisResult.module_name} -{' '}
                           {analysisResult.replicate}
                         </Link>
+                        {analysisResult.description && (
+                          <>
+                            <br/>
+                            <p>{analysisResult.description}</p>
+                          </>)}
                       </li>
                     </ul>
                   ))}
@@ -187,34 +193,11 @@ export const SampleScreen = (props: SampleScreenProps) => {
         />
         <Route
           exact={true}
-          path="/samples/:uuid/tags"
+          path="/samples/:uuid/settings"
           render={() => (
-            <Row>
-              <Col lg={12}>
-                {tags.count > 0 &&
-                  tags.results.map(tag => (
-                    <ul
-                      key={tag.uuid}
-                      className="analysis-group-list"
-                    >
-                      <li className="analysis-group-list-item">
-                        <Link
-                          to={`/tags/${tag.uuid}`}
-                        >
-                          {tag.name}
-                        </Link>
-                      </li>
-                    </ul>
-                  ))}
-                {tags.count === 0 && (
-                  <Well className="text-center">
-                    <h4>This sample has no tags.</h4>
-                  </Well>
-                )}
-              </Col>
-            </Row>            
+            <SampleSettings sample={sample} tags={tags} />           
           )}
-        />
+        />        
       </Switch>
     </>
   );

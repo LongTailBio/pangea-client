@@ -1,6 +1,8 @@
 
 import React, { createContext, useState, useCallback, useMemo, useContext } from 'react';
 import { PangeaUserType } from '../../services/api/models/user';
+import LogRocket from 'logrocket';
+
 
 interface UserContextInterface {
     user: PangeaUserType | undefined;
@@ -27,6 +29,9 @@ export const UserContextProvider = ({
 
     const handleFetchUserProfile = useCallback((newUser: PangeaUserType) => {
         setUser(newUser);
+        if(newUser){
+            LogRocket.identify(newUser.email);
+        }
     }, [setUser])
     const value = useMemo(() => ({
         user, handleFetchUserProfile,

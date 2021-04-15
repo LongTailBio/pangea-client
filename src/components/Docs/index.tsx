@@ -76,6 +76,31 @@ export const createSampleCmds = (user?: PangeaUserType, grp?: SampleGroupType): 
   )
 }
 
+export const iCreateSampleCmds = (user?: PangeaUserType, grp?: SampleGroupType): ReactElement => {
+  const cmd_email = user ? user.email : '<your email>';
+  const cmd_grp = grp ? grp.name : '<grp name>';
+  var cmd_org = '<org name>';
+  if(grp){
+    cmd_org = grp.organization_obj.name;
+  }
+  const shcmd1 = `pangea-api create sample-with-data -m 'raw::paired_short_reads '-e ${cmd_email} -p *** "${cmd_org}"  "${cmd_grp}" "Sample Name" <fastq 1> <fastq 2>`
+  const shcmd2 = `pangea-api create sample-with-data -m 'raw::single_short_reads '-e ${cmd_email} -p *** "${cmd_org}"  "${cmd_grp}" "Sample Name" <fastq 1>`
+
+  return (
+      <>
+        <Row>
+          <h4>From the <a href={apilink}>Command Line</a></h4>
+          <code>
+            {shcmd1}
+          </code>
+          <br/>Or<br/>
+          <code>
+            {shcmd2}
+          </code>          
+        </Row>
+      </>
+  )
+}
 
 export const createBulkSampleCmds = (user?: PangeaUserType, grp?: SampleGroupType): ReactElement => {
   const cmd_email = user ? user.email : '<your email>';

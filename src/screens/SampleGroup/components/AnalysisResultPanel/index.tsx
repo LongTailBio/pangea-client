@@ -45,6 +45,11 @@ export const AnalysisResultPanel = (props: AnalysisResultPanelProps) => {
                     {analysisResult.module_name} -{' '}
                     {analysisResult.replicate}
                   </Link>
+                  {analysisResult.description && (
+                    <>
+                      <br/>
+                      <p>{analysisResult.description}</p>
+                    </>)}                  
                 </li>
               </ul>
             ))}

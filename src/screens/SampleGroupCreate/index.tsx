@@ -130,7 +130,9 @@ const CreateGrpForm = withFormik<CreateGrpFormProps, CreateGrpValues>({
     }
     pangeaFetch(`/sample_groups`, 'POST', JSON.stringify(postData))
         .then(response => response.json())
-        .then(data => `/sample-groups/${data.uuid}`)
+        .then(data => {
+            return `/sample-groups/${data.uuid}`
+        })
         .then(url => formikBag.props.history.push(url));    
   },   
 })(CreateGrpInnerForm);

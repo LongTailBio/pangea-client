@@ -33,13 +33,13 @@ export const MetaDataPanel = (props: MetaDataPanelProps) => {
     <Row>
       <ul key="get-manifest" className="analysis-group-list">
         <li className="analysis-group-list-item">
+        <li className="analysis-group-list-item">
           <a
             href={`/api/sample_groups/${group.uuid}/metadata?kind=csv&token=${authToken}`}
           >
             Metadata - Download metadata for this group as a CSV
           </a>
         </li>
-        <li className="analysis-group-list-item">
           <a
             href={`/api/sample_groups/${group.uuid}/module_counts?format=json&token=${authToken}`}
           >

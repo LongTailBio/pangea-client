@@ -24,6 +24,8 @@ import SampleListPanel from './components/SampleListPanel';
 import DownloadPanel from './components/DownloadPanel';
 import EditableDescription from './components/EditableDescription'
 import EditableLongDescription from './components/EditableLongDescription'
+import { HandleErrorLoading } from '../../components/ErrorLoadingHandler'
+import SampleGroupSettings from './components/SampleGroupSettings'
 
 
 const useSampleGroup = (uuid: string) => {
@@ -62,35 +64,8 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
   const [{ data, loading, error }] = useSampleGroup(props.uuid);
   const { authToken } = window.localStorage;
 
-  if (loading) {
-    return (
-      <>
-        <Helmet>
-          <title>Pangea :: Sample Group</title>
-        </Helmet>
-        <Row>
-          <h1>Loading...</h1>
-          <h2>Sample Group</h2>
-        </Row>
-      </>
-    );
-  }
-
-  if (error) {
-    const { status } = error.response || {};
-    const title = status === 404 ? 'Not Found' : 'Error';
-    return (
-      <>
-        <Helmet>
-          <title>{`Pangea :: ${title}`}</title>
-        </Helmet>
-        <Row>
-          <h1>{title}</h1>
-          <h2>Sample Group</h2>
-          <p>{error.message}</p>
-        </Row>
-      </>
-    );
+  if(loading || error){
+    return (<HandleErrorLoading loading={loading} error={error}/>)
   }
 
   const { group, samples, analysisResults } = data;
@@ -145,6 +120,11 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
               <Glyphicon glyph="download" /> Download{' '}
             </NavItem>
           </LinkContainer>
+          <LinkContainer to={`/sample-groups/${props.uuid}/settings`}>
+            <NavItem eventKey="6">
+              <Glyphicon glyph="cog" /> Settings{' '}
+            </NavItem>
+          </LinkContainer>          
         </Nav>
       </Row>
 
@@ -185,6 +165,14 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
             <DownloadPanel group={group} analysisResults={analysisResults.results} />
           )}
         />
+        SampleGroupSettings
+        <Route
+          exact={true}
+          path="/sample-groups/:uuid/settings"
+          render={() => (
+            <SampleGroupSettings grp={group}/>
+          )}
+        />        
       </Switch>
     </>
   );
