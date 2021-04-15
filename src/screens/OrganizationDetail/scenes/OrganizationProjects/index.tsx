@@ -12,9 +12,6 @@ import { usePangeaAxios, PaginatedResult } from '../../../../services/api';
 import { OrganizationType } from '../../../../services/api/models/organization';
 
 
-import { OrganizationType } from '../../../../services/api/models/organization';
-
-
 interface OrganizationProjectsProps {
   sampleGroups: PaginatedResult<SampleGroupType>;
   organization: OrganizationType;
