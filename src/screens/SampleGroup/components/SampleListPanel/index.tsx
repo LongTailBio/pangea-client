@@ -258,6 +258,9 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
                 <h4>No samples match the specified filter.</h4>
               </Well>
             )}
+            <Row>
+              {this._renderPaginator()}
+            </Row>
           </Col>
           <Col lg={3} lgOffset={1}>
             <Row>
@@ -280,9 +283,6 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
               )}
             </Row>
           </Col>
-        </Row>
-        <Row>
-          {this._renderPaginator()}
         </Row>
 
       </>
