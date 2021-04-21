@@ -33,7 +33,7 @@ const useSampleGroup = (uuid: string) => {
     `/sample_groups/${uuid}`,
   );
   const [samplesResult] = usePangeaAxios<LinkList<SampleLinkType>>(
-    `/sample_groups/${uuid}/sample_links`,
+    `/sample_groups/${uuid}/sample_links?metadata=true`,
   );
   const [analysisResultsResult] = usePangeaAxios<
     PaginatedResult<AnalysisResultType>

@@ -8,6 +8,7 @@ import OrganizationProjects from './scenes/OrganizationProjects';
 import PeopleList from './scenes/OrganizationPeople/components/PeopleList';
 import PersonDetail from './scenes/OrganizationPeople/components/PersonDetail';
 import OrganizationSettings from './scenes/OrganizationSettings';
+import { HandleErrorLoading } from '../../components/ErrorLoadingHandler'
 
 import { usePangeaAxios, PaginatedResult } from '../../services/api';
 import { OrganizationType } from '../../services/api/models/organization';
@@ -47,35 +48,8 @@ interface OrganizationsProps {
 export const OrganizationDetail = (props: OrganizationsProps) => {
   const [{ data, loading, error }] = useOrganization(props.uuid);
 
-  if (loading) {
-    return (
-      <>
-        <Helmet>
-          <title>Pangea :: Organizations</title>
-        </Helmet>
-        <Row>
-          <h1>Loading...</h1>
-          <h2>Organizations</h2>
-        </Row>
-      </>
-    );
-  }
-
-  if (error) {
-    const { status } = error.response || {};
-    const title = status === 404 ? 'Not Found' : 'Error';
-    return (
-      <>
-        <Helmet>
-          <title>{`Pangea :: ${title}`}</title>
-        </Helmet>
-        <Row>
-          <h1>{title}</h1>
-          <h2>Organization</h2>
-          <p>{error.message}</p>
-        </Row>
-      </>
-    );
+  if(loading || error){
+    return (<HandleErrorLoading loading={loading} error={error}/>)
   }
 
   const { organization, sampleGroups, people } = data;

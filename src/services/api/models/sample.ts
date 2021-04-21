@@ -14,4 +14,5 @@ export interface SampleType {
 export interface SampleLinkType {
   uuid: string;
   name: string;
+  metadata?: any;
 }

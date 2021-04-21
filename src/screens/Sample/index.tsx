@@ -17,10 +17,12 @@ import { usePangeaAxios, PaginatedResult } from '../../services/api';
 import { SampleType } from '../../services/api/models/sample';
 import { TagType } from '../../services/api/models/tag';
 import { AnalysisResultType } from '../../services/api/models/analysisResult';
+import { HandleErrorLoading } from '../../components/ErrorLoadingHandler'
 
 import SampleMetadataPanel from './components/SampleMetadataPanel';
 import EditableDescription from './components/EditableDescription';
 import SampleSettings from './components/SampleSettings';
+
 
 
 const useGroup = (uuid: string) => {
@@ -47,35 +49,8 @@ interface SampleScreenProps {
 export const SampleScreen = (props: SampleScreenProps) => {
   const [{ data, loading, error }] = useGroup(props.uuid);
 
-  if (loading) {
-    return (
-      <>
-        <Helmet>
-          <title>Pangea :: Sample</title>
-        </Helmet>
-        <Row>
-          <h1>Loading...</h1>
-          <h2>Sample</h2>
-        </Row>
-      </>
-    );
-  }
-
-  if (error) {
-    const { status } = error.response || {};
-    const title = status === 404 ? 'Not Found' : 'Error';
-    return (
-      <>
-        <Helmet>
-          <title>{`Pangea :: ${title}`}</title>
-        </Helmet>
-        <Row>
-          <h1>{title}</h1>
-          <h2>Sample</h2>
-          <p>{error.message}</p>
-        </Row>
-      </>
-    );
+  if(loading || error){
+    return (<HandleErrorLoading loading={loading} error={error}/>)
   }
 
   const { sample, analysisResults, tags } = data;

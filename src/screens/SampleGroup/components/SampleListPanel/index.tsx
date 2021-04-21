@@ -20,7 +20,7 @@ import { usePangeaAxios, LinkList } from '../../../../services/api';
 import { SampleGroupType } from '../../../../services/api/models/sampleGroup';
 import { SampleLinkType } from '../../../../services/api/models/sample';
 import { AnalysisResultType } from '../../../../services/api/models/analysisResult';
-
+import { FilterMetadataForm } from './components/FilterForm'
 
 interface SampleListPanelProps {
   samples: LinkList<SampleLinkType>;
@@ -36,8 +36,28 @@ interface SampleListPanelState {
   filter: string;
 }
 
+const metadataToStr = (sampleLink: SampleLinkType): string => {
+  if(! sampleLink?.metadata){
+    return "No metadata";
+  }
+  var out = "";
+  Object.keys(sampleLink.metadata).map(key => {
+    out += key
+    out += ": "
+    out += sampleLink.metadata[key]
+    out += ", "
+  })
+  if(out.length > 100){
+    out = out.slice(0, 97) + '...'
+  } else if(out.length == 0){
+    return "No metadata"
+  }
+  return out
+}
+
 export class SampleListPanel extends React.Component<SampleListPanelProps, SampleListPanelState> {
   protected sourceToken: CancelTokenSource;
+  protected metadataKeys: string[];
   protected pageLength: number;
 
   constructor(props: SampleListPanelProps) {
@@ -49,24 +69,81 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
       allSamples: props.samples.links,
       samplesInCurrentFilter: props.samples.links,
       samplesOnCurrentPage: props.samples.links.slice(0, this.pageLength),
-
       currentPage: 0,
       totalPages: Math.ceil(props.samples.count / this.pageLength),
       filter: '',
     }
-    this.handleFilterChange = this.handleFilterChange.bind(this)
+    this.setMetadataFilter = this.setMetadataFilter.bind(this);
+    this.handleFilterChange = this.handleFilterChange.bind(this);
+    this.filterSamples = this.filterSamples.bind(this);
     this.loadSamplePage = this.loadSamplePage.bind(this);
+
+    this.metadataKeys = [];
+    props.samples.links.map(sample => {
+      if(sample?.metadata){
+        Object.keys(sample.metadata).map(key => {
+          if(this.metadataKeys.indexOf(key) === -1){
+            this.metadataKeys.push(key);
+          }
+        })
+      } 
+    })
+  }
+
+  setMetadataFilter(key: string, value: string){
+    var filterStr = '';
+    if(this.state.filter.trim().length === 0){
+      filterStr = key + '=' + value;
+    } else if(this.state.filter.indexOf(key) === -1){
+      filterStr = this.state.filter + '; ' + key + '=' + value;
+    } else {
+      const tkns = this.state.filter.split(';');
+      var newTkns: string[] = [];
+      tkns.map(tkn => {
+        if(tkn.indexOf(key) === -1){
+          newTkns.push(tkn);
+        } else {
+          newTkns.push(' ' + key + '=' + value)
+        }
+      })
+      filterStr = newTkns.join(';')
+    }
+    this.filterSamples(filterStr);
   }
 
   handleFilterChange = (event: React.FormEvent<HTMLInputElement>) => {
-    const filterStr = event.currentTarget.value.toLowerCase();
-    const filteredSamples = this.state.allSamples.filter(
-      sample =>
-        sample.name.toLowerCase().indexOf(filterStr) > -1
-    )
+    const filterStr = event.currentTarget.value;
+    this.filterSamples(filterStr);
+  }
+
+  filterSamples = (filterStr: string) => {
+    var filteredSamples = this.state.allSamples;
+    const tkns = filterStr.split(';');
+    tkns.map((tkn) => {
+      const subtkns = tkn.trim().split('=');
+      if(subtkns.length == 1){
+        filteredSamples = filteredSamples.filter(
+          sample =>
+            sample.name.toLowerCase().indexOf(subtkns[0].toLowerCase()) > -1
+        )
+      } else if(subtkns.length == 2){
+        const key = subtkns[0];
+        const val = subtkns[1].toLowerCase();
+        filteredSamples = filteredSamples.filter(
+          sample => {
+            if(!sample?.metadata){
+              return false
+            } else if(!sample.metadata[key]){
+              return false
+            }
+            return sample.metadata[key].toLowerCase().indexOf(val) > -1
+          }
+        )
+      }
+    })
 
     this.setState({
-      filter: event.currentTarget.value,
+      filter: filterStr,
       samplesInCurrentFilter: filteredSamples,
       totalPages: Math.ceil(filteredSamples.length / this.pageLength),
       samplesOnCurrentPage: filteredSamples.slice(0, this.pageLength),
@@ -150,7 +227,7 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
                   name="filter"
                   className="form-control input-lg"
                   type="text"
-                  placeholder="Filter samples on this page"
+                  placeholder="Filter samples"
                   required={true}
                   value={this.state.filter}
                   onChange={this.handleFilterChange}
@@ -164,6 +241,10 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
                     <Link to={`/samples/${sample.uuid}`}>
                       {sample.name}
                     </Link>
+                    <>
+                      <br/>
+                      <p>{metadataToStr(sample)}</p>
+                    </>
                   </li>
                 </ul>
               ))}
@@ -179,12 +260,25 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
             )}
           </Col>
           <Col lg={2} lgOffset={2}>
-            {this.props.grp && (
-              this.props.grp.is_library && (
-              <Link to={linkTo} className="btn btn-primary">
-                Create Sample
-              </Link>
-            ))}
+            <Row>
+              {this.props.grp && (
+                this.props.grp.is_library && (
+                <Link to={linkTo} className="btn btn-success btn-lg ">
+                  Create New Sample
+                </Link>
+              ))}
+            </Row>
+            <br/>
+            <hr/>
+            <Row>
+              <h3>Filter by Metadata</h3>
+              {this.metadataKeys.map(key =>
+                <>
+                  <h4>{key}</h4>
+                  <FilterMetadataForm metadataKey={key} callback={this.setMetadataFilter} />
+                </>
+              )}
+            </Row>
           </Col>
         </Row>
         <Row>
