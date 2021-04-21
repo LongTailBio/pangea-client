@@ -21,11 +21,17 @@ interface FilterMetadataValues {
 const FilterMetadataInnerForm = (props: FormikProps<FilterMetadataValues>) => {
   const { touched, errors, isSubmitting } = props;
   return (
-    <Form> 
-      <FormGroup>
-         <Field id="value" name="value" placeholder="Value" className="form-control input-lg"/>
-      </FormGroup>    
-      <button type="submit" className="btn btn-primary btn-lg btn-block">Filter</button>
+    <Form>
+      <Row>
+        <Col lg={8}>
+          <FormGroup>
+             <Field id="value" name="value" placeholder="Value" className="form-control input-lg"/>
+          </FormGroup>
+        </Col>
+        <Col lg={4}>
+          <button type="submit" className="btn btn-primary btn-lg btn-block">Filter</button>
+        </Col>
+      </Row>
     </Form>
   );  
 }

@@ -259,7 +259,7 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
               </Well>
             )}
           </Col>
-          <Col lg={2} lgOffset={2}>
+          <Col lg={3} lgOffset={1}>
             <Row>
               {this.props.grp && (
                 this.props.grp.is_library && (
