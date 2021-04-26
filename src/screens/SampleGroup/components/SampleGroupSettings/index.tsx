@@ -8,6 +8,7 @@ import { Helmet } from 'react-helmet';
 import { SampleGroupType } from '../../../../services/api/models/sampleGroup';
 
 import BasicSampleGroupSettings from './components/BasicSampleGroupSettings'
+import SampleGroupSettingWorkOrder from './components/WorkOrders';
 
 interface SampleGroupSettingsProps {
   grp: SampleGroupType;
@@ -18,7 +19,10 @@ const SampleGroupSettings = (props: SampleGroupSettingsProps) => {
   return (
     <Row>
       <Tabs id="user_settings_tabs">
-        <Tab eventKey={1} title="Basics">
+        <Tab eventKey={1} title="Work Orders">
+          <SampleGroupSettingWorkOrder group={props.grp}/>
+        </Tab>
+        <Tab eventKey={2} title="Basics">
           <BasicSampleGroupSettings grp={props.grp} />
         </Tab>       
       </Tabs>

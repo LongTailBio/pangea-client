@@ -5,15 +5,16 @@ import { LinkContainer } from 'react-router-bootstrap';
 import {
   Row, Col, Panel, ListGroup, ListGroupItem, FormGroup,
   FormControl, Popover, OverlayTrigger, Button, Glyphicon,
-  Tab, Tabs, ProgressBar, Collapse
+  Tab, Tabs, ProgressBar, Collapse,
 } from 'react-bootstrap';import { Helmet } from 'react-helmet';
-import { SampleType } from '../../../../../services/api/models/sample';
-import { WorkOrderProtoType, WorkOrderType, JobOrderType } from '../../../../../services/api/models/workOrder';
+import { SampleGroupType } from '../../../../../services/api/models/sampleGroup';
+import { GroupWorkOrderProtoType, GroupWorkOrderType, WorkOrderLinkType } from '../../../../../services/api/models/workOrder';
 import { usePangeaAxios, PaginatedResult } from '../../../../../services/api';
 
 import { withFormik, FormikProps, FormikErrors, Form, Field, FieldArray } from 'formik';
 import { InfoButton, multilineText } from '../../../../../components/CreateForm'
 import { pangeaFetch } from '../../../../../services/api/coreApi';
+import { HandleErrorLoading } from '../../../../../components/ErrorLoadingHandler'
 
 
 
@@ -22,8 +23,8 @@ interface CreateWorkOrderFormValues {
 }
 
 interface CreateWorkOrderFormProps {
-  sample: SampleType;
-  workOrders: WorkOrderProtoType[];
+  group: SampleGroupType;
+  workOrders: GroupWorkOrderProtoType[];
   history: any;
 }
 
@@ -34,7 +35,7 @@ const CreateWorkOrderInnerForm = (props: CreateWorkOrderFormProps & FormikProps<
     <Form>
       <FormGroup>
         <label htmlFor="workOrderName">Add a Work Order
-          <InfoButton desc={"The work order to add to this sample."} />
+          <InfoButton desc={"The work order to add to this sample group."} />
         </label>
         <Field name="workOrderName" as="select">
           {workOrders && workOrders.map(el =>
@@ -58,7 +59,7 @@ const CreateWorkOrderForm = withFormik<CreateWorkOrderFormProps, CreateWorkOrder
   handleSubmit: (values, formikBag) => {
     const match = formikBag.props.workOrders.filter(el => {return el.name == values.workOrderName})
     const woUUID = match[0].uuid;
-    pangeaFetch(`/samples/${formikBag.props.sample.uuid}/work_orders/${woUUID}`, 'POST', JSON.stringify({}))
+    pangeaFetch(`/sample_groups/${formikBag.props.group.uuid}/work_orders/${woUUID}`, 'POST', JSON.stringify({}))
         .then(response => response.json())
         .then(data => window.location.reload(false))
    },   
@@ -66,47 +67,53 @@ const CreateWorkOrderForm = withFormik<CreateWorkOrderFormProps, CreateWorkOrder
 
 
 const useWorkOrders = (uuid: string) => {
-  const [workOrderProtoResult] = usePangeaAxios<PaginatedResult<WorkOrderProtoType>>(`/work_order_prototypes`);
-  const [sampleWorkOrderResult] = usePangeaAxios<PaginatedResult<WorkOrderType>>(`/samples/${uuid}/work_orders`);
+  const [workOrderProtoResult] = usePangeaAxios<PaginatedResult<GroupWorkOrderProtoType>>(`/group_work_order_prototypes`);
+  const [groupWorkOrderResult] = usePangeaAxios<PaginatedResult<GroupWorkOrderType>>(`/sample_groups/${uuid}/work_orders`);
 
   const data = {
     workOrderProtos: workOrderProtoResult.data,
-    workOrders: sampleWorkOrderResult.data,
+    workOrders: groupWorkOrderResult.data,
   };
-  const loading = workOrderProtoResult.loading || sampleWorkOrderResult.loading;
-  const error = workOrderProtoResult.error || sampleWorkOrderResult.error || undefined;
+  const loading = workOrderProtoResult.loading || groupWorkOrderResult.loading;
+  const error = workOrderProtoResult.error || groupWorkOrderResult.error || undefined;
   return [{ data, loading, error }];
 };
 
 
-interface JobOrderPanelProps {
-  jobOrder: JobOrderType;
+interface WorkOrderLinkPanelProps {
+  workOrderLink: WorkOrderLinkType;
 }
 
-const JobOrderPanel = (props: JobOrderPanelProps) => {
+
+const WorkOrderLinkPanel = (props: WorkOrderLinkPanelProps) => {
   var panelType = '';
-  if(props.jobOrder.status === "success"){
+  if(props.workOrderLink.status === "success"){
     panelType = 'panel-success';
-  } else if(props.jobOrder.status === "working"){
+  } else if(props.workOrderLink.status === "working"){
     panelType = 'panel-info';
-  } else if(props.jobOrder.status === "error"){
+  } else if(props.workOrderLink.status === "error"){
     panelType = 'panel-danger';
   } 
   return (
     <Panel className={panelType}>
-      <div className="panel-heading">{props.jobOrder.name}</div>
+      <div className="panel-heading">
+        <Link to={`/samples/${props.workOrderLink.sample_uuid}/settings`}>
+          {props.workOrderLink.sample_name}
+        </Link>
+      </div>
       <div className="panel-body">
-        <h5>Status: {props.jobOrder.status}</h5>
+        <h5>{props.workOrderLink.name}</h5>
+        <h5>Status: {props.workOrderLink.status}</h5>
       </div>
     </Panel>
   )
 }
 
-interface WorkOrderPanelProps {
-  workOrder: WorkOrderType;
+interface GroupWorkOrderPanelProps {
+  workOrder: GroupWorkOrderType;
 }
 
-const WorkOrderPanel = (props: WorkOrderPanelProps) => {
+const GroupWorkOrderPanel = (props: GroupWorkOrderPanelProps) => {
   const [open, setOpen] = React.useState(false);
   const nJobs = props.workOrder.progress_summary['n_jobs'] ? props.workOrder.progress_summary['n_jobs'] : 0;
   const nSuccess = props.workOrder.progress_summary['success'] ? props.workOrder.progress_summary['success'] : 0;
@@ -135,12 +142,12 @@ const WorkOrderPanel = (props: WorkOrderPanelProps) => {
             aria-controls="example-collapse-text"
             aria-expanded={open}
           >
-            Jobs
+            Samples
           </Button>
           <Collapse in={open}>
             <Panel>
             {
-              props.workOrder.job_order_objs.map(el => (<JobOrderPanel jobOrder={el}/>))
+              props.workOrder.work_order_links.map(el => (<WorkOrderLinkPanel workOrderLink={el}/>))
             }
             </Panel>
           </Collapse>
@@ -151,34 +158,17 @@ const WorkOrderPanel = (props: WorkOrderPanelProps) => {
 }
 
 
-interface SampleSettingWorkOrderProps {
-  sample: SampleType;
+interface SampleGroupSettingWorkOrderProps {
+  group: SampleGroupType;
 }
 
 
-const SampleSettingWorkOrder = (props: SampleSettingWorkOrderProps) => {
-  const [{ data, loading, error }] = useWorkOrders(props.sample.uuid);
+const SampleGroupSettingWorkOrder = (props: SampleGroupSettingWorkOrderProps) => {
+  const [{ data, loading, error }] = useWorkOrders(props.group.uuid);
   let history = useHistory();
 
-  if (loading) {
-    return (
-        <Row>
-          <h1>Loading...</h1>
-          <h2>Work Orders</h2>
-        </Row>
-    );
-  }
-
-  if (error) {
-    const { status } = error.response || {};
-    const title = status === 404 ? 'Not Found' : 'Error';
-    return (
-        <Row>
-          <h1>{title}</h1>
-          <h2>Work Orders</h2>
-          <p>{error.message}</p>
-        </Row>
-    );
+  if(loading || error){
+    return (<HandleErrorLoading loading={loading} error={error}/>)
   }
 
   const { workOrderProtos, workOrders } = data;
@@ -187,17 +177,17 @@ const SampleSettingWorkOrder = (props: SampleSettingWorkOrderProps) => {
     <Row>
       <Col lg={9}>
         {
-          workOrders.results.map(el => (<WorkOrderPanel workOrder={el} />))
+          workOrders.results.map(el => (<GroupWorkOrderPanel workOrder={el} />))
         }
       </Col>
       <Col lg={3}>
         <CreateWorkOrderForm
           history={history}
-          sample={props.sample}
+          group={props.group}
           workOrders={workOrderProtos.results}
         />
       </Col>
     </Row>
   );
 }
-export default SampleSettingWorkOrder;
+export default SampleGroupSettingWorkOrder;
