@@ -15,9 +15,12 @@ import { Helmet } from 'react-helmet';
 
 import { usePangeaAxios, PaginatedResult, LinkList } from '../../services/api';
 import { SampleGroupType } from '../../services/api/models/sampleGroup';
+import { WikiType } from '../../services/api/models/wiki';
+
 import { SampleLinkType } from '../../services/api/models/sample';
 import { AnalysisResultType } from '../../services/api/models/analysisResult';
 import MetaDataPanel from './components/MetaDataPanel';
+import WikiPanel from './components/WikiPanel';
 import VizPanel from './components/VizPanel';
 import AnalysisResultPanel from './components/AnalysisResultPanel';
 import SampleListPanel from './components/SampleListPanel';
@@ -38,19 +41,23 @@ const useSampleGroup = (uuid: string) => {
   const [analysisResultsResult] = usePangeaAxios<
     PaginatedResult<AnalysisResultType>
   >(`/sample_group_ars?sample_group_id=${uuid}`);
+  const [wikiResult] = usePangeaAxios<WikiType>(`/sample_groups/${uuid}/wiki`)
 
   const data = {
     group: sampleGroupResult.data,
     samples: samplesResult.data,
     analysisResults: analysisResultsResult.data,
+    wiki: wikiResult.data,
   };
   const loading =
     sampleGroupResult.loading ||
     samplesResult.loading ||
+    wikiResult.loading ||
     analysisResultsResult.loading;
   const error =
     sampleGroupResult.error ||
     samplesResult.error ||
+    wikiResult.error ||
     analysisResultsResult.error ||
     undefined;
   return [{ data, loading, error }];
@@ -68,7 +75,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
     return (<HandleErrorLoading loading={loading} error={error}/>)
   }
 
-  const { group, samples, analysisResults } = data;
+  const { group, samples, analysisResults, wiki } = data;
   let metadata_count = samples.count;
   return (
     <>
@@ -110,6 +117,11 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
               <Badge>{metadata_count}</Badge>
             </NavItem>
           </LinkContainer>
+          <LinkContainer to={`/sample-groups/${props.uuid}/wiki`}>
+            <NavItem eventKey="3">
+              <Glyphicon glyph="book" /> Wiki
+            </NavItem>
+          </LinkContainer>          
           <LinkContainer to={`/sample-groups/${props.uuid}/viz`}>
             <NavItem eventKey="4">
               <Glyphicon glyph="tags" /> Visualization{' '}
@@ -149,6 +161,13 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
           path="/sample-groups/:uuid/metadata"
           render={() => (
             <MetaDataPanel group={group} analysisResults={analysisResults.results} />
+          )}
+        />
+        <Route
+          exact={true}
+          path="/sample-groups/:uuid/wiki"
+          render={() => (
+            <WikiPanel grp_uuid={group.uuid} wiki={wiki}/>
           )}
         />
         <Route

@@ -22,11 +22,13 @@ interface EditableTextProps {
   initialText: string;
   inputType: "inline"|"area";
   title: string;
+  textType?: "h1"|"p";
 }
 
 interface EditableTextState {
   editMode: boolean;
   editText: string;
+  textType: "h1"|"p";
 }
 
 export class EditableTextPanel extends React.Component<EditableTextProps, EditableTextState> {
@@ -38,10 +40,19 @@ export class EditableTextPanel extends React.Component<EditableTextProps, Editab
     this.state = {
       editMode: false,
       editText: props.initialText,
+      textType: props.textType ? props.textType : "p"
     }
     this.flipEditState = this.flipEditState.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps: EditableTextProps) {
+    this.state = {
+      editMode: false,
+      editText: nextProps.initialText,
+      textType: nextProps.textType ? nextProps.textType : "p"
+    }
   }
 
   flipEditState() {
@@ -75,7 +86,7 @@ export class EditableTextPanel extends React.Component<EditableTextProps, Editab
         <Row>
           <form>
             <div className="form-group">
-              <Col lg={6}>
+              <Col lg={10}>
                 <input
                   className="form-control input-lg input-grp-btn"
                   type="text"
@@ -99,14 +110,16 @@ export class EditableTextPanel extends React.Component<EditableTextProps, Editab
         </Row>
       )
     }
+
     return (
       <Row>
-        <Col lg={6}>
-        <p>{this.state.editText}</p>
+        <Col lg={10}>
+        {(this.state.textType == "p") ? <p>{this.state.editText}</p> : <></>}
+        {(this.state.textType == "h1") ? <h1>{this.state.editText}</h1> : <></>}
         </Col>
         <Col lg={2}>
           <button
-            className="btn btn-primary btn-lg btn-block"
+            className="btn btn-secondary btn-lg btn-block"
             onClick={this.flipEditState}
           >Edit</button>
         </Col>
@@ -152,18 +165,19 @@ export class EditableTextPanel extends React.Component<EditableTextProps, Editab
     return (
       <>
         <Row>
-          <Col lg={6}>
-            Long Description
+          <Col lg={10}>
+            <h4>{this.props.title}</h4>
           </Col>
           <Col lg={2}>
             <button
-              className="btn btn-primary btn-lg btn-block"
+              className="btn btn-secondary btn-lg btn-block"
               onClick={this.flipEditState}
             >Edit</button>
           </Col>
         </Row>
+        <br/>
         <Row>
-          <Col lg={8}>
+          <Col lg={12}>
             <ReactMarkdown>{this.state.editText}</ReactMarkdown>
           </Col>
         </Row>
