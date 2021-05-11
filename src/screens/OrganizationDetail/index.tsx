@@ -9,8 +9,10 @@ import PeopleList from './scenes/OrganizationPeople/components/PeopleList';
 import PersonDetail from './scenes/OrganizationPeople/components/PersonDetail';
 import OrganizationSettings from './scenes/OrganizationSettings';
 import { HandleErrorLoading } from '../../components/ErrorLoadingHandler'
+import WikiPanel from '../../components/WikiPanel'
 
 import { usePangeaAxios, PaginatedResult } from '../../services/api';
+import { WikiType } from '../../services/api/models/wiki';
 import { OrganizationType } from '../../services/api/models/organization';
 import { SampleGroupType } from '../../services/api/models/analysisGroup';
 import { UserType } from '../../services/api/models/user';
@@ -28,15 +30,19 @@ const useOrganization = (uuid: string) => {
     `/organizations/${uuid}/users`,
   );
 
+  const [wiki] = usePangeaAxios<WikiType>(
+    `/organizations/${uuid}/wiki`,
+  );
   const data = {
     organization: organization.data,
     sampleGroups: sampleGroups.data,
     people: people.data,
+    wiki: wiki.data,
   };
   const loading =
-    organization.loading || sampleGroups.loading || people.loading;
+    organization.loading || sampleGroups.loading || people.loading || wiki.loading;
   const error =
-    organization.error || sampleGroups.error || people.error || undefined;
+    organization.error || sampleGroups.error || people.error || wiki.error || undefined;
 
   return [{ data, loading, error }];
 };
@@ -52,8 +58,8 @@ export const OrganizationDetail = (props: OrganizationsProps) => {
     return (<HandleErrorLoading loading={loading} error={error}/>)
   }
 
-  const { organization, sampleGroups, people } = data;
-
+  const { organization, sampleGroups, people, wiki } = data;
+  console.log(wiki)
   return (
     <>
       <Helmet>
@@ -74,13 +80,18 @@ export const OrganizationDetail = (props: OrganizationsProps) => {
                 <Badge>{sampleGroups.count}</Badge>
               </NavItem>
             </LinkContainer>
-            <LinkContainer to={`/organizations/${props.uuid}/people`}>
+            <LinkContainer to={`/organizations/${props.uuid}/wiki`}>
               <NavItem eventKey="2">
+                <Glyphicon glyph="book" /> Wiki
+              </NavItem>
+            </LinkContainer>            
+            <LinkContainer to={`/organizations/${props.uuid}/people`}>
+              <NavItem eventKey="3">
                 <Glyphicon glyph="user" /> People <Badge>{people.count}</Badge>
               </NavItem>
             </LinkContainer>
             <LinkContainer to={`/organizations/${props.uuid}/settings`}>
-              <NavItem eventKey="2">
+              <NavItem eventKey="4">
                 <Glyphicon glyph="cog" /> Settings
               </NavItem>
             </LinkContainer>            
@@ -95,6 +106,11 @@ export const OrganizationDetail = (props: OrganizationsProps) => {
               <OrganizationProjects sampleGroups={sampleGroups} organization={organization} />
             )}
           />
+          <Route
+            exact={true}
+            path="/organizations/:uuid/wiki"
+            render={_props => <WikiPanel uuid={organization.uuid} wiki={wiki} kind="organizations" />}
+          />          
           <Route
             exact={true}
             path="/organizations/:uuid/people"

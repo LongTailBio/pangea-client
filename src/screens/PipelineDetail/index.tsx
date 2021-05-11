@@ -6,11 +6,13 @@ import { Row, Col, Nav, NavItem, Glyphicon, Badge } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 
 import PipelineModules from './scenes/PipelineModules';
+import WikiPanel from '../../components/WikiPanel'
 
 import { usePangeaAxios, PaginatedResult } from '../../services/api';
 import { PipelineType } from '../../services/api/models/pipeline';
 import { PipelineModuleType } from '../../services/api/models/pipelineModule';
 import { modifyPipelineDescription } from '../../services/api/pipelineApi'
+import { WikiType } from '../../services/api/models/wiki';
 
 import EditableText from '../../components/EditableText';
 
@@ -22,15 +24,18 @@ const usePipeline = (uuid: string) => {
   const [modules] = usePangeaAxios<PaginatedResult<PipelineModuleType>>(
     `/pipeline_modules?pipeline=${uuid}`,
   );
-
+  const [wiki] = usePangeaAxios<WikiType>(
+    `/pipelines/${uuid}/wiki`,
+  );
   const data = {
     pipeline: pipeline.data,
     modules: modules.data,
+    wiki: wiki.data,
   };
   const loading =
-    pipeline.loading || modules.loading;
+    pipeline.loading || modules.loading || wiki.loading;
   const error =
-    pipeline.error || modules.error || undefined;
+    pipeline.error || modules.error || wiki.error || undefined;
 
   return [{ data, loading, error }];
 };
@@ -73,7 +78,7 @@ export const PipelineDetail = (props: PipelineProps) => {
     );
   }
 
-  const { pipeline, modules } = data;
+  const { pipeline, modules, wiki } = data;
 
   return (
     <>
@@ -107,6 +112,11 @@ export const PipelineDetail = (props: PipelineProps) => {
                 <Badge>{modules.count}</Badge>
               </NavItem>
             </LinkContainer>
+            <LinkContainer to={`/pipelines/${props.uuid}/wiki`} exact={true}>
+              <NavItem eventKey="2">
+                <Glyphicon glyph="book" /> Wiki
+              </NavItem>
+            </LinkContainer>            
           </Nav>
         </Row>
         <br />
@@ -118,6 +128,13 @@ export const PipelineDetail = (props: PipelineProps) => {
               <PipelineModules modules={modules.results} />
             )}
           />
+          <Route
+            exact={true}
+            path="/pipelines/:uuid/wiki"
+            render={() => (
+              <WikiPanel uuid={pipeline.uuid} wiki={wiki} kind="pipelines" />
+            )}
+          />          
         </Switch>
       </Row>
     </>

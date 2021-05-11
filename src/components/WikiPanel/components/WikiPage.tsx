@@ -10,23 +10,24 @@ import {
   Pagination,
 } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
-import { WikiPageType } from '../../../../../services/api/models/wiki';
-import { EditableTextPanel } from '../../../../../components/EditableText';
-import { pangeaFetch } from '../../../../../services/api/coreApi';
+import { WikiPageType } from '../../../services/api/models/wiki';
+import { EditableTextPanel } from '../../../components/EditableText';
+import { pangeaFetch } from '../../../services/api/coreApi';
 
 
 interface WikiPageProps {
 	page: WikiPageType;
-	grp_uuid: string;
+	uuid: string;
+	kind: "sample_groups"|"organizations"|"pipelines";
 }
 
-const editWikiPage = (grp_uuid: string, page: WikiPageType) => {
+const editWikiPage = (kind: string, uuid: string, page: WikiPageType) => {
 	const data = {
 		uuid: page.uuid,
 		title: page.title,
 		text: page.text,
 	} 
-	return pangeaFetch(`/sample_groups/${grp_uuid}/wiki`, 'POST', JSON.stringify(data))
+	return pangeaFetch(`/${kind}/${uuid}/wiki`, 'POST', JSON.stringify(data))
 		.then(response => response.json())
         .then(data => window.location.reload(false))
 }
@@ -36,11 +37,11 @@ export const WikiPagePanel = (props: WikiPageProps) => {
 
 	const editWikiTitle = (new_title: string) =>{
 		props.page.title = new_title
-		return editWikiPage(props.grp_uuid, props.page)
+		return editWikiPage(props.kind, props.uuid, props.page)
 	}
 	const editWikiText = (new_text: string) =>{
 		props.page.text = new_text
-		return editWikiPage(props.grp_uuid, props.page)
+		return editWikiPage(props.kind, props.uuid, props.page)
 	}
 	return (
 		<>

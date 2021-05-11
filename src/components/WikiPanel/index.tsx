@@ -11,16 +11,18 @@ import {
   Button,
 } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
-import { WikiType, WikiPageType } from '../../../../services/api/models/wiki';
-import { usePangeaAxios } from '../../../../services/api';
-import { HandleErrorLoading } from '../../../../components/ErrorLoadingHandler';
+import { WikiType, WikiPageType } from '../../services/api/models/wiki';
+import { usePangeaAxios } from '../../services/api';
+import { HandleErrorLoading } from '../ErrorLoadingHandler';
 import { WikiPagePanel } from './components/WikiPage';
-import { pangeaFetch } from '../../../../services/api/coreApi';
+import { pangeaFetch } from '../../services/api/coreApi';
+
 
 
 interface WikiPanelProps {
-	grp_uuid: string;
+	uuid: string;
 	wiki: WikiType;
+	kind: "sample_groups"|"organizations"|"pipelines";
 }
 
 interface WikiPanelState {
@@ -43,7 +45,7 @@ export class WikiPanel extends React.Component<WikiPanelProps, WikiPanelState> {
 			title: 'New Page',
 			text: '',
 		} 
-		return pangeaFetch(`/sample_groups/${this.props.grp_uuid}/wiki`, 'POST', JSON.stringify(data))
+		return pangeaFetch(`/${this.props.kind}/${this.props.uuid}/wiki`, 'POST', JSON.stringify(data))
 			.then(response => response.json())
 	        .then(data => window.location.reload(false))
 	}
@@ -58,7 +60,7 @@ export class WikiPanel extends React.Component<WikiPanelProps, WikiPanelState> {
 			<>
 				<Row>
 					<Col lg={10}>
-						<WikiPagePanel page={this.state.activePage} grp_uuid={this.props.grp_uuid}/>
+						<WikiPagePanel page={this.state.activePage} uuid={this.props.uuid} kind={this.props.kind}/>
 					</Col>
 					<Col lg={2}>
 			          <Nav bsStyle="list" activeKey={this.state.activePage.title} onSelect={this.selectPage}>

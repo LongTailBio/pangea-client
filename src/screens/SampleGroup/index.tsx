@@ -20,7 +20,7 @@ import { WikiType } from '../../services/api/models/wiki';
 import { SampleLinkType } from '../../services/api/models/sample';
 import { AnalysisResultType } from '../../services/api/models/analysisResult';
 import MetaDataPanel from './components/MetaDataPanel';
-import WikiPanel from './components/WikiPanel';
+import WikiPanel from '../../components/WikiPanel';
 import VizPanel from './components/VizPanel';
 import AnalysisResultPanel from './components/AnalysisResultPanel';
 import SampleListPanel from './components/SampleListPanel';
@@ -167,7 +167,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
           exact={true}
           path="/sample-groups/:uuid/wiki"
           render={() => (
-            <WikiPanel grp_uuid={group.uuid} wiki={wiki}/>
+            <WikiPanel uuid={group.uuid} wiki={wiki} kind="sample_groups"/>
           )}
         />
         <Route
