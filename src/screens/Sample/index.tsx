@@ -10,6 +10,9 @@ import {
   NavItem,
   Glyphicon,
   Badge,
+  Collapse,
+  Button,
+  Panel,
 } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 
@@ -46,7 +49,44 @@ interface SampleScreenProps {
   uuid: string;
 }
 
+const arHtml = (analysisResult: AnalysisResultType, uuid: string) => {
+
+  return (
+    <ul
+      key={analysisResult.uuid}
+      className="analysis-group-list"
+    >
+      <li className="analysis-group-list-item">
+        <Link
+          to={`/samples/${uuid}/analysis-results/${analysisResult.uuid}`}
+        >
+          {analysisResult.module_name} -{' '}
+          {analysisResult.replicate}
+        </Link>
+        {analysisResult.description && (
+          <>
+            <br/>
+            <p>{analysisResult.description}</p>
+          </>)}                  
+      </li>
+    </ul>
+  )
+}
+
+
+const arList = (analysisResults: AnalysisResultType[], uuid: string) => {
+  if(analysisResults.length === 0) {
+    return (<></>)
+  }
+  return (
+    <>
+      {analysisResults.map(aR => arHtml(aR, uuid))}
+    </>
+  )
+}
+
 export const SampleScreen = (props: SampleScreenProps) => {
+  const [open, setOpen] = React.useState(false);
   const [{ data, loading, error }] = useGroup(props.uuid);
 
   if(loading || error){
@@ -60,6 +100,8 @@ export const SampleScreen = (props: SampleScreenProps) => {
       sample: sample,
     }
   }
+  const shownResults = analysisResults.results.filter(ar => !ar.is_hidden);
+  const hiddenResults = analysisResults.results.filter(ar => ar.is_hidden);
   return (
     <>
       <Helmet>
@@ -105,27 +147,27 @@ export const SampleScreen = (props: SampleScreenProps) => {
           render={() => (
             <Row>
               <Col lg={6}>
-                {analysisResults.count > 0 &&
-                  analysisResults.results.map(analysisResult => (
-                    <ul
-                      key={analysisResult.uuid}
-                      className="analysis-group-list"
+                {arList(shownResults, props.uuid)}
+                
+                { hiddenResults.length > 0 && (
+                  <>
+                    <hr/>
+                    <Button
+                      onClick={() => setOpen(!open)}
+                      aria-controls="example-collapse-text"
+                      aria-expanded={open}
                     >
-                      <li className="analysis-group-list-item">
-                        <Link
-                          to={`/samples/${sample.uuid}/analysis-results/${analysisResult.uuid}`}
-                        >
-                          {analysisResult.module_name} -{' '}
-                          {analysisResult.replicate}
-                        </Link>
-                        {analysisResult.description && (
-                          <>
-                            <br/>
-                            <p>{analysisResult.description}</p>
-                          </>)}
-                      </li>
-                    </ul>
-                  ))}
+                      {open ? "Hide Hidden Results" : "Show Hidden Results"}
+                    </Button>
+                    <br/>
+                    <Collapse in={open}>
+                      <Panel>
+                      {arList(hiddenResults, props.uuid)}
+                      </Panel>
+                    </Collapse>
+                  </>
+                )}
+                <br/>
                 {analysisResults.count === 0 && (
                   <Well className="text-center">
                     <h4>This sample has no analysis results.</h4>

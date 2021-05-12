@@ -16,4 +16,5 @@ export interface AnalysisResultType {
   description: string;
   pipeline_module: string | undefined;
   pipeline_module_obj: PipelineModuleType | undefined;
+  is_hidden: boolean;
 }
