@@ -12,4 +12,5 @@ export interface SampleGroupType {
   created_at: string;
   updated_at: string;
   organization_obj: OrganizationType;
+  sample_metadata_schema: any;
 }

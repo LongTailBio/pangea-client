@@ -160,7 +160,7 @@ export const SampleGroupScreen = (props: SampleGroupScreenProps) => {
           exact={true}
           path="/sample-groups/:uuid/metadata"
           render={() => (
-            <MetaDataPanel group={group} analysisResults={analysisResults.results} />
+            <MetaDataPanel group={group} analysisResults={analysisResults.results} samples={samples} />
           )}
         />
         <Route

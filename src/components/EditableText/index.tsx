@@ -22,13 +22,13 @@ interface EditableTextProps {
   initialText: string;
   inputType: "inline"|"area";
   title: string;
-  textType?: "h1"|"p";
+  textType?: "h1"|"p"|"markdown"|"code";
 }
 
 interface EditableTextState {
   editMode: boolean;
   editText: string;
-  textType: "h1"|"p";
+  textType: "h1"|"p"|"markdown"|"code";
 }
 
 export class EditableTextPanel extends React.Component<EditableTextProps, EditableTextState> {
@@ -40,7 +40,7 @@ export class EditableTextPanel extends React.Component<EditableTextProps, Editab
     this.state = {
       editMode: false,
       editText: props.initialText,
-      textType: props.textType ? props.textType : "p"
+      textType: props.textType ? props.textType : (props.inputType === "inline" ? "p" : "markdown")
     }
     this.flipEditState = this.flipEditState.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -178,7 +178,12 @@ export class EditableTextPanel extends React.Component<EditableTextProps, Editab
         <br/>
         <Row>
           <Col lg={12}>
-            <ReactMarkdown>{this.state.editText}</ReactMarkdown>
+            {this.state.textType === "markdown" ?
+              <ReactMarkdown>{this.state.editText}</ReactMarkdown> : <></>
+            }
+            {this.state.textType === "code" ?
+              <pre><code>{this.state.editText}</code></pre> : <></>
+            }            
           </Col>
         </Row>
       </>
