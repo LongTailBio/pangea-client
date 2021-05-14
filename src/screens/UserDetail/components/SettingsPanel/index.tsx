@@ -7,7 +7,7 @@ import { PangeaUserType } from '../../../../services/api/models/user';
 
 import UserSettingsDetails from './components/Details'
 import UserSettingsProfile from './components/Profile'
-
+import UserPasswordFormPage from './components/Password'
 
 interface PangeaUserSettingsProps {
   user: PangeaUserType;
@@ -47,7 +47,10 @@ export default class PangeaUserSettings extends React.Component<PangeaUserSettin
         </Tab>
         <Tab eventKey={3} title="Log Out">
           <Link to="/logout" className="btn btn-danger">Log Out</Link>
-        </Tab>          
+        </Tab> 
+        <Tab eventKey={4} title="Change Password">
+          <UserPasswordFormPage user={this.props.user} />
+        </Tab>                   
       </Tabs>
     );
   }
