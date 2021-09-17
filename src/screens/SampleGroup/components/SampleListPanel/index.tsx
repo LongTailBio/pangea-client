@@ -21,6 +21,7 @@ import { SampleGroupType } from '../../../../services/api/models/sampleGroup';
 import { SampleLinkType } from '../../../../services/api/models/sample';
 import { AnalysisResultType } from '../../../../services/api/models/analysisResult';
 import { FilterMetadataForm } from './components/FilterForm'
+import { SampleListForm } from './components/SampleList'
 
 interface SampleListPanelProps {
   samples: LinkList<SampleLinkType>;
@@ -235,19 +236,8 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
               </form>
             </Row>
             {samples.length > 0 &&
-              samples.map(sample => (
-                <ul key={sample.uuid} className="analysis-group-list">
-                  <li className="analysis-group-list-item">
-                    <Link to={`/samples/${sample.uuid}`}>
-                      {sample.name}
-                    </Link>
-                    <>
-                      <br/>
-                      <p>{metadataToStr(sample)}</p>
-                    </>
-                  </li>
-                </ul>
-              ))}
+              <SampleListForm samples={samples} />
+            }
             {(samples.length === 0 && this.state.filter === '') && (
               <Well className="text-center">
                 <h4>This sample group has no samples.</h4>
