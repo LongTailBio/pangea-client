@@ -25,7 +25,7 @@ import { SampleListForm } from './components/SampleList'
 
 interface SampleListPanelProps {
   samples: LinkList<SampleLinkType>;
-  grp?: SampleGroupType;
+  grp: SampleGroupType;
 }
 
 interface SampleListPanelState {
@@ -236,7 +236,7 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
               </form>
             </Row>
             {samples.length > 0 &&
-              <SampleListForm samples={samples} />
+              <SampleListForm samples={samples} grp={this.props.grp} />
             }
             {(samples.length === 0 && this.state.filter === '') && (
               <Well className="text-center">
