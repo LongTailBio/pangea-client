@@ -13,6 +13,8 @@ import {
   Glyphicon,
   Badge,
   Pagination,
+  Dropdown,
+  MenuItem,
 } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 import { cancelableAxios } from '../../../../services/api/utils';
@@ -29,6 +31,7 @@ interface SampleListPanelProps {
 }
 
 interface SampleListPanelState {
+  pageLength: number;
   samplesOnCurrentPage: SampleLinkType[];
   samplesInCurrentFilter: SampleLinkType[];
   allSamples: SampleLinkType[];
@@ -59,21 +62,22 @@ const metadataToStr = (sampleLink: SampleLinkType): string => {
 export class SampleListPanel extends React.Component<SampleListPanelProps, SampleListPanelState> {
   protected sourceToken: CancelTokenSource;
   protected metadataKeys: string[];
-  protected pageLength: number;
 
   constructor(props: SampleListPanelProps) {
     super(props);
     this.sourceToken = axios.CancelToken.source();
-    this.pageLength = 50;
+    const defaultPageLength = 50
 
     this.state = {
+      pageLength: defaultPageLength,
       allSamples: props.samples.links,
       samplesInCurrentFilter: props.samples.links,
-      samplesOnCurrentPage: props.samples.links.slice(0, this.pageLength),
+      samplesOnCurrentPage: props.samples.links.slice(0, defaultPageLength),
       currentPage: 0,
-      totalPages: Math.ceil(props.samples.count / this.pageLength),
+      totalPages: Math.ceil(props.samples.count / defaultPageLength),
       filter: '',
     }
+    this.setSamplesPerPage = this.setSamplesPerPage.bind(this);
     this.setMetadataFilter = this.setMetadataFilter.bind(this);
     this.handleFilterChange = this.handleFilterChange.bind(this);
     this.filterSamples = this.filterSamples.bind(this);
@@ -89,6 +93,16 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
         })
       } 
     })
+  }
+
+  setSamplesPerPage(value: number){
+    const samples = this.state.samplesInCurrentFilter.slice(0, value);
+    this.setState({
+      pageLength: value,
+      totalPages: Math.ceil(this.state.allSamples.length / value),
+      currentPage: 0,
+      samplesOnCurrentPage: samples,
+    });
   }
 
   setMetadataFilter(key: string, value: string){
@@ -146,15 +160,15 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
     this.setState({
       filter: filterStr,
       samplesInCurrentFilter: filteredSamples,
-      totalPages: Math.ceil(filteredSamples.length / this.pageLength),
-      samplesOnCurrentPage: filteredSamples.slice(0, this.pageLength),
+      totalPages: Math.ceil(filteredSamples.length / this.state.pageLength),
+      samplesOnCurrentPage: filteredSamples.slice(0, this.state.pageLength),
     });
   };
 
   loadSamplePage(pageNum: number) {
     const myPageNum = Math.max(Math.min(pageNum, this.state.totalPages - 1), 0);
-    const start = myPageNum * this.pageLength;
-    const end = start + this.pageLength;
+    const start = myPageNum * this.state.pageLength;
+    const end = start + this.state.pageLength;
     const samples = this.state.samplesInCurrentFilter.slice(start, end);
     this.setState({
       currentPage: myPageNum,
@@ -222,19 +236,46 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
       <>
         <Row>
           <Col lg={8}>
-            <Row>
-              <form>
-                <input
-                  name="filter"
-                  className="form-control input-lg"
-                  type="text"
-                  placeholder="Filter samples"
-                  required={true}
-                  value={this.state.filter}
-                  onChange={this.handleFilterChange}
-                />
-              </form>
-            </Row>
+            <div className="input-group">
+              <input
+                name="filter"
+                className="form-control"
+                type="text"
+                placeholder="Filter samples"
+                required={true}
+                value={this.state.filter}
+                onChange={this.handleFilterChange}
+              />
+              <div className="input-group-btn">
+                <Dropdown id="dropdown-sample-group" pullRight={true}>
+                  <Dropdown.Toggle>
+                    {this.state.pageLength} per page
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <MenuItem eventKey="#/action-1" onClick={() => this.setSamplesPerPage(10)}>10 per page</MenuItem>
+                    <MenuItem eventKey="#/action-2" onClick={() => this.setSamplesPerPage(25)}>25 per page</MenuItem>
+                    <MenuItem eventKey="#/action-3" onClick={() => this.setSamplesPerPage(50)}>50 per page</MenuItem>
+                    <MenuItem eventKey="#/action-4" onClick={() => this.setSamplesPerPage(100)}>100 per page</MenuItem>
+                    <MenuItem eventKey="#/action-5" onClick={() => this.setSamplesPerPage(250)}>250 per page</MenuItem>
+                    <MenuItem eventKey="#/action-6" onClick={() => this.setSamplesPerPage(1000)}>1,000 per page</MenuItem>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+            </div>
+          </Col>
+          <Col lg={3} lgOffset={1}>
+            {this.props.grp && (
+              this.props.grp.is_library && (
+              <Link to={linkTo} className="btn btn-success">
+                New Sample
+              </Link>
+            ))}
+          </Col>
+        </Row>
+        <hr/>
+        <Row>
+          <Col lg={8}>
+            
             {samples.length > 0 &&
               <SampleListForm samples={samples} grp={this.props.grp} />
             }
@@ -253,16 +294,6 @@ export class SampleListPanel extends React.Component<SampleListPanelProps, Sampl
             </Row>
           </Col>
           <Col lg={3} lgOffset={1}>
-            <Row>
-              {this.props.grp && (
-                this.props.grp.is_library && (
-                <Link to={linkTo} className="btn btn-success btn-lg ">
-                  Create New Sample
-                </Link>
-              ))}
-            </Row>
-            <br/>
-            <hr/>
             <Row>
               <h3>Filter by Metadata</h3>
               {this.metadataKeys.map(key =>

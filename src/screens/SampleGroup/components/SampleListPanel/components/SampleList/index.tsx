@@ -36,7 +36,7 @@ const SampleListInnerForm = (props: SampleListFormProps & FormikProps<SampleList
 	const [createGrpModalShow, setCreateGrpModalShow] = React.useState(false);
 
 	const { touched, errors, isSubmitting, values, setFieldValue,  } = props;
-	const samples = values.samples;
+	const samples = props.samples;
 	const flipCheckAll = () => {
 		setFieldValue(
 			'checkAllChecked',
@@ -58,7 +58,7 @@ const SampleListInnerForm = (props: SampleListFormProps & FormikProps<SampleList
 			                  type="checkbox"
 			                  required={true}
 			                  onChange={flipCheckAll}
-			                />{' '}Check All					       
+			                />{' Check '}{samples.length} Samples				       
 			            </Col>
 			            <Col lg={3}>
 			            	<ButtonToolbar>

@@ -85,7 +85,7 @@ export class EditableDescriptionPanel extends React.Component<EditableDescriptio
               <Col lg={2}>
                 <input
                   type="button"
-                  className="btn btn-success btn-lg btn-block"
+                  className="btn btn-success btn-block"
                   value="Save"
                   onClick={this.handleSubmit}
                 />
@@ -102,7 +102,7 @@ export class EditableDescriptionPanel extends React.Component<EditableDescriptio
         </Col>
         <Col lg={2}>
           <button
-            className="btn btn-primary btn-lg btn-block"
+            className="btn btn-secondary btn-block"
             onClick={this.flipEditState}
           >Edit</button>
         </Col>

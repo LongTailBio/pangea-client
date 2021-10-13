@@ -25,11 +25,11 @@ const FilterMetadataInnerForm = (props: FormikProps<FilterMetadataValues>) => {
       <Row>
         <Col lg={8}>
           <FormGroup>
-             <Field id="value" name="value" placeholder="Value" className="form-control input-lg"/>
+             <Field id="value" name="value" placeholder="Value" className="form-control"/>
           </FormGroup>
         </Col>
         <Col lg={4}>
-          <button type="submit" className="btn btn-primary btn-lg btn-block">Filter</button>
+          <button type="submit" className="btn btn-primary btn-block">Filter</button>
         </Col>
       </Row>
     </Form>
